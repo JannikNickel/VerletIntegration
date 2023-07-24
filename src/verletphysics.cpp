@@ -9,7 +9,7 @@ void VerletPhysics::Update(float dt)
 	{
 		Gravity();
 		Constraint();
-		Collisions();
+		//Collisions();
 		Move(stepDt);
 	}
 }

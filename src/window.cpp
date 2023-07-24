@@ -16,7 +16,7 @@
 typedef std::chrono::high_resolution_clock Clock;
 static void HandleGLFWError(int error, const char* description);
 
-Window::Window(unsigned int width, unsigned int height, const char* title, int x, int y) : width(width), height(height), title(title), x(x), y(y), window(nullptr)
+Window::Window(unsigned int width, unsigned int height, const char* title, int x, int y) : width(width), height(height), title(title), x(x), y(y), renderTime(0.0f), window(nullptr)
 {
 
 }
@@ -49,7 +49,7 @@ void Window::Show(std::function<void(double)> update)
 	glfwSetWindowPos(window, x != -1 ? x : xPos, y != -1 ? y : yPos);
 
 	glfwMakeContextCurrent(window);
-	//glfwSwapInterval(0);
+	glfwSwapInterval(1);
 
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -83,14 +83,18 @@ void Window::Show(std::function<void(double)> update)
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
+		
 		Input::Update(window);
+		
 		update(dt);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+		auto renderStart = std::chrono::high_resolution_clock::now();
 		glfwSwapBuffers(window);
+		auto renderEnd = std::chrono::high_resolution_clock::now();
+		renderTime = std::chrono::duration_cast<std::chrono::nanoseconds>(renderEnd - renderStart).count() * 1e-6f;
 		glfwPollEvents();
 	}
 
@@ -107,6 +111,11 @@ void Window::Show(std::function<void(double)> update)
 void Window::Close()
 {
 	glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
+
+float Window::LastFrameRenderTime()
+{
+	return renderTime;
 }
 
 void HandleGLFWError(int error, const char* description)

@@ -42,12 +42,15 @@ int main()
 		spawnCooldown -= dt;
 		if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
 		{
-			float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
-			spawnCooldown = 0.015f * r;
-			VerletObj obj = VerletObj(0, physics.center + Vector2(0.0f, size * 0.25f), 1.0f, r, Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f));
-			Vector2 dir = Vector2(std::sinf(time), -0.33f);
-			obj.acc = dir.Normalized() * 500000.0f;
-			physics.objects.push_back(obj);
+			for(int i = 0; i < 10; i++)
+			{
+				float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
+				//spawnCooldown = 0.015f * r;
+				VerletObj obj = VerletObj(0, physics.center + Vector2(0.0f, size * 0.25f), 1.0f, r, Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f));
+				Vector2 dir = Vector2(std::sinf(time), -0.33f);
+				obj.acc = dir.Normalized() * 500000.0f;
+				physics.objects.push_back(obj);
+			}
 		}
 
 		auto t0 = std::chrono::high_resolution_clock::now();
@@ -64,7 +67,8 @@ int main()
 		{
 			float simulation = std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count() * 1e-6f;
 			float render = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() * 1e-6f;
-			ImGui::LabelText("", "FPS = %d, OBJECTS = %d, SIMULATION = %.2f ms, RENDER = %.2f ms", (int)fps, physics.objects.size(), simulation, render);
+			ImGui::SetNextItemWidth(size);
+			ImGui::LabelText("", "FPS = %d, OBJECTS = %d, SIMULATION = %.2f ms, RENDERPREP = %.2f ms, RENDER = %.2f ms", (int)fps, physics.objects.size(), simulation, render, window.LastFrameRenderTime());
 			ImGui::EndMainMenuBar();
 		}
 	});

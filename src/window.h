@@ -11,6 +11,8 @@ public:
 
 	void Show(std::function<void(double)> update);
 	void Close();
+	
+	float LastFrameRenderTime();
 
 private:
 	unsigned int width;
@@ -18,6 +20,8 @@ private:
 	const char* title;
 	int x;
 	int y;
+
+	float renderTime;
 
 	struct GLFWwindow* window;
 };
