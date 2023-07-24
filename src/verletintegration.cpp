@@ -27,6 +27,10 @@ int main()
 	double spawnCooldown = 0.0f;
 	double time = 0.0f;
 
+	Vector2 iPositions[Graphics::INSTANCING_LIMIT];
+	float iRadii[Graphics::INSTANCING_LIMIT];
+	Color iColors[Graphics::INSTANCING_LIMIT];
+
 	window.Show([&](double dt)
 	{
 		time += dt;
@@ -57,9 +61,23 @@ int main()
 		physics.Update(dt);
 		auto t1 = std::chrono::high_resolution_clock::now();
 		Graphics::Circle(Vector2(physics.center), physics.radius, Color::From32(15, 15, 15, 255));
+		int iIndex = 0;
 		for(const VerletObj& obj : physics.objects)
 		{
-			Graphics::Circle(obj.pos, obj.radius, obj.color);
+			//Graphics::Circle(obj.pos, obj.radius, obj.color);
+			iPositions[iIndex] = obj.pos;
+			iRadii[iIndex] = obj.radius;
+			iColors[iIndex] = obj.color;
+			iIndex++;
+			if(iIndex >= Graphics::INSTANCING_LIMIT)
+			{
+				Graphics::CircleInstanced(iPositions, iRadii, iColors, iIndex);
+				iIndex = 0;
+			}
+		}
+		if(iIndex > 0)
+		{
+			Graphics::CircleInstanced(iPositions, iRadii, iColors, iIndex);
 		}
 		auto t2 = std::chrono::high_resolution_clock::now();
 

@@ -10,6 +10,7 @@ struct Color
 	static const Color white;
 	static const Color black;
 
+	Color();
 	Color(float r, float g, float b, float a = 1.0f);
 
 	static Color From32(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);

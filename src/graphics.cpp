@@ -33,6 +33,15 @@ static unsigned int shaderViewLoc;
 static unsigned int shaderProjectionLoc;
 static unsigned int shaderMainColorLoc;
 
+static unsigned int quadInstancedVBO, quadInstancedVAO, quadInstancedEBO;
+static unsigned int quadInstanceTransformBuffer;
+static unsigned int quadInstanceColorBuffer;
+static unsigned int instancedShaderProgram;
+static unsigned int instancedShaderViewLoc;
+static unsigned int instancedShaderProjectionLoc;
+static glm::mat4 instanceTransforms[Graphics::INSTANCING_LIMIT];
+static glm::vec4 instanceColors[Graphics::INSTANCING_LIMIT];
+
 static glm::mat4 viewMatrix;
 static glm::mat4 projectionMatrix;
 
@@ -76,7 +85,7 @@ static unsigned int CompileShader(const char* path, unsigned int shaderType)
 	return shader;
 }
 
-static void CreateVertexArrayObject(unsigned int* vao, unsigned int* vbo, unsigned int* ebo, const float* vertices, int verticesLength, const unsigned int* indices, int indicesLength)
+static void CreateVertexArrayObject(unsigned int* vao, unsigned int* vbo, unsigned int* ebo, const float* vertices, int verticesLength, const unsigned int* indices, int indicesLength, unsigned int* instanceTransformBuffer = nullptr, unsigned int* instanceColorBuffer = nullptr)
 {
 	glGenVertexArrays(1, vao);
 	glGenBuffers(1, vbo);
@@ -93,6 +102,31 @@ static void CreateVertexArrayObject(unsigned int* vao, unsigned int* vbo, unsign
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	if(instanceTransformBuffer != nullptr)
+	{
+		glBindVertexArray(*vao);
+
+		glGenBuffers(1, instanceTransformBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, *instanceTransformBuffer);
+		glBufferData(GL_ARRAY_BUFFER, Graphics::INSTANCING_LIMIT * sizeof(glm::mat4), &instanceTransforms[0], GL_DYNAMIC_DRAW);
+
+		std::size_t vec4Size = sizeof(glm::vec4);
+		for(int i = 0; i < 4; i++)
+		{
+			glEnableVertexAttribArray(2 + i);
+			glVertexAttribPointer(2 + i, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(i * vec4Size));
+			glVertexAttribDivisor(2 + i, 1);
+		}
+
+		glGenBuffers(1, instanceColorBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, *instanceColorBuffer);
+		glBufferData(GL_ARRAY_BUFFER, Graphics::INSTANCING_LIMIT * sizeof(glm::vec4), &instanceColors[0], GL_DYNAMIC_DRAW);
+
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, vec4Size, (void*)0);
+		glVertexAttribDivisor(6, 1);
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -129,6 +163,8 @@ void Graphics::Init(unsigned int width, unsigned int height)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
+	//Regular shader
 	unsigned int vertexShader = CompileShader("shaders/default2d.vert", GL_VERTEX_SHADER);
 	unsigned int fragmentShader = CompileShader("shaders/default2d.frag", GL_FRAGMENT_SHADER);
 
@@ -146,14 +182,42 @@ void Graphics::Init(unsigned int width, unsigned int height)
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
+	//Instanced shader
+	unsigned int instancedVertexShader = CompileShader("shaders/default2d_instanced.vert", GL_VERTEX_SHADER);
+	unsigned int instancedFragmentShader = CompileShader("shaders/default2d_instanced.frag", GL_FRAGMENT_SHADER);
+
+	instancedShaderProgram = glCreateProgram();
+	glAttachShader(instancedShaderProgram, instancedVertexShader);
+	glAttachShader(instancedShaderProgram, instancedFragmentShader);
+	glLinkProgram(instancedShaderProgram);
+	ValidateShaderLinking(instancedShaderProgram);
+
+	instancedShaderViewLoc = glGetUniformLocation(instancedShaderProgram, "view");
+	instancedShaderProjectionLoc = glGetUniformLocation(instancedShaderProgram, "projection");
+
+	glDeleteShader(instancedVertexShader);
+	glDeleteShader(instancedFragmentShader);
+
+
 	viewMatrix = glm::mat4(1.0f);
 	projectionMatrix = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
+
 
 	glUseProgram(shaderProgram);
 	glUniformMatrix4fv(shaderViewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	glUniformMatrix4fv(shaderProjectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
+
+	glUseProgram(instancedShaderProgram);
+	glUniformMatrix4fv(instancedShaderViewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	glUniformMatrix4fv(instancedShaderProjectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+
 	CreateVertexArrayObject(&quadVAO, &quadVBO, &quadEBO, quadVertices, sizeof(quadVertices), quadIndices, sizeof(quadIndices));
+
+
+	CreateVertexArrayObject(&quadInstancedVAO, &quadInstancedVBO, &quadInstancedEBO, quadVertices, sizeof(quadVertices), quadIndices, sizeof(quadIndices), &quadInstanceTransformBuffer, &quadInstanceColorBuffer);
+
 
 	quadTex = CreateTexture("resources/square.png");
 	circleTex = CreateTexture("resources/circle.png");
@@ -162,9 +226,13 @@ void Graphics::Init(unsigned int width, unsigned int height)
 void Graphics::Shutdown()
 {
 	glDeleteProgram(shaderProgram);
+	glDeleteProgram(instancedShaderProgram);
 	glDeleteVertexArrays(1, &quadVAO);
 	glDeleteBuffers(1, &quadVBO);
 	glDeleteBuffers(1, &quadEBO);
+	glDeleteVertexArrays(1, &quadInstancedVAO);
+	glDeleteBuffers(1, &quadInstancedVBO);
+	glDeleteBuffers(1, &quadInstancedEBO);
 	glDeleteTextures(1, &quadTex);
 	glDeleteTextures(1, &circleTex);
 }
@@ -202,4 +270,33 @@ void Graphics::Circle(Vector2 pos, float radius, const Color& color)
 
 	glBindVertexArray(quadVAO);
 	glDrawElements(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0);
+}
+
+void Graphics::CircleInstanced(Vector2* positions, float* radii, Color* colors, int instanceCount)
+{
+	for(int i = 0; i < instanceCount; i++)
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(positions[i].x, positions[i].y, 0.0f));
+		model = glm::scale(model, glm::vec3(radii[i] * 2.0f));
+		instanceTransforms[i] = model;
+		
+		instanceColors[i] = glm::vec4(colors[i].r, colors[i].g, colors[i].b, colors[i].a);
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, quadInstanceTransformBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * sizeof(glm::mat4), &instanceTransforms[0]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, quadInstanceColorBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * sizeof(glm::vec4), &instanceColors[0]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+	glUseProgram(instancedShaderProgram);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, circleTex);
+
+
+	glBindVertexArray(quadInstancedVAO);
+	glDrawElementsInstanced(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0, instanceCount);
 }

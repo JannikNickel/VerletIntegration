@@ -45,6 +45,8 @@
     <None Include="shaders\default2d.vert">
       <FileType>Document</FileType>
     </None>
+    <None Include="shaders\default2d_instanced.frag" />
+    <None Include="shaders\default2d_instanced.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
