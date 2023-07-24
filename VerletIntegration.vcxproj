@@ -22,6 +22,7 @@
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\color.cpp" />
+    <ClCompile Include="src\matrix4.cpp" />
     <ClCompile Include="src\vector2.cpp" />
     <ClCompile Include="src\vector2.h" />
     <ClCompile Include="src\verletintegration.cpp" />
@@ -34,6 +35,7 @@
     <ClInclude Include="src\keycode.h" />
     <ClInclude Include="src\color.h" />
     <ClInclude Include="src\config.h" />
+    <ClInclude Include="src\matrix4.h" />
     <ClInclude Include="src\verletobj.h" />
     <ClInclude Include="src\verletphysics.h" />
     <ClInclude Include="src\window.h" />
@@ -96,7 +98,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glm-0.9.9.8\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,7 +120,7 @@ XCOPY /E /Y "$(SolutionDir)resources" "$(OutDIr)resources\"</Command>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glm-0.9.9.8\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

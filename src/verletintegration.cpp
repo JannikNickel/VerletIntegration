@@ -46,7 +46,7 @@ int main()
 		spawnCooldown -= dt;
 		if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
 		{
-			for(int i = 0; i < 10; i++)
+			for(int i = 0; i < 100; i++)
 			{
 				float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
 				//spawnCooldown = 0.015f * r;
