@@ -2,10 +2,10 @@
 #include <algorithm>
 #include <chrono>
 
-#include "window.h"
-#include "input.h"
-#include "graphics.h"
-#include "verletphysics.h"
+#include "engine/window.h"
+#include "engine/input.h"
+#include "renderer/graphics.h"
+#include "physics/verletphysics.h"
 
 #include "imgui.h"
 
@@ -28,9 +28,9 @@ int main()
 	double spawnCooldown = 0.0f;
 	double time = 0.0f;
 
-	Vector2 iPositions[Graphics::INSTANCING_LIMIT];
-	float iRadii[Graphics::INSTANCING_LIMIT];
-	Color iColors[Graphics::INSTANCING_LIMIT];
+	Vector2 iPositions[Graphics::instancingLimit];
+	float iRadii[Graphics::instancingLimit];
+	Color iColors[Graphics::instancingLimit];
 
 	window.Show([&](double dt)
 	{
@@ -67,15 +67,15 @@ int main()
 			iRadii[iIndex] = obj.radius;
 			iColors[iIndex] = obj.color;
 			iIndex++;
-			if(iIndex >= Graphics::INSTANCING_LIMIT)
+			if(iIndex >= Graphics::instancingLimit)
 			{
-				Graphics::CircleInstanced(iPositions, iRadii, iColors, iIndex);
+				Graphics::CirclesInstanced(iPositions, iRadii, iColors, iIndex);
 				iIndex = 0;
 			}
 		}
 		if(iIndex > 0)
 		{
-			Graphics::CircleInstanced(iPositions, iRadii, iColors, iIndex);
+			Graphics::CirclesInstanced(iPositions, iRadii, iColors, iIndex);
 		}
 		auto t2 = std::chrono::high_resolution_clock::now();
 

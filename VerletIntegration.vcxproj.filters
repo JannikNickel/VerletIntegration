@@ -21,22 +21,22 @@
     <ClCompile Include="external\glad\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\window.cpp">
+    <ClCompile Include="src\engine\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\color.cpp">
+    <ClCompile Include="src\structs\color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\input.cpp">
+    <ClCompile Include="src\engine\input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vector2.h">
+    <ClCompile Include="src\structs\vector2.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vector2.cpp">
+    <ClCompile Include="src\structs\vector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics.cpp">
+    <ClCompile Include="src\renderer\graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="external\imgui-1.89.7\imgui.cpp">
@@ -60,39 +60,36 @@
     <ClCompile Include="external\imgui-1.89.7\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\verletphysics.cpp">
+    <ClCompile Include="src\physics\verletphysics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\matrix4.cpp">
+    <ClCompile Include="src\structs\matrix4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\config.h">
+    <ClInclude Include="src\engine\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\window.h">
+    <ClInclude Include="src\structs\color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\color.h">
+    <ClInclude Include="src\engine\input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\input.h">
+    <ClInclude Include="src\engine\keycode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\keycode.h">
+    <ClInclude Include="src\renderer\graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics.h">
+    <ClInclude Include="src\physics\verletobj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\verletobj.h">
+    <ClInclude Include="src\physics\verletphysics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\verletphysics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\matrix4.h">
+    <ClInclude Include="src\structs\matrix4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

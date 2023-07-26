@@ -19,26 +19,25 @@
     <ClCompile Include="external\imgui-1.89.7\imgui_impl_opengl3.cpp" />
     <ClCompile Include="external\imgui-1.89.7\imgui_tables.cpp" />
     <ClCompile Include="external\imgui-1.89.7\imgui_widgets.cpp" />
-    <ClCompile Include="src\graphics.cpp" />
-    <ClCompile Include="src\input.cpp" />
-    <ClCompile Include="src\color.cpp" />
-    <ClCompile Include="src\matrix4.cpp" />
-    <ClCompile Include="src\vector2.cpp" />
-    <ClCompile Include="src\vector2.h" />
+    <ClCompile Include="src\renderer\graphics.cpp" />
+    <ClCompile Include="src\engine\input.cpp" />
+    <ClCompile Include="src\structs\color.cpp" />
+    <ClCompile Include="src\structs\matrix4.cpp" />
+    <ClCompile Include="src\structs\vector2.cpp" />
+    <ClCompile Include="src\structs\vector2.h" />
     <ClCompile Include="src\verletintegration.cpp" />
-    <ClCompile Include="src\verletphysics.cpp" />
-    <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\physics\verletphysics.cpp" />
+    <ClCompile Include="src\engine\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\graphics.h" />
-    <ClInclude Include="src\input.h" />
-    <ClInclude Include="src\keycode.h" />
-    <ClInclude Include="src\color.h" />
-    <ClInclude Include="src\config.h" />
-    <ClInclude Include="src\matrix4.h" />
-    <ClInclude Include="src\verletobj.h" />
-    <ClInclude Include="src\verletphysics.h" />
-    <ClInclude Include="src\window.h" />
+    <ClInclude Include="src\renderer\graphics.h" />
+    <ClInclude Include="src\engine\input.h" />
+    <ClInclude Include="src\engine\keycode.h" />
+    <ClInclude Include="src\structs\color.h" />
+    <ClInclude Include="src\structs\matrix4.h" />
+    <ClInclude Include="src\physics\verletobj.h" />
+    <ClInclude Include="src\physics\verletphysics.h" />
+    <ClInclude Include="src\engine\window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default2d.frag">
@@ -98,7 +97,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,7 +119,7 @@ XCOPY /E /Y "$(SolutionDir)resources" "$(OutDIr)resources\"</Command>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

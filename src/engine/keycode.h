@@ -1,4 +1,5 @@
 #pragma once
+
 enum class KeyCode : int
 {
 	LeftMouseButton = 0,

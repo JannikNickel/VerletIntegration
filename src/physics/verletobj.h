@@ -1,6 +1,6 @@
 #pragma once
-#include "vector2.h"
-#include "color.h"
+#include "structs/vector2.h"
+#include "structs/color.h"
 
 struct VerletObj
 {

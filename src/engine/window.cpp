@@ -1,6 +1,6 @@
 #include "window.h"
 #include "input.h"
-#include "graphics.h"
+#include "renderer/graphics.h"
 
 #include <iostream>
 #include <chrono>
@@ -13,10 +13,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-typedef std::chrono::high_resolution_clock Clock;
+using Clock = std::chrono::high_resolution_clock;
 static void HandleGLFWError(int error, const char* description);
 
-Window::Window(unsigned int width, unsigned int height, const char* title, int x, int y) : width(width), height(height), title(title), x(x), y(y), renderTime(0.0f), window(nullptr)
+Window::Window(unsigned int width, unsigned int height, const char* title, int x, int y, bool vSync) : width(width), height(height), title(title), x(x), y(y), vSync(vSync), renderTime(0.0f), window(nullptr)
 {
 
 }
@@ -49,7 +49,7 @@ void Window::Show(std::function<void(double)> update)
 	glfwSetWindowPos(window, x != -1 ? x : xPos, y != -1 ? y : yPos);
 
 	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1);
+	glfwSwapInterval(static_cast<int>(vSync));
 
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -91,10 +91,10 @@ void Window::Show(std::function<void(double)> update)
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		auto renderStart = std::chrono::high_resolution_clock::now();
+		auto tRenderStart = std::chrono::high_resolution_clock::now();
 		glfwSwapBuffers(window);
-		auto renderEnd = std::chrono::high_resolution_clock::now();
-		renderTime = std::chrono::duration_cast<std::chrono::nanoseconds>(renderEnd - renderStart).count() * 1e-6f;
+		auto tRenderEnd = std::chrono::high_resolution_clock::now();
+		renderTime = std::chrono::duration_cast<std::chrono::nanoseconds>(tRenderEnd - tRenderStart).count() * 1e-6f;
 		glfwPollEvents();
 	}
 

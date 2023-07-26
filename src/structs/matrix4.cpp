@@ -40,23 +40,15 @@ Matrix4 Matrix4::PositionScale2d(Vector2 pos, float scale)
 	};
 }
 
-/*
-0  1  2  3
-4  5  6  7
-8  9  10 11
-12 13 14 15
-
-*/
-
 Matrix4 Matrix4::Ortho(float left, float right, float bottom, float top, float near, float far)
 {
 	Matrix4 m = Matrix4::identity;
 	m.cells[0] = 2.0f / (right - left);
 	m.cells[5] = 2.0f / (top - bottom);
-	//m.cells[10] = -2.0f / (far - near);
+	m.cells[10] = -2.0f / (far - near);
 	m.cells[12] = -((right + left) / (right - left));
 	m.cells[13] = -((top + bottom) / (top - bottom));
-	//m.cells[14] = -((far + near) / (far - near));
+	m.cells[14] = -((far + near) / (far - near));
 	m.cells[4] = m.cells[8] = 0.0f;
 	m.cells[1] = m.cells[9] = 0.0f;
 	m.cells[2] = m.cells[6] = 0.0f;

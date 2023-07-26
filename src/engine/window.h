@@ -1,5 +1,5 @@
 #pragma once
-#include "color.h"
+#include "structs/color.h"
 #include <functional>
 
 class Window
@@ -7,12 +7,11 @@ class Window
 public:
 	Color clearColor = Color::From32(30, 30, 30);
 
-	Window(unsigned int width, unsigned int height, const char* title, int x = -1, int y = -1);
+	Window(unsigned int width, unsigned int height, const char* title, int x = -1, int y = -1, bool vSync = true);
 
 	void Show(std::function<void(double)> update);
 	void Close();
-	
-	float LastFrameRenderTime();
+	float LastFrameRenderTime();	
 
 private:
 	unsigned int width;
@@ -20,6 +19,7 @@ private:
 	const char* title;
 	int x;
 	int y;
+	bool vSync;
 
 	float renderTime;
 

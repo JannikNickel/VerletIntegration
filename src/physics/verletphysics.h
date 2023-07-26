@@ -1,6 +1,6 @@
 #pragma once
 #include "verletobj.h"
-#include "vector2.h"
+#include "structs/vector2.h"
 #include <vector>
 #include <iostream>
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "keycode.h"
-#include "window.h"
-#include "vector2.h"
+#include "engine/window.h"
+#include "structs/vector2.h"
 
 class Input
 {
