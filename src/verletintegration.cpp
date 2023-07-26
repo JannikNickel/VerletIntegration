@@ -46,15 +46,12 @@ int main()
 		spawnCooldown -= dt;
 		if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
 		{
-			for(int i = 0; i < 100; i++)
-			{
-				float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
-				//spawnCooldown = 0.015f * r;
-				VerletObj obj = VerletObj(0, physics.center + Vector2(0.0f, size * 0.25f), 1.0f, r, Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f));
-				Vector2 dir = Vector2(std::sinf(time), -0.33f);
-				obj.acc = dir.Normalized() * 500000.0f;
-				physics.objects.push_back(obj);
-			}
+			float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
+			spawnCooldown = 0.015f * r;
+			VerletObj obj = VerletObj(0, physics.center + Vector2(0.0f, size * 0.25f), 1.0f, r, Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f));
+			Vector2 dir = Vector2(std::sinf(time), -0.33f);
+			obj.acc = dir.Normalized() * 500000.0f;
+			physics.objects.push_back(obj);
 		}
 
 		auto t0 = std::chrono::high_resolution_clock::now();

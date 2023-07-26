@@ -275,10 +275,10 @@ void Graphics::CircleInstanced(Vector2* positions, float* radii, Color* colors, 
 	std::memcpy(instanceColors, colors, instanceCount * sizeof(Color));
 
 	glBindBuffer(GL_ARRAY_BUFFER, quadInstanceTransformBuffer);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * (sizeof(Matrix4) / 4), &instanceTransforms[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * sizeof(Matrix4), &instanceTransforms[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, quadInstanceColorBuffer);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * (sizeof(Matrix4) / 4), &instanceColors[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * sizeof(Color), &instanceColors[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
