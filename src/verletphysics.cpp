@@ -3,13 +3,24 @@
 
 void VerletPhysics::Update(float dt)
 {
+	static float timer = 0.0f;
+	timer += dt;
+	while(timer >= timeStep)
+	{
+		Simulate(timeStep);
+		timer -= timeStep;
+	}
+}
+
+void VerletPhysics::Simulate(float dt)
+{
 	unsigned int steps = std::max(substeps, 1u);
 	float stepDt = dt / static_cast<float>(steps);
 	for(unsigned int i = 0; i < steps; i++)
 	{
 		Gravity();
 		Constraint();
-		//Collisions();
+		Collisions();
 		Move(stepDt);
 	}
 }

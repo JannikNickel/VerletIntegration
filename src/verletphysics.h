@@ -6,6 +6,7 @@
 
 struct VerletPhysics
 {
+	float timeStep = 1.0f / 60.0f;
 	float gravity = 0.0f;
 	Vector2 center = Vector2::zero;
 	float radius = 0.0f;
@@ -13,6 +14,7 @@ struct VerletPhysics
 	std::vector<VerletObj> objects = {};
 
 	void Update(float dt);
+	void Simulate(float dt);
 	void Gravity();
 	void Constraint();
 	void Collisions();

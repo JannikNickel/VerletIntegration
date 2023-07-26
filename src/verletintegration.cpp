@@ -20,6 +20,7 @@ int main()
 	int fps = 0;
 
 	VerletPhysics physics = VerletPhysics();
+	physics.timeStep = 1.0f / 144.0f;
 	physics.gravity = -900.0f;
 	physics.center = Vector2::one * size * 0.5f;
 	physics.radius = size * 0.45f;
