@@ -60,10 +60,19 @@
     <ClCompile Include="external\imgui-1.89.7\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\physics\verletphysics.cpp">
+    <ClCompile Include="src\structs\matrix4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\structs\matrix4.cpp">
+    <ClCompile Include="src\core\world.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\circleworld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\frameratecounter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\verletsolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,10 +95,22 @@
     <ClInclude Include="src\physics\verletobj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\physics\verletphysics.h">
+    <ClInclude Include="src\structs\matrix4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\structs\matrix4.h">
+    <ClInclude Include="src\core\world.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\constraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\circleworld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\frameratecounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\verletsolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

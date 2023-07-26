@@ -19,6 +19,10 @@
     <ClCompile Include="external\imgui-1.89.7\imgui_impl_opengl3.cpp" />
     <ClCompile Include="external\imgui-1.89.7\imgui_tables.cpp" />
     <ClCompile Include="external\imgui-1.89.7\imgui_widgets.cpp" />
+    <ClCompile Include="src\core\circleworld.cpp" />
+    <ClCompile Include="src\core\frameratecounter.cpp" />
+    <ClCompile Include="src\core\world.cpp" />
+    <ClCompile Include="src\physics\verletsolver.cpp" />
     <ClCompile Include="src\renderer\graphics.cpp" />
     <ClCompile Include="src\engine\input.cpp" />
     <ClCompile Include="src\structs\color.cpp" />
@@ -26,17 +30,20 @@
     <ClCompile Include="src\structs\vector2.cpp" />
     <ClCompile Include="src\structs\vector2.h" />
     <ClCompile Include="src\verletintegration.cpp" />
-    <ClCompile Include="src\physics\verletphysics.cpp" />
     <ClCompile Include="src\engine\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\circleworld.h" />
+    <ClInclude Include="src\core\frameratecounter.h" />
+    <ClInclude Include="src\core\world.h" />
+    <ClInclude Include="src\physics\constraint.h" />
+    <ClInclude Include="src\physics\verletsolver.h" />
     <ClInclude Include="src\renderer\graphics.h" />
     <ClInclude Include="src\engine\input.h" />
     <ClInclude Include="src\engine\keycode.h" />
     <ClInclude Include="src\structs\color.h" />
     <ClInclude Include="src\structs\matrix4.h" />
     <ClInclude Include="src\physics\verletobj.h" />
-    <ClInclude Include="src\physics\verletphysics.h" />
     <ClInclude Include="src\engine\window.h" />
   </ItemGroup>
   <ItemGroup>

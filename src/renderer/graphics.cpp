@@ -22,6 +22,8 @@ const static unsigned int quadIndices[] =
 	1, 3, 2
 };
 
+static Window* window;
+
 static unsigned int quadVBO, quadVAO, quadEBO;
 
 static unsigned int quadInstancedVBO, quadInstancedVAO, quadInstancedEBO;
@@ -174,8 +176,10 @@ static unsigned int CreateTexture(const char* path)
 	return tex;
 }
 
-void Graphics::Init(unsigned int width, unsigned int height)
+void Graphics::Init(Window* window, unsigned int width, unsigned int height)
 {
+	::window = window;
+
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glEnable(GL_BLEND);
@@ -218,7 +222,12 @@ void Graphics::Shutdown()
 	glDeleteTextures(1, &circleTex);
 }
 
-static void PrepareShader(const Matrix4& mat, unsigned int texture, const Color& color)
+void Graphics::SetClearColor(Color color)
+{
+	window->clearColor = color;
+}
+
+static void PrepareShader(const Matrix4& mat, const Color& color, unsigned int texture)
 {
 	glUseProgram(shaderProgram);
 
@@ -231,7 +240,7 @@ static void PrepareShader(const Matrix4& mat, unsigned int texture, const Color&
 
 void Graphics::Quad(Vector2 pos, Vector2 size, const Color& color)
 {
-	PrepareShader(Matrix4::PositionScale2d(pos, size), quadTex, color);
+	PrepareShader(Matrix4::PositionScale2d(pos, size), color, quadTex);
 
 	glBindVertexArray(quadVAO);
 	glDrawElements(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0);
@@ -239,7 +248,7 @@ void Graphics::Quad(Vector2 pos, Vector2 size, const Color& color)
 
 void Graphics::Circle(Vector2 pos, float radius, const Color& color)
 {
-	PrepareShader(Matrix4::PositionScale2d(pos, radius * 2.0f), circleTex, color);
+	PrepareShader(Matrix4::PositionScale2d(pos, radius * 2.0f), color, circleTex);
 
 	glBindVertexArray(quadVAO);
 	glDrawElements(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0);

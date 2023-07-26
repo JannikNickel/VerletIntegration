@@ -61,7 +61,7 @@ void Window::Show(std::function<void(double)> update)
 	glViewport(0, 0, width, height);
 
 	Input::Init(window);
-	Graphics::Init(width, height);
+	Graphics::Init(this, width, height);
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();

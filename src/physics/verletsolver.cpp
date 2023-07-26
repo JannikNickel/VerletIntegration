@@ -1,7 +1,12 @@
-#include "verletphysics.h"
+#include "verletsolver.h"
 #include <cmath>
 
-void VerletPhysics::Update(float dt)
+VerletSolver::VerletSolver(float timeStep, IConstraint* constraint, float gravity, unsigned int substeps) : timeStep(timeStep), constraint(constraint), gravity(gravity), substeps(substeps)
+{
+
+}
+
+void VerletSolver::Update(float dt)
 {
 	static float timer = 0.0f;
 	timer += dt;
@@ -12,7 +17,7 @@ void VerletPhysics::Update(float dt)
 	}
 }
 
-void VerletPhysics::Simulate(float dt)
+void VerletSolver::Simulate(float dt)
 {
 	unsigned int steps = std::max(substeps, 1u);
 	float stepDt = dt / static_cast<float>(steps);
@@ -25,7 +30,7 @@ void VerletPhysics::Simulate(float dt)
 	}
 }
 
-void VerletPhysics::Gravity()
+void VerletSolver::Gravity()
 {
 	for(VerletObj& obj : objects)
 	{
@@ -33,21 +38,15 @@ void VerletPhysics::Gravity()
 	}
 }
 
-void VerletPhysics::Constraint()
+void VerletSolver::Constraint()
 {
 	for(VerletObj& obj : objects)
 	{
-		Vector2 dir = obj.pos - center;
-		float dst = dir.Length();
-		if(dst + obj.radius > radius)
-		{
-			Vector2 normDir = dir / dst;
-			obj.pos = center + normDir * (radius - obj.radius);
-		}
+		constraint->Contrain(obj);
 	}
 }
 
-void VerletPhysics::Collisions()
+void VerletSolver::Collisions()
 {
 	size_t objCount = objects.size();
 	for(size_t i = 0; i < objCount; i++)
@@ -70,7 +69,7 @@ void VerletPhysics::Collisions()
 	}
 }
 
-void VerletPhysics::Move(float dt)
+void VerletSolver::Move(float dt)
 {
 	for(VerletObj& obj : objects)
 	{
