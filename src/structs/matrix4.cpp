@@ -18,6 +18,12 @@ Matrix4::Matrix4(float c0, float c1, float c2, float c3, float c4, float c5, flo
 
 }
 
+void Matrix4::SetPosition(Vector2 pos)
+{
+	cells[12] = pos.x;
+	cells[13] = pos.y;
+}
+
 Matrix4 Matrix4::PositionScale2d(Vector2 pos, Vector2 scale)
 {
 	return

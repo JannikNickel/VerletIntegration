@@ -29,8 +29,7 @@ int main()
 	double spawnCooldown = 0.0f;
 	double time = 0.0f;
 
-	Vector2 iPositions[Graphics::instancingLimit];
-	float iRadii[Graphics::instancingLimit];
+	Matrix4 iMatrices[Graphics::instancingLimit];
 	Color iColors[Graphics::instancingLimit];
 
 	window.Show([&](double dt)
@@ -39,37 +38,39 @@ int main()
 		frameRate.Frame(dt);
 
 		spawnCooldown -= dt;
-		if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
+		for(size_t i = 0; i < 1000; i++)
 		{
-			float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
-			spawnCooldown = 0.015f * r;
-			VerletObj obj = VerletObj(0, world->Center() + Vector2(0.0f, size * 0.25f), 1.0f, r, Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f));
-			Vector2 dir = Vector2(std::sinf(time), -0.33f);
-			obj.acc = dir.Normalized() * 500000.0f;
-			solver.objects.push_back(obj);
+			if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
+			{
+				float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
+				//spawnCooldown = 0.015f * r;
+				VerletObj obj = VerletObj(0, world->Center() + Vector2(0.0f, size * 0.25f), 1.0f, r, Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f));
+				Vector2 dir = Vector2(std::sinf(time), -0.33f);
+				obj.acc = dir.Normalized() * 500000.0f;
+				solver.objects.push_back(obj);
+			}
 		}
 
 		auto t0 = Clock::now();
-		solver.Update(dt);
+		//solver.Update(dt);
 		auto t1 = Clock::now();
 		world->Render();
 		int iIndex = 0;
-		for(const VerletObj& obj : solver.objects)
+		for(VerletObj& obj : solver.objects)
 		{
-			//Graphics::Circle(obj.pos, obj.radius, obj.color);
-			iPositions[iIndex] = obj.pos;
-			iRadii[iIndex] = obj.radius;
+			obj.matrix.SetPosition(obj.pos);
+			iMatrices[iIndex] = obj.matrix;
 			iColors[iIndex] = obj.color;
 			iIndex++;
 			if(iIndex >= Graphics::instancingLimit)
 			{
-				Graphics::CirclesInstanced(iPositions, iRadii, iColors, iIndex);
+				Graphics::CirclesInstanced(iMatrices, iColors, iIndex);
 				iIndex = 0;
 			}
 		}
 		if(iIndex > 0)
 		{
-			Graphics::CirclesInstanced(iPositions, iRadii, iColors, iIndex);
+			Graphics::CirclesInstanced(iMatrices, iColors, iIndex);
 		}
 		auto t2 = Clock::now();
 

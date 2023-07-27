@@ -292,3 +292,11 @@ void Graphics::CirclesInstanced(Vector2* positions, float* radii, Color* colors,
 	glBindVertexArray(quadInstancedVAO);
 	glDrawElementsInstanced(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0, instanceCount);
 }
+
+void Graphics::CirclesInstanced(Matrix4* matrices, Color* colors, int instanceCount)
+{
+	PrepareInstancedRendering(matrices, colors, instanceCount, circleTex);
+
+	glBindVertexArray(quadInstancedVAO);
+	glDrawElementsInstanced(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0, instanceCount);
+}
