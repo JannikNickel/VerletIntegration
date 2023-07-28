@@ -9,19 +9,39 @@
 #include "core/circleworld.h"
 #include "core/frameratecounter.h"
 #include "physics/verletsolver.h"
+#include "ecs/world.h"
+#include "ecs/component.h"
 
 #include "imgui.h"
 
 using Clock = std::chrono::high_resolution_clock;
 
+struct Position : public Component<Position>
+{
+	Vector2 value;
+
+	Position(Vector2 value) : value(value) { }
+};
+
+struct RenderColor : public Component<RenderColor>
+{
+	Color value;
+
+	RenderColor(Color value) : value(value) { }
+};
+
 int main()
 {
+	EcsWorld ecs = EcsWorld();
+	Entity e = ecs.CreateEntity(Position(Vector2(1.0f, 2.0f)), RenderColor(Color::From32(255, 255, 0)));
+	return 0;
+
 	const float size = 720.0f;
 	const float physicsSps = 144.0f;
 	const float gravity = -900.0f;
 	const unsigned int substeps = 8;
 
-	Window window = Window(static_cast<unsigned int>(size), static_cast<unsigned int>(size), "Verlet Integration");	
+	Window window = Window(static_cast<unsigned int>(size), static_cast<unsigned int>(size), "Verlet Integration");
 	World* world = new CircleWorld(Color::From32(30, 30, 30), Vector2::one * size * 0.5f, size * 0.45f, Color::From32(15, 15, 15, 255));
 	FrameRateCounter frameRate = FrameRateCounter();
 	VerletSolver solver = VerletSolver(1.0f / physicsSps, dynamic_cast<IConstraint*>(world), gravity, substeps);
@@ -44,7 +64,7 @@ int main()
 			{
 				float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
 				//spawnCooldown = 0.015f * r;
-				VerletObj obj = VerletObj(0, world->Center() + Vector2(0.0f, size * 0.25f), 1.0f, r, Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f));
+				VerletObj obj = VerletObj(solver.objects.size(), world->Center() + Vector2(0.0f, size * 0.25f), 1.0f, r, Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f));
 				Vector2 dir = Vector2(std::sinf(time), -0.33f);
 				obj.acc = dir.Normalized() * 500000.0f;
 				solver.objects.push_back(obj);
@@ -58,9 +78,9 @@ int main()
 		int iIndex = 0;
 		for(VerletObj& obj : solver.objects)
 		{
-			obj.matrix.SetPosition(obj.pos);
+			/*obj.matrix.SetPosition(obj.pos);
 			iMatrices[iIndex] = obj.matrix;
-			iColors[iIndex] = obj.color;
+			iColors[iIndex] = obj.color;*/
 			iIndex++;
 			if(iIndex >= Graphics::instancingLimit)
 			{

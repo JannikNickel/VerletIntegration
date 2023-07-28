@@ -22,6 +22,7 @@
     <ClCompile Include="src\core\circleworld.cpp" />
     <ClCompile Include="src\core\frameratecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
+    <ClCompile Include="src\ecs\archetype.cpp" />
     <ClCompile Include="src\physics\verletsolver.cpp" />
     <ClCompile Include="src\renderer\graphics.cpp" />
     <ClCompile Include="src\engine\input.cpp" />
@@ -36,6 +37,10 @@
     <ClInclude Include="src\core\circleworld.h" />
     <ClInclude Include="src\core\frameratecounter.h" />
     <ClInclude Include="src\core\world.h" />
+    <ClInclude Include="src\ecs\archetype.h" />
+    <ClInclude Include="src\ecs\component.h" />
+    <ClInclude Include="src\ecs\entity.h" />
+    <ClInclude Include="src\ecs\world.h" />
     <ClInclude Include="src\physics\constraint.h" />
     <ClInclude Include="src\physics\verletsolver.h" />
     <ClInclude Include="src\renderer\graphics.h" />
