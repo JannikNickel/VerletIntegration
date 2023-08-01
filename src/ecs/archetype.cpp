@@ -1,4 +1,3 @@
 #include "archetype.h"
 
-ComponentId Archetype::nextComponentId = 0;
-std::unordered_map<ArchetypeId, Archetype, ArchetypeIdHash> Archetype::archetypes = {};
+std::unordered_map<ArchetypeId, Archetype, Archetype::ArchetypeIdHash> Archetype::archetypes = {};

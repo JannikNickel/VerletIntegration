@@ -34,6 +34,9 @@ int main()
 {
 	EcsWorld ecs = EcsWorld();
 	Entity e = ecs.CreateEntity(Position(Vector2(1.0f, 2.0f)), RenderColor(Color::From32(255, 255, 0)));
+	Position* p = ecs.GetComponent<Position>(e);
+	std::cout << p->value.x << " - " << p->value.y << std::endl;
+	std::cout << ecs.HasComponent<Position>(e);
 	return 0;
 
 	const float size = 720.0f;
