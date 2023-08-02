@@ -7,7 +7,9 @@
 #include <array>
 #include <algorithm>
 #include <ranges>
-#include <assert.h>
+#include <memory>
+#include <functional>
+#include <cassert>
 
 using ArchetypeId = std::vector<ComponentId>;
 
@@ -35,6 +37,7 @@ class Archetype
 
 public:
 	Archetype() : id({}) { }
+	Archetype(ArchetypeId id) : id(id) { }
 
 	//comps should be sorted based on CompId in ascending order!
 	template<size_t N>
@@ -62,7 +65,7 @@ public:
 		return false;
 	}
 
-	template<class T>
+	template<typename T>
 	T* GetComponent(size_t index)
 	{
 		ComponentId compId = T::componentId;
@@ -77,7 +80,7 @@ public:
 
 	//comps should be sorted based on CompId in ascending order!
 	template<size_t N>
-	static Archetype& FromComponents(const std::array<ComponentBase*, N>& comps)
+	static std::shared_ptr<Archetype> FromComponents(const std::array<ComponentBase*, N>& comps)
 	{
 		auto idView = std::views::all(comps) | std::views::transform([](const ComponentBase* comp) { return comp->CompId(); });
 		ArchetypeId id = ArchetypeId(idView.begin(), idView.end());
@@ -88,13 +91,34 @@ public:
 			return it->second;
 		}
 
-		Archetype archetype = Archetype(id);
-		for(const ComponentBase* comp : comps)
+		std::shared_ptr<Archetype> archetype = std::make_shared<Archetype>(id);
+		for(size_t i = 0; i < N; i++)
 		{
-			archetype.components.push_back(ComponentData { comp->Size(), {} });
+			const ComponentBase* comp = comps[i];
+			archetype->components.push_back(ComponentData { comp->Size(), {} });
+
+			auto [cIt, _] = componentArchetypeMap.emplace(comp->CompId(), std::vector<std::pair<ArchetypeId, size_t>>());
+			cIt->second.push_back(std::make_pair(id, i));
 		}
-		auto [eIt, _] = archetypes.emplace(id, std::move(archetype));
-		return eIt->second;
+		archetypes.insert(std::make_pair(id, archetype));
+		return archetype;
+	}
+
+	template<typename T>
+	static void QueryComponents(std::function<void(T&)> entityFunc)
+	{
+		const std::vector<std::pair<ArchetypeId, size_t>>& archetypes = componentArchetypeMap[T::componentId];
+		for(auto& [id, index] : archetypes)
+		{
+			std::shared_ptr<Archetype> archetype = Archetype::archetypes[id];
+			ComponentData& compData = archetype->components[index];
+
+			for(size_t i = 0; i < compData.data.size(); i += compData.elementSize)
+			{
+				T* comp = reinterpret_cast<T*>(&compData.data.data()[i]);
+				entityFunc(*comp);
+			}
+		}
 	}
 
 private:
@@ -103,7 +127,6 @@ private:
 	std::vector<ComponentData> components = {};
 	//Could store another vector of entity ids to know them too
 
-	Archetype(ArchetypeId id) : id(id) { }
-
-	static std::unordered_map<ArchetypeId, Archetype, ArchetypeIdHash> archetypes;
+	static std::unordered_map<ArchetypeId, std::shared_ptr<Archetype>, ArchetypeIdHash> archetypes;
+	static std::unordered_map<ComponentId, std::vector<std::pair<ArchetypeId, size_t>>> componentArchetypeMap;
 };

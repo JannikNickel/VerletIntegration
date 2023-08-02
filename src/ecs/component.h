@@ -8,11 +8,7 @@ struct ComponentBase
 	virtual ComponentId CompId() const = 0;
 	virtual size_t Size() const = 0;
 
-	static ComponentId RegisterComponent()
-	{
-		static ComponentId nextId = 0;
-		return ++nextId;
-	}
+	static ComponentId RegisterComponent();
 };
 
 template <class T>

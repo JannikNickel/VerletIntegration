@@ -33,10 +33,14 @@ struct RenderColor : public Component<RenderColor>
 int main()
 {
 	EcsWorld ecs = EcsWorld();
-	Entity e = ecs.CreateEntity(Position(Vector2(1.0f, 2.0f)), RenderColor(Color::From32(255, 255, 0)));
-	Position* p = ecs.GetComponent<Position>(e);
-	std::cout << p->value.x << " - " << p->value.y << std::endl;
-	std::cout << ecs.HasComponent<Position>(e);
+	for(size_t i = 0; i < 10; i++)
+	{
+		Entity e = ecs.CreateEntity(Position(Vector2(rand() / (double)RAND_MAX * 100.0f, rand() / (double)RAND_MAX * 100.0f)), RenderColor(Color::From32(255, 255, 0)));
+	}
+	ecs.Query<Position>([](Position& pos)
+	{
+		std::cout << pos.value.x << ", " << pos.value.y << std::endl;
+	});
 	return 0;
 
 	const float size = 720.0f;

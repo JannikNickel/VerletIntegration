@@ -23,6 +23,7 @@
     <ClCompile Include="src\core\frameratecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
     <ClCompile Include="src\ecs\archetype.cpp" />
+    <ClCompile Include="src\ecs\component.cpp" />
     <ClCompile Include="src\physics\verletsolver.cpp" />
     <ClCompile Include="src\renderer\graphics.cpp" />
     <ClCompile Include="src\engine\input.cpp" />

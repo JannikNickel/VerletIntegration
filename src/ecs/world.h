@@ -5,7 +5,8 @@
 #include <vector>
 #include <array>
 #include <unordered_map>
-#include <functional>
+#include <type_traits>
+#include <memory>
 
 template<typename T>
 concept ComponentDerived = std::is_base_of<Component<T>, T>::value;
@@ -14,7 +15,7 @@ class EcsWorld
 {
 	struct Record
 	{
-		Archetype& archetype;
+		std::shared_ptr<Archetype> archetype;
 		size_t index;
 	};
 
@@ -29,8 +30,8 @@ public:
 		//std::array<size_t, numComps> compSizes = { sizeof(Components)... };
 
 		std::ranges::sort(comps, [](const ComponentBase* lhs, const ComponentBase* rhs) { return lhs->CompId() < rhs->CompId(); });
-		Archetype& archetype = Archetype::FromComponents(comps);
-		size_t index = archetype.AddEntity(e, comps);
+		std::shared_ptr<Archetype> archetype = Archetype::FromComponents(comps);
+		size_t index = archetype->AddEntity(e, comps);
 		entities.insert(std::make_pair(e, Record { archetype, index }));
 
 		return e;
@@ -39,16 +40,21 @@ public:
 	template<typename T> requires ComponentDerived<T>
 	bool HasComponent(Entity entity)
 	{
-		Archetype& archetype = entities.at(entity).archetype;
-		return archetype.HasComponent(T::componentId);
+		const std::shared_ptr<Archetype>& archetype = entities.at(entity).archetype;
+		return archetype->HasComponent(T::componentId);
 	}
 
 	template<typename T> requires ComponentDerived<T>
 	T* GetComponent(Entity entity)
 	{
 		const Record& record = entities.at(entity);
-		Archetype& archetype = record.archetype;
-		return archetype.GetComponent<T>(record.index);
+		return record.archetype->GetComponent<T>(record.index);
+	}
+
+	template<typename T> requires ComponentDerived<T>
+	void Query(std::function<void(T&)> entityFunc)
+	{
+		Archetype::QueryComponents(entityFunc);
 	}
 
 private:
