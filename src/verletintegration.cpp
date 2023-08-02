@@ -35,11 +35,11 @@ int main()
 	EcsWorld ecs = EcsWorld();
 	for(size_t i = 0; i < 10; i++)
 	{
-		Entity e = ecs.CreateEntity(Position(Vector2(rand() / (double)RAND_MAX * 100.0f, rand() / (double)RAND_MAX * 100.0f)), RenderColor(Color::From32(255, 255, 0)));
+		Entity e = ecs.CreateEntity(Position(Vector2(rand() / (double)RAND_MAX * 100.0f, rand() / (double)RAND_MAX * 100.0f)), RenderColor(Color(rand() / (double)RAND_MAX, rand() / (double)RAND_MAX, rand() / (double)RAND_MAX)));
 	}
-	ecs.Query<Position>([](Position& pos)
+	ecs.Query<Position, RenderColor>([](Position& pos, RenderColor& col)
 	{
-		std::cout << pos.value.x << ", " << pos.value.y << std::endl;
+		std::cout << pos.value.x << ", " << pos.value.y << " | " << col.value.r << ", " << col.value.g << ", " << col.value.b << ", " << col.value.a << std::endl;
 	});
 	return 0;
 

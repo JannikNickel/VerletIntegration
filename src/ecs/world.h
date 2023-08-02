@@ -27,7 +27,6 @@ public:
 
 		constexpr size_t numComps = sizeof...(Components);
 		std::array<ComponentBase*, numComps> comps = { &components... };
-		//std::array<size_t, numComps> compSizes = { sizeof(Components)... };
 
 		std::ranges::sort(comps, [](const ComponentBase* lhs, const ComponentBase* rhs) { return lhs->CompId() < rhs->CompId(); });
 		std::shared_ptr<Archetype> archetype = Archetype::FromComponents(comps);
@@ -51,8 +50,8 @@ public:
 		return record.archetype->GetComponent<T>(record.index);
 	}
 
-	template<typename T> requires ComponentDerived<T>
-	void Query(std::function<void(T&)> entityFunc)
+	template<typename... Components> requires (ComponentDerived<Components>&&...)
+	void Query(std::function<void(Components&...)> entityFunc)
 	{
 		Archetype::QueryComponents(entityFunc);
 	}
