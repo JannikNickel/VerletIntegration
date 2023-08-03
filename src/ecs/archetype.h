@@ -175,4 +175,54 @@ private:
 			}
 		}
 	}
+
+	template<typename... Components>
+	static void QueryComponentsChunked(std::function<void(Components*..., size_t)> entityFunc, size_t chunkSize)
+	{
+		constexpr size_t numComps = sizeof...(Components);
+		std::array<ComponentId, numComps> comps = { Components::componentId... };
+
+		std::vector<std::pair<ArchetypeId, std::array<size_t, numComps>>> archs = {};
+		for(const std::pair<ArchetypeId, size_t>& pair : componentArchetypeMap[comps[0]])
+		{
+			std::array<size_t, numComps> arr = { pair.second };
+			archs.push_back(std::make_pair(pair.first, arr));
+		}
+		for(size_t i = 1; i < numComps; i++)
+		{
+			const std::vector<std::pair<ArchetypeId, size_t>>& cArchs = componentArchetypeMap[comps[i]];
+			for(int k = archs.size() - 1; k >= 0; k--)
+			{
+				std::pair<ArchetypeId, std::array<size_t, numComps>>& arch = archs[k];
+				auto it = std::ranges::find_if(cArchs, [&](const std::pair<ArchetypeId, size_t>& pair) { return pair.first == arch.first; });
+				if(it == cArchs.end())
+				{
+					archs.erase(archs.begin() + k);
+					continue;
+				}
+				arch.second[i] = it->second;
+			}
+		}
+
+		for(auto& [id, indices] : archs)
+		{
+			std::shared_ptr<Archetype> archetype = Archetype::archetypes[id];
+			std::array<ComponentData*, numComps> compData = {};
+			for(size_t i = 0; i < numComps; i++)
+			{
+				ComponentData* data = &archetype->components[indices[i]];
+				compData[i] = data;
+			}
+
+			std::tuple<Components*...> comps = UnwrapCompPtr<Components...>(compData.data(), std::make_index_sequence<numComps>{});
+			size_t compCount = compData[0]->data.size() / compData[0]->elementSize;
+			for(size_t i = 0; i < compCount; i += chunkSize)
+			{
+				size_t currentChunkSize = std::min(compCount - i, chunkSize);
+				std::apply(entityFunc, std::tuple_cat(comps, std::make_tuple(currentChunkSize)));
+
+				((std::get<Components*>(comps) += chunkSize), ...);
+			}
+		}
+	}
 };

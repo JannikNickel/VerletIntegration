@@ -2,6 +2,7 @@
 #include "entity.h"
 #include "component.h"
 #include "archetype.h"
+#include <cstdint>
 #include <vector>
 #include <array>
 #include <unordered_map>
@@ -50,6 +51,12 @@ public:
 	void Query(std::function<void(Components&...)> entityFunc)
 	{
 		Archetype::QueryComponents(entityFunc);
+	}
+
+	template<typename... Components> requires (ComponentDerived<Components>&&...)
+	void QueryChunked(size_t chunkSize, std::function<void(Components*..., size_t amount)> entityFunc)
+	{
+		Archetype::QueryComponentsChunked<Components...>(entityFunc, chunkSize);
 	}
 
 private:
