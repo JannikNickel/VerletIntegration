@@ -11,6 +11,9 @@ struct Matrix4
     Matrix4(float c0, float c1, float c2, float c3, float c4, float c5, float c6, float c7, float c8, float c9, float c10, float c11, float c12, float c13, float c14, float c15);
 
     void SetPosition(Vector2 pos);
+    Vector2 GetPosition();
+    void SetScale(Vector2 scale);
+    Vector2 GetScale();
 
     static Matrix4 PositionScale2d(Vector2 pos, Vector2 scale);
     static Matrix4 PositionScale2d(Vector2 pos, float scale);

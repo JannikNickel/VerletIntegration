@@ -28,6 +28,20 @@ struct Component : public ComponentBase
 	}
 };
 
+template <class T>
+struct Componentb : public ComponentBase
+{
+	ComponentId CompId() const override
+	{
+		return 0;
+	}
+
+	size_t Size() const override
+	{
+		return 0;
+	}
+};
+
 template<typename T>
 concept ComponentDerived = std::is_base_of<Component<T>, T>::value;
 

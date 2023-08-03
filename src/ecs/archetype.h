@@ -129,7 +129,7 @@ private:
 	}
 
 	template<typename... Components>
-	static void QueryComponents(std::function<void(Components&...)> entityFunc)
+	static std::vector<std::pair<ArchetypeId, std::array<size_t, sizeof...(Components)>>> QueryArchetypes()
 	{
 		constexpr size_t numComps = sizeof...(Components);
 		std::array<ComponentId, numComps> comps = { Components::componentId... };
@@ -155,19 +155,33 @@ private:
 				arch.second[i] = it->second;
 			}
 		}
+		
+		return archs;
+	}
+
+	template<typename... Components>
+	static std::pair<std::tuple<Components*...>, size_t> QueryComponentData(ArchetypeId archId, std::array<size_t, sizeof...(Components)> compIndices)
+	{
+		constexpr size_t numComps = sizeof...(Components);
+		std::shared_ptr<Archetype> archetype = Archetype::archetypes[archId];
+		std::array<ComponentData*, numComps> compData = {};
+		for(size_t i = 0; i < numComps; i++)
+		{
+			compData[i] = &archetype->components[compIndices[i]];
+		}
+		std::tuple<Components*...> comps = UnwrapCompPtr<Components...>(compData.data(), std::make_index_sequence<numComps>{});
+		return std::make_pair(comps, compData[0]->data.size() / compData[0]->elementSize);
+	}
+
+	template<typename... Components>
+	static void QueryComponents(std::function<void(Components&...)> entityFunc)
+	{
+		constexpr size_t numComps = sizeof...(Components);
+		std::vector<std::pair<ArchetypeId, std::array<size_t, numComps>>> archs = QueryArchetypes<Components...>();
 
 		for(auto& [id, indices] : archs)
 		{
-			std::shared_ptr<Archetype> archetype = Archetype::archetypes[id];
-			std::array<ComponentData*, numComps> compData = {};
-			for(size_t i = 0; i < numComps; i++)
-			{
-				ComponentData* data = &archetype->components[indices[i]];
-				compData[i] = data;
-			}
-
-			std::tuple<Components*...> comps = UnwrapCompPtr<Components...>(compData.data(), std::make_index_sequence<numComps>{});
-			size_t compCount = compData[0]->data.size() / compData[0]->elementSize;
+			auto [comps, compCount] = QueryComponentData<Components...>(id, indices);
 			for(size_t i = 0; i < compCount; i++)
 			{
 				InvokeEntityFunc(entityFunc, comps, std::make_index_sequence<numComps>{});
@@ -180,42 +194,11 @@ private:
 	static void QueryComponentsChunked(std::function<void(Components*..., size_t)> entityFunc, size_t chunkSize)
 	{
 		constexpr size_t numComps = sizeof...(Components);
-		std::array<ComponentId, numComps> comps = { Components::componentId... };
-
-		std::vector<std::pair<ArchetypeId, std::array<size_t, numComps>>> archs = {};
-		for(const std::pair<ArchetypeId, size_t>& pair : componentArchetypeMap[comps[0]])
-		{
-			std::array<size_t, numComps> arr = { pair.second };
-			archs.push_back(std::make_pair(pair.first, arr));
-		}
-		for(size_t i = 1; i < numComps; i++)
-		{
-			const std::vector<std::pair<ArchetypeId, size_t>>& cArchs = componentArchetypeMap[comps[i]];
-			for(int k = archs.size() - 1; k >= 0; k--)
-			{
-				std::pair<ArchetypeId, std::array<size_t, numComps>>& arch = archs[k];
-				auto it = std::ranges::find_if(cArchs, [&](const std::pair<ArchetypeId, size_t>& pair) { return pair.first == arch.first; });
-				if(it == cArchs.end())
-				{
-					archs.erase(archs.begin() + k);
-					continue;
-				}
-				arch.second[i] = it->second;
-			}
-		}
+		std::vector<std::pair<ArchetypeId, std::array<size_t, numComps>>> archs = QueryArchetypes<Components...>();
 
 		for(auto& [id, indices] : archs)
 		{
-			std::shared_ptr<Archetype> archetype = Archetype::archetypes[id];
-			std::array<ComponentData*, numComps> compData = {};
-			for(size_t i = 0; i < numComps; i++)
-			{
-				ComponentData* data = &archetype->components[indices[i]];
-				compData[i] = data;
-			}
-
-			std::tuple<Components*...> comps = UnwrapCompPtr<Components...>(compData.data(), std::make_index_sequence<numComps>{});
-			size_t compCount = compData[0]->data.size() / compData[0]->elementSize;
+			auto [comps, compCount] = QueryComponentData<Components...>(id, indices);
 			for(size_t i = 0; i < compCount; i += chunkSize)
 			{
 				size_t currentChunkSize = std::min(compCount - i, chunkSize);

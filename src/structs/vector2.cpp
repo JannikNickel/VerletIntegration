@@ -184,3 +184,8 @@ Vector2 Vector2::operator-()
 {
 	return Vector2(-x, -y);
 }
+
+std::ostream& operator<<(std::ostream& os, const Vector2& v)
+{
+	return (os << "[Vector2] (" << v.x << ", " << v.y << ")");
+}

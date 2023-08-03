@@ -16,6 +16,11 @@
 
 using Clock = std::chrono::high_resolution_clock;
 
+struct Transform4b : Componentb<Transform4b>
+{
+	Matrix4 value;
+};
+
 struct Transform4 : Component<Transform4>
 {
 	Matrix4 value;
@@ -53,6 +58,7 @@ int main()
 	FrameRateCounter frameRate = FrameRateCounter();
 	VerletSolver solver = VerletSolver(1.0f / physicsSps, dynamic_cast<IConstraint*>(world), gravity, substeps);
 
+
 	double spawnCooldown = 0.0f;
 	double time = 0.0f;
 	size_t physicsObjCount = 0;
@@ -65,7 +71,7 @@ int main()
 		spawnCooldown -= dt;
 		if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
 		{
-			float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
+			float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f) * 5;
 			float m = 1.0f;
 			Color col = Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f);
 			Vector2 pos = world->Center() + Vector2(0.0f, size * 0.25f);
@@ -74,6 +80,7 @@ int main()
 			spawnCooldown = 0.015f * r;
 			ecs.CreateEntity(Transform4(Matrix4::PositionScale2d(pos, r)), RenderColor(col), PhysicsCircle(r, m, pos, acc));
 			physicsObjCount++;
+			ecs.Query<RenderColor>([](RenderColor& tc) { });
 		}
 
 		auto t0 = Clock::now();
@@ -83,7 +90,16 @@ int main()
 		int iIndex = 0;
 		ecs.QueryChunked<Transform4, RenderColor>(Graphics::instancingLimit, [](Transform4* transform, RenderColor* renderColor, size_t chunkSize)
 		{
-			Graphics::CirclesInstanced(reinterpret_cast<Matrix4*>(transform), reinterpret_cast<Color*>(renderColor), chunkSize);
+			//THIS IS A PROBLEM, because the vtable increases the struct size of Transform4 vs Matrix4 (72 vs 64)
+			std::cout << sizeof(Transform4b) << " == " << sizeof(Matrix4) << std::endl;
+			Matrix4* mats = (Matrix4*)transform;
+			std::cout << chunkSize << "\n";
+			for(size_t i = 0; i < chunkSize; i++)
+			{
+				std::cout << "pos = " << mats[i].GetPosition() << ", scale = " << mats[i].GetScale() << std::endl;
+			}
+
+			Graphics::CirclesInstanced(mats, reinterpret_cast<Color*>(renderColor), chunkSize);
 		});
 		auto t2 = Clock::now();
 

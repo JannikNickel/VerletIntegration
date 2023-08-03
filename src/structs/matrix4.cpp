@@ -24,6 +24,22 @@ void Matrix4::SetPosition(Vector2 pos)
 	cells[13] = pos.y;
 }
 
+Vector2 Matrix4::GetPosition()
+{
+	return Vector2(cells[12], cells[13]);
+}
+
+void Matrix4::SetScale(Vector2 scale)
+{
+	cells[0] = scale.x;
+	cells[5] = scale.y;
+}
+
+Vector2 Matrix4::GetScale()
+{
+	return Vector2(cells[0], cells[5]);
+}
+
 Matrix4 Matrix4::PositionScale2d(Vector2 pos, Vector2 scale)
 {
 	return

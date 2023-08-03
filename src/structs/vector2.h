@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 struct Vector2
 {
@@ -46,3 +47,5 @@ struct Vector2
 
 	Vector2 operator-();
 };
+
+std::ostream& operator<<(std::ostream& os, const Vector2& v);
