@@ -5,11 +5,7 @@
 #include <vector>
 #include <array>
 #include <unordered_map>
-#include <type_traits>
 #include <memory>
-
-template<typename T>
-concept ComponentDerived = std::is_base_of<Component<T>, T>::value;
 
 class EcsWorld
 {
@@ -40,7 +36,7 @@ public:
 	bool HasComponent(Entity entity)
 	{
 		const std::shared_ptr<Archetype>& archetype = entities.at(entity).archetype;
-		return archetype->HasComponent(T::componentId);
+		return archetype->HasComponent<T>();
 	}
 
 	template<typename T> requires ComponentDerived<T>

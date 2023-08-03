@@ -16,6 +16,8 @@ using ArchetypeId = std::vector<ComponentId>;
 
 class Archetype
 {
+	friend class EcsWorld;
+
 	struct ArchetypeIdHash
 	{
 		size_t operator()(const ArchetypeId& id) const
@@ -37,47 +39,16 @@ class Archetype
 	};
 
 public:
-	Archetype() : id({}) { }
 	Archetype(ArchetypeId id) : id(id) { }
 
-	//comps should be sorted based on CompId in ascending order!
-	template<size_t N>
-	size_t AddEntity(Entity entity, const std::array<ComponentBase*, N>& comps)
-	{
-		for(size_t i = 0; i < N; i++)
-		{
-			ComponentData& compData = components[i];
-			assert(compData.elementSize == comps[i]->Size());
-			const uint8_t* begin = reinterpret_cast<const uint8_t*>(comps[i]);
-			compData.data.insert(compData.data.end(), begin, begin + compData.elementSize);
-		}
-		return size++;
-	}
+private:
+	ArchetypeId id;
+	size_t size = 0;
+	std::vector<ComponentData> components = {};
+	//Could store another vector of entity ids to know them too
 
-	bool HasComponent(ComponentId compId)
-	{
-		for(const ComponentId id : this->id)
-		{
-			if(id == compId)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	template<typename T>
-	T* GetComponent(size_t index)
-	{
-		ComponentId compId = T::componentId;
-		for(size_t i = 0; i < id.size(); i++)
-		{
-			if(id[i] == compId)
-			{
-				return reinterpret_cast<T*>(&components[i].data.data()[index * components[i].elementSize]);
-			}
-		}
-	}
+	static std::unordered_map<ArchetypeId, std::shared_ptr<Archetype>, ArchetypeIdHash> archetypes;
+	static std::unordered_map<ComponentId, std::vector<std::pair<ArchetypeId, size_t>>> componentArchetypeMap;
 
 	//comps should be sorted based on CompId in ascending order!
 	template<size_t N>
@@ -103,6 +74,46 @@ public:
 		}
 		archetypes.insert(std::make_pair(id, archetype));
 		return archetype;
+	}
+
+	//comps should be sorted based on CompId in ascending order!
+	template<size_t N>
+	size_t AddEntity(Entity entity, const std::array<ComponentBase*, N>& comps)
+	{
+		for(size_t i = 0; i < N; i++)
+		{
+			ComponentData& compData = components[i];
+			assert(compData.elementSize == comps[i]->Size());
+			const uint8_t* begin = reinterpret_cast<const uint8_t*>(comps[i]);
+			compData.data.insert(compData.data.end(), begin, begin + compData.elementSize);
+		}
+		return size++;
+	}
+
+	template<typename T> requires ComponentDerived<T>
+	bool HasComponent()
+	{
+		for(const ComponentId id : this->id)
+		{
+			if(id == T::componentId)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	template<typename T> requires ComponentDerived<T>
+	T* GetComponent(size_t index)
+	{
+		ComponentId compId = T::componentId;
+		for(size_t i = 0; i < id.size(); i++)
+		{
+			if(id[i] == compId)
+			{
+				return reinterpret_cast<T*>(&components[i].data.data()[index * components[i].elementSize]);
+			}
+		}
 	}
 
 	template<typename... Components, size_t... Indices>
@@ -164,13 +175,4 @@ public:
 			}
 		}
 	}
-
-private:
-	ArchetypeId id;
-	size_t size = 0;
-	std::vector<ComponentData> components = {};
-	//Could store another vector of entity ids to know them too
-
-	static std::unordered_map<ArchetypeId, std::shared_ptr<Archetype>, ArchetypeIdHash> archetypes;
-	static std::unordered_map<ComponentId, std::vector<std::pair<ArchetypeId, size_t>>> componentArchetypeMap;
 };

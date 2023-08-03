@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <type_traits>
 
 using ComponentId = uint32_t;
 
@@ -26,6 +27,9 @@ struct Component : public ComponentBase
 		return sizeof(T);
 	}
 };
+
+template<typename T>
+concept ComponentDerived = std::is_base_of<Component<T>, T>::value;
 
 template<class T>
 const uint32_t Component<T>::componentId = ComponentBase::RegisterComponent();

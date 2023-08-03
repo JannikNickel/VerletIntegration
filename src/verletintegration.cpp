@@ -30,12 +30,25 @@ struct RenderColor : public Component<RenderColor>
 	RenderColor(Color value) : value(value) { }
 };
 
+struct Physics : public Component<Physics>
+{
+	float gravity = 9.81f;
+};
+
 int main()
 {
 	EcsWorld ecs = EcsWorld();
 	for(size_t i = 0; i < 10; i++)
 	{
 		Entity e = ecs.CreateEntity(Position(Vector2(rand() / (double)RAND_MAX * 100.0f, rand() / (double)RAND_MAX * 100.0f)), RenderColor(Color(rand() / (double)RAND_MAX, rand() / (double)RAND_MAX, rand() / (double)RAND_MAX)));
+	}
+	for(size_t i = 0; i < 5; i++)
+	{
+		Entity e = ecs.CreateEntity(Position(Vector2(rand() / (double)RAND_MAX, rand() / (double)RAND_MAX)), Physics());
+	}
+	for(size_t i = 0; i < 5; i++)
+	{
+		Entity e = ecs.CreateEntity(Position(Vector2(rand() / (double)RAND_MAX * -1.0, rand() / (double)RAND_MAX * -1.0)), RenderColor(Color::black), Physics());
 	}
 	ecs.Query<Position, RenderColor>([](Position& pos, RenderColor& col)
 	{
