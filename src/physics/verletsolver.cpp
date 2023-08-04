@@ -1,7 +1,9 @@
 #include "verletsolver.h"
+#include "structs/vector2.h"
+#include "simulation/simulation.h"
 #include <cmath>
 
-VerletSolver::VerletSolver(float timeStep, IConstraint* constraint, float gravity, unsigned int substeps) : timeStep(timeStep), constraint(constraint), gravity(gravity), substeps(substeps)
+VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps) : ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps)
 {
 
 }
@@ -32,23 +34,23 @@ void VerletSolver::Simulate(float dt)
 
 void VerletSolver::Gravity()
 {
-	for(VerletObj& obj : objects)
+	ecs.Query<PhysicsCircle>([this](PhysicsCircle& p)
 	{
-		obj.acc.y += gravity;
-	}
+		p.acc.y += gravity;
+	});
 }
 
 void VerletSolver::Constraint()
 {
-	for(VerletObj& obj : objects)
+	/*ecs.Query<Transform, PhysicsCircle>([this](Transform& t, PhysicsCircle& p)
 	{
-		constraint->Contrain(obj);
-	}
+		constraint->Contrain(t.Position(), p);
+	});*/
 }
 
 void VerletSolver::Collisions()
 {
-	size_t objCount = objects.size();
+	/*size_t objCount = objects.size();
 	for(size_t i = 0; i < objCount; i++)
 	{
 		VerletObj& a = objects[i];
@@ -66,16 +68,17 @@ void VerletSolver::Collisions()
 				b.pos -= normDir * (overlap * (1.0f - massRatio));
 			}
 		}
-	}
+	}*/
 }
 
 void VerletSolver::Move(float dt)
 {
-	for(VerletObj& obj : objects)
+	ecs.Query<Transform, PhysicsCircle>([dt](Transform& t, PhysicsCircle& p)
 	{
-		const Vector2 vel = obj.pos - obj.prevPos;
-		obj.prevPos = obj.pos;
-		obj.pos += vel + obj.acc * (dt * dt);
-		obj.acc = Vector2::zero;
-	}
+		Vector2& pos = t.Position();
+		const Vector2 vel = pos - p.prevPos;
+		p.prevPos = pos;
+		pos += vel + p.acc * (dt * dt);
+		p.acc = Vector2::zero;
+	});
 }

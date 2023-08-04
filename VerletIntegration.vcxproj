@@ -47,7 +47,11 @@
     <ClInclude Include="src\renderer\graphics.h" />
     <ClInclude Include="src\engine\input.h" />
     <ClInclude Include="src\engine\keycode.h" />
+    <ClInclude Include="src\simulation\simulation.h" />
     <ClInclude Include="src\structs\color.h" />
+    <ClInclude Include="src\simulation\components\physicscircle.h" />
+    <ClInclude Include="src\simulation\components\rendercolor.h" />
+    <ClInclude Include="src\simulation\components\transform.h" />
     <ClInclude Include="src\structs\matrix4.h" />
     <ClInclude Include="src\physics\verletobj.h" />
     <ClInclude Include="src\engine\window.h" />

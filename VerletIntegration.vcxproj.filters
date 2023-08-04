@@ -131,6 +131,18 @@
     <ClInclude Include="src\ecs\component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\simulation\components\rendercolor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\simulation\components\transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\simulation\components\physicscircle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\simulation\simulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default2d.frag" />

@@ -1,9 +1,10 @@
 #pragma once
 #include "physics/verletobj.h"
+#include "simulation/components/physicscircle.h"
 
 class IConstraint
 {
 public:
 	virtual ~IConstraint() { };
-	virtual void Contrain(VerletObj& obj) = 0;
+	virtual void Contrain(Vector2& pos, const PhysicsCircle& p) = 0;
 };

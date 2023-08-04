@@ -49,16 +49,18 @@ public:
 		return record.archetype->GetComponent<T>(record.index);
 	}
 
-	template<typename... Components> requires (ComponentDerived<Components>&&...)
-	void Query(std::function<void(Components&...)> entityFunc)
+	template<typename... Components, typename Func>
+		requires (ComponentDerived<Components>&&...) && (sizeof...(Components) > 0) && std::is_invocable_r_v<void, Func, Components&...>
+	void Query(Func&& entityFunc)
 	{
-		Archetype::QueryComponents(entityFunc);
+		Archetype::QueryComponents<Func, Components...>(std::forward<Func>(entityFunc));
 	}
 
-	template<typename... Components> requires (ComponentDerived<Components>&&...)
-	void QueryChunked(size_t chunkSize, std::function<void(Components*..., size_t amount)> entityFunc)
+	template<typename... Components, typename Func>
+		requires (ComponentDerived<Components>&&...) && (sizeof...(Components) > 0) && std::is_invocable_r_v<void, Func, Components*..., size_t>
+	void QueryChunked(size_t chunkSize, Func&& entityFunc)
 	{
-		Archetype::QueryComponentsChunked<Components...>(entityFunc, chunkSize);
+		Archetype::QueryComponentsChunked<Func, Components...>(std::forward<Func>(entityFunc), chunkSize);
 	}
 
 private:

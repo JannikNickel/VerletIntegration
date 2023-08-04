@@ -122,8 +122,8 @@ private:
 		return std::make_tuple(reinterpret_cast<Components*>(&compData[Indices]->data[0])...);
 	}
 
-	template<typename... Components, size_t... Indices>
-	static void InvokeEntityFunc(std::function<void(Components&...)>& entityFunc, std::tuple<Components*...>& comps, std::index_sequence<Indices...>)
+	template<typename Func, typename... Components, size_t... Indices>
+	static void InvokeEntityFunc(Func&& entityFunc, std::tuple<Components*...>& comps, std::index_sequence<Indices...>)
 	{
 		entityFunc(*std::get<Indices>(comps)...);
 	}
@@ -173,8 +173,8 @@ private:
 		return std::make_pair(comps, compData[0]->data.size() / compData[0]->elementSize);
 	}
 
-	template<typename... Components>
-	static void QueryComponents(std::function<void(Components&...)> entityFunc)
+	template<typename Func, typename... Components>
+	static void QueryComponents(Func&& entityFunc)
 	{
 		constexpr size_t numComps = sizeof...(Components);
 		std::vector<std::pair<ArchetypeId, std::array<size_t, numComps>>> archs = QueryArchetypes<Components...>();
@@ -190,8 +190,8 @@ private:
 		}
 	}
 
-	template<typename... Components>
-	static void QueryComponentsChunked(std::function<void(Components*..., size_t)> entityFunc, size_t chunkSize)
+	template<typename Func, typename... Components>
+	static void QueryComponentsChunked(Func&& entityFunc, size_t chunkSize)
 	{
 		constexpr size_t numComps = sizeof...(Components);
 		std::vector<std::pair<ArchetypeId, std::array<size_t, numComps>>> archs = QueryArchetypes<Components...>();
