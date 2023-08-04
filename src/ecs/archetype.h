@@ -50,11 +50,11 @@ private:
 	static std::unordered_map<ArchetypeId, std::shared_ptr<Archetype>, ArchetypeIdHash> archetypes;
 	static std::unordered_map<ComponentId, std::vector<std::pair<ArchetypeId, size_t>>> componentArchetypeMap;
 
-	//comps should be sorted based on CompId in ascending order!
+	//comps should be sorted based on componentId in ascending order!
 	template<size_t N>
-	static std::shared_ptr<Archetype> FromComponents(const std::array<ComponentBase*, N>& comps)
+	static std::shared_ptr<Archetype> FromComponents(const std::array<std::tuple<ComponentId, size_t, void*>, N>& comps)
 	{
-		auto idView = std::views::all(comps) | std::views::transform([](const ComponentBase* comp) { return comp->CompId(); });
+		auto idView = std::views::all(comps) | std::views::transform([](const std::tuple<ComponentId, size_t, void*>& comp) { return std::get<0>(comp); });
 		ArchetypeId id = ArchetypeId(idView.begin(), idView.end());
 
 		auto it = archetypes.find(id);
@@ -66,25 +66,25 @@ private:
 		std::shared_ptr<Archetype> archetype = std::make_shared<Archetype>(id);
 		for(size_t i = 0; i < N; i++)
 		{
-			const ComponentBase* comp = comps[i];
-			archetype->components.push_back(ComponentData { comp->Size(), {} });
+			const std::tuple<ComponentId, size_t, void*>& comp = comps[i];
+			archetype->components.push_back(ComponentData { std::get<1>(comp), {} });
 
-			auto [cIt, _] = componentArchetypeMap.emplace(comp->CompId(), std::vector<std::pair<ArchetypeId, size_t>>());
+			auto [cIt, _] = componentArchetypeMap.emplace(std::get<0>(comp), std::vector<std::pair<ArchetypeId, size_t>>());
 			cIt->second.push_back(std::make_pair(id, i));
 		}
 		archetypes.insert(std::make_pair(id, archetype));
 		return archetype;
 	}
 
-	//comps should be sorted based on CompId in ascending order!
+	//comps should be sorted based on componentId in ascending order!
 	template<size_t N>
-	size_t AddEntity(Entity entity, const std::array<ComponentBase*, N>& comps)
+	size_t AddEntity(Entity entity, const std::array<std::tuple<ComponentId, size_t, void*>, N>& comps)
 	{
 		for(size_t i = 0; i < N; i++)
 		{
 			ComponentData& compData = components[i];
-			assert(compData.elementSize == comps[i]->Size());
-			const uint8_t* begin = reinterpret_cast<const uint8_t*>(comps[i]);
+			assert(compData.elementSize == std::get<1>(comps[i]));
+			const uint8_t* begin = reinterpret_cast<const uint8_t*>(std::get<2>(comps[i]));
 			compData.data.insert(compData.data.end(), begin, begin + compData.elementSize);
 		}
 		return size++;

@@ -16,11 +16,6 @@
 
 using Clock = std::chrono::high_resolution_clock;
 
-struct Transform4b : Componentb<Transform4b>
-{
-	Matrix4 value;
-};
-
 struct Transform4 : Component<Transform4>
 {
 	Matrix4 value;
@@ -80,7 +75,6 @@ int main()
 			spawnCooldown = 0.015f * r;
 			ecs.CreateEntity(Transform4(Matrix4::PositionScale2d(pos, r)), RenderColor(col), PhysicsCircle(r, m, pos, acc));
 			physicsObjCount++;
-			ecs.Query<RenderColor>([](RenderColor& tc) { });
 		}
 
 		auto t0 = Clock::now();
@@ -90,16 +84,7 @@ int main()
 		int iIndex = 0;
 		ecs.QueryChunked<Transform4, RenderColor>(Graphics::instancingLimit, [](Transform4* transform, RenderColor* renderColor, size_t chunkSize)
 		{
-			//THIS IS A PROBLEM, because the vtable increases the struct size of Transform4 vs Matrix4 (72 vs 64)
-			std::cout << sizeof(Transform4b) << " == " << sizeof(Matrix4) << std::endl;
-			Matrix4* mats = (Matrix4*)transform;
-			std::cout << chunkSize << "\n";
-			for(size_t i = 0; i < chunkSize; i++)
-			{
-				std::cout << "pos = " << mats[i].GetPosition() << ", scale = " << mats[i].GetScale() << std::endl;
-			}
-
-			Graphics::CirclesInstanced(mats, reinterpret_cast<Color*>(renderColor), chunkSize);
+			Graphics::CirclesInstanced(reinterpret_cast<Matrix4*>(transform), reinterpret_cast<Color*>(renderColor), chunkSize);
 		});
 		auto t2 = Clock::now();
 

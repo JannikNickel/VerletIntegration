@@ -43,3 +43,8 @@ Color Color::FromHSV(float h, float s, float v, float a)
             return Color::black;
     }
 }
+
+std::ostream& operator<<(std::ostream& os, const Color& c)
+{
+    return (os << "[Color] (" << c.r << ", " << c.g << ", " << c.b << ", " << c.a << ")");
+}

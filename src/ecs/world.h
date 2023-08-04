@@ -7,6 +7,8 @@
 #include <array>
 #include <unordered_map>
 #include <memory>
+#include <algorithm>
+#include <type_traits>
 
 class EcsWorld
 {
@@ -23,9 +25,9 @@ public:
 		Entity e = ++nextEntity;
 
 		constexpr size_t numComps = sizeof...(Components);
-		std::array<ComponentBase*, numComps> comps = { &components... };
+		std::array<std::tuple<ComponentId, size_t, void*>, numComps> comps = { std::make_tuple(Components::componentId, sizeof(std::decay_t<Components>), &components)... };
 
-		std::ranges::sort(comps, [](const ComponentBase* lhs, const ComponentBase* rhs) { return lhs->CompId() < rhs->CompId(); });
+		std::ranges::sort(comps, [](const std::tuple<ComponentId, size_t, void*>& lhs, const std::tuple<ComponentId, size_t, void*>& rhs) { return std::get<0>(lhs) < std::get<0>(rhs); });
 		std::shared_ptr<Archetype> archetype = Archetype::FromComponents(comps);
 		size_t index = archetype->AddEntity(e, comps);
 		entities.insert(std::make_pair(e, Record { archetype, index }));
