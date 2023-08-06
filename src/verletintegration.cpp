@@ -50,8 +50,6 @@ int main()
 			spawnCooldown = 0.015f * r;
 			ecs.CreateEntity(Transform(Matrix4::PositionScale2d(pos, r * 2.0f)), RenderColor(col), PhysicsCircle(r, m, pos, acc));
 			physicsObjCount++;
-
-			//spawnCooldown = 1.0;
 		}
 
 		auto t0 = Clock::now();

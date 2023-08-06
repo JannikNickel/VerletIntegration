@@ -208,4 +208,42 @@ private:
 			}
 		}
 	}
+
+	template<size_t START, size_t COUNT, typename... Components, size_t... Indices>
+	static constexpr void IncCompPtrSeq(std::tuple<Components*...>& comps, std::ptrdiff_t inc, std::index_sequence<Indices...>)
+	{
+		((std::get<START + Indices>(comps) += inc), ...);
+	}
+
+	template<size_t START, size_t COUNT, typename... Components>
+	static constexpr void IncCompPtrs(std::tuple<Components*...>& comps, std::ptrdiff_t inc)
+	{
+		IncCompPtrSeq<START, COUNT>(comps, inc, std::make_index_sequence<COUNT>{});
+	}
+
+	template<typename Func, typename... Components>
+	static void QueryComponentPairs(Func&& entityFunc)
+	{
+		constexpr size_t numComps = sizeof...(Components);
+		std::vector<std::pair<ArchetypeId, std::array<size_t, numComps>>> archs = QueryArchetypes<Components...>();
+
+		for(auto& [id, indices] : archs)
+		{
+			auto [comps, compCount] = QueryComponentData<Components...>(id, indices);
+			auto cComps = std::tuple_cat(comps, comps);
+
+			for(size_t i = 0; i < compCount; i++)
+			{
+				IncCompPtrs<numComps, numComps>(cComps, i + 1);
+				for(size_t k = i + 1; k < compCount; k++)
+				{
+					InvokeEntityFunc(entityFunc, cComps, std::make_index_sequence<numComps * 2>{});
+					IncCompPtrs<numComps, numComps>(cComps, 1);
+				}
+				size_t diff = (i + 1) + (compCount - (i + 1));
+				IncCompPtrs<numComps, numComps>(cComps, -static_cast<std::ptrdiff_t>(diff));
+				IncCompPtrs<0, numComps>(cComps, 1);
+			}
+		}
+	}
 };

@@ -63,6 +63,13 @@ public:
 		Archetype::QueryComponentsChunked<Func, Components...>(std::forward<Func>(entityFunc), chunkSize);
 	}
 
+	template<typename... Components, typename Func>
+		requires (ComponentDerived<Components>&&...) && (sizeof...(Components) > 0) && std::is_invocable_r_v<void, Func, Components&..., Components&...>
+	void QueryPairs(Func&& entityFunc)
+	{
+		Archetype::QueryComponentPairs<Func, Components...>(std::forward<Func>(entityFunc));
+	}
+
 private:
 	uint32_t nextEntity = 0;
 	std::unordered_map<Entity, Record> entities = {};

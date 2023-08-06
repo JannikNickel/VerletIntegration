@@ -50,25 +50,21 @@ void VerletSolver::Constraint()
 
 void VerletSolver::Collisions()
 {
-	/*size_t objCount = objects.size();
-	for(size_t i = 0; i < objCount; i++)
+	ecs.QueryPairs<Transform, PhysicsCircle>([this](Transform& aTransform, PhysicsCircle& a, Transform& bTransform, PhysicsCircle& b)
 	{
-		VerletObj& a = objects[i];
-		for(size_t k = i + 1; k < objCount; k++)
+		Vector2& aPos = aTransform.Position();
+		Vector2& bPos = bTransform.Position();
+		Vector2 dir = aPos - bPos;
+		float dst = dir.Length();
+		if(dst < a.radius + b.radius)
 		{
-			VerletObj& b = objects[k];
-			Vector2 dir = a.pos - b.pos;
-			float dst = dir.Length();
-			if(dst < a.radius + b.radius)
-			{
-				Vector2 normDir = dir / dst;
-				float overlap = a.radius + b.radius - dst;
-				float massRatio = b.mass / (a.mass + b.mass);
-				a.pos += normDir * (overlap * massRatio);
-				b.pos -= normDir * (overlap * (1.0f - massRatio));
-			}
+			Vector2 normDir = dir / dst;
+			float overlap = a.radius + b.radius - dst;
+			float massRatio = b.mass / (a.mass + b.mass);
+			aPos += normDir * (overlap * massRatio);
+			bPos -= normDir * (overlap * (1.0f - massRatio));
 		}
-	}*/
+	});
 }
 
 void VerletSolver::Move(float dt)
