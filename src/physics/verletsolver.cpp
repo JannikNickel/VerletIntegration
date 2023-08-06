@@ -42,10 +42,10 @@ void VerletSolver::Gravity()
 
 void VerletSolver::Constraint()
 {
-	/*ecs.Query<Transform, PhysicsCircle>([this](Transform& t, PhysicsCircle& p)
+	ecs.Query<Transform, PhysicsCircle>([this](Transform& t, PhysicsCircle& p)
 	{
 		constraint->Contrain(t.Position(), p);
-	});*/
+	});
 }
 
 void VerletSolver::Collisions()

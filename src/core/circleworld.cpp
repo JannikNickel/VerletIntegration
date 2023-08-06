@@ -25,6 +25,6 @@ void CircleWorld::Contrain(Vector2& pos, const PhysicsCircle& p)
 	if(dst + p.radius > radius)
 	{
 		Vector2 normDir = dir / dst;
-		pos = center + normDir * (radius - radius);
+		pos = center + normDir * (radius - p.radius);
 	}
 }
