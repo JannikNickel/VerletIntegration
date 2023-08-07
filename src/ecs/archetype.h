@@ -1,6 +1,7 @@
 #pragma once
 #include "entity.h"
 #include "component.h"
+#include "threadpool.h"
 #include <cstdint>
 #include <unordered_map>
 #include <vector>
@@ -10,6 +11,9 @@
 #include <ranges>
 #include <memory>
 #include <functional>
+#include <optional>
+#include <thread>
+#include <algorithm>
 #include <cassert>
 
 using ArchetypeId = std::vector<ComponentId>;
@@ -186,6 +190,59 @@ private:
 			{
 				InvokeEntityFunc(entityFunc, comps, std::make_index_sequence<numComps>{});
 				((std::get<Components*>(comps)++), ...);
+			}
+		}
+	}
+
+	static const std::vector<std::pair<size_t, size_t>> SplitWork(size_t workCount, size_t threadCount)
+	{
+		size_t sectionSize = workCount / threadCount;
+		size_t remainder = workCount % threadCount;
+		std::vector<std::pair<size_t, size_t>> ranges = {};
+		ranges.reserve(threadCount);
+
+		size_t start = 0;
+		for(size_t i = 0; i < threadCount; i++)
+		{
+			size_t end = start + sectionSize + static_cast<size_t>(i < remainder);
+			ranges.emplace_back(start, end - start);
+			start = end;
+		}
+
+		return ranges;
+	}
+
+	template<typename Func, typename... Components>
+	static void QueryComponentsMT(Func&& entityFunc, ThreadPool& threadPool, const std::optional<uint32_t>& threads = std::nullopt)
+	{
+		uint32_t threadCount = std::clamp(threads.value_or(std::thread::hardware_concurrency()), 1U, threadPool.ThreadCount());
+
+		constexpr size_t numComps = sizeof...(Components);
+		std::vector<std::pair<ArchetypeId, std::array<size_t, numComps>>> archs = QueryArchetypes<Components...>();
+
+		for(auto& [id, indices] : archs)
+		{
+			auto [comps, compCount] = QueryComponentData<Components...>(id, indices);
+
+			std::vector<std::pair<size_t, size_t>> sections = SplitWork(compCount, threadCount);
+			std::vector<std::thread> handles = {};
+			for(size_t i = 0; i < threadCount; i++)
+			{
+				std::tuple<Components*...> tPtrs = comps;
+				size_t offset = sections[i].first;
+				((std::get<Components*>(tPtrs) += offset), ...);
+
+				size_t amount = sections[i].second;
+				auto workerFunc = [&entityFunc, &tPtrs, amount]()
+				{
+					for(size_t i = 0; i < amount; i++)
+					{
+						InvokeEntityFunc(entityFunc, tPtrs, std::make_index_sequence<numComps>{});
+						((std::get<Components*>(tPtrs)++), ...);
+					}
+				};
+				std::future<void> handle = threadPool.QueueJob(workerFunc);
+				handle.get();
 			}
 		}
 	}

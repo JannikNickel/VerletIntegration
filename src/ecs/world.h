@@ -2,6 +2,7 @@
 #include "entity.h"
 #include "component.h"
 #include "archetype.h"
+#include "threadpool.h"
 #include <cstdint>
 #include <vector>
 #include <array>
@@ -9,6 +10,7 @@
 #include <memory>
 #include <algorithm>
 #include <type_traits>
+#include <optional>
 
 class EcsWorld
 {
@@ -57,6 +59,13 @@ public:
 	}
 
 	template<typename... Components, typename Func>
+		requires (ComponentDerived<Components>&&...) && (sizeof...(Components) > 0) && std::is_invocable_r_v<void, Func, Components&...>
+	void QueryMT(const std::optional<uint32_t>& threads, Func&& entityFunc)
+	{
+		Archetype::QueryComponentsMT<Func, Components...>(std::forward<Func>(entityFunc), threadPool, threads);
+	}
+
+	template<typename... Components, typename Func>
 		requires (ComponentDerived<Components>&&...) && (sizeof...(Components) > 0) && std::is_invocable_r_v<void, Func, Components*..., size_t>
 	void QueryChunked(size_t chunkSize, Func&& entityFunc)
 	{
@@ -73,4 +82,5 @@ public:
 private:
 	uint32_t nextEntity = 0;
 	std::unordered_map<Entity, Record> entities = {};
+	ThreadPool threadPool = {};
 };

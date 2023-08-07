@@ -9,6 +9,7 @@ class VerletSolver
 public:
 	float gravity;
 	unsigned int substeps;
+	bool collision;
 
 	VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps = 1);
 	void Update(float dt);

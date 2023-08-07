@@ -3,7 +3,7 @@
 #include "simulation/simulation.h"
 #include <cmath>
 
-VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps) : ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps)
+VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps) : ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps), collision(true)
 {
 
 }
@@ -27,14 +27,17 @@ void VerletSolver::Simulate(float dt)
 	{
 		Gravity();
 		Constraint();
-		Collisions();
+		if(collision)
+		{
+			Collisions();
+		}
 		Move(stepDt);
 	}
 }
 
 void VerletSolver::Gravity()
 {
-	ecs.Query<PhysicsCircle>([this](PhysicsCircle& p)
+	ecs.QueryMT<PhysicsCircle>(std::nullopt, [this](PhysicsCircle& p)
 	{
 		p.acc.y += gravity;
 	});
@@ -42,7 +45,7 @@ void VerletSolver::Gravity()
 
 void VerletSolver::Constraint()
 {
-	ecs.Query<Transform, PhysicsCircle>([this](Transform& t, PhysicsCircle& p)
+	ecs.QueryMT<Transform, PhysicsCircle>(std::nullopt, [this](Transform& t, PhysicsCircle& p)
 	{
 		constraint->Contrain(t.Position(), p);
 	});

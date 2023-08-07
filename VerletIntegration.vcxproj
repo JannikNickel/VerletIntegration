@@ -24,6 +24,7 @@
     <ClCompile Include="src\core\world.cpp" />
     <ClCompile Include="src\ecs\archetype.cpp" />
     <ClCompile Include="src\ecs\component.cpp" />
+    <ClCompile Include="src\ecs\threadpool.cpp" />
     <ClCompile Include="src\physics\verletsolver.cpp" />
     <ClCompile Include="src\renderer\graphics.cpp" />
     <ClCompile Include="src\engine\input.cpp" />
@@ -41,6 +42,7 @@
     <ClInclude Include="src\ecs\archetype.h" />
     <ClInclude Include="src\ecs\component.h" />
     <ClInclude Include="src\ecs\entity.h" />
+    <ClInclude Include="src\ecs\threadpool.h" />
     <ClInclude Include="src\ecs\world.h" />
     <ClInclude Include="src\physics\constraint.h" />
     <ClInclude Include="src\physics\verletsolver.h" />
