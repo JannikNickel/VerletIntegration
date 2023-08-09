@@ -228,12 +228,17 @@ private:
 			std::vector<std::thread> handles = {};
 			for(size_t i = 0; i < threadCount; i++)
 			{
+				auto [offset, amount] = sections[i];
+
+				if(amount == 0)
+				{
+					continue;
+				}
+
 				std::tuple<Components*...> tPtrs = comps;
-				size_t offset = sections[i].first;
 				((std::get<Components*>(tPtrs) += offset), ...);
 
-				size_t amount = sections[i].second;
-				auto workerFunc = [&entityFunc, &tPtrs, amount]()
+				auto workerFunc = [&entityFunc, tPtrs = std::move(tPtrs), amount]() mutable
 				{
 					for(size_t i = 0; i < amount; i++)
 					{
@@ -241,9 +246,9 @@ private:
 						((std::get<Components*>(tPtrs)++), ...);
 					}
 				};
-				std::future<void> handle = threadPool.QueueJob(workerFunc);
-				handle.get();
+				threadPool.EnqueueJob(std::move(workerFunc));
 			}
+			threadPool.WaitForCompletion();
 		}
 	}
 

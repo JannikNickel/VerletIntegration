@@ -40,6 +40,7 @@
     <ClInclude Include="src\core\frameratecounter.h" />
     <ClInclude Include="src\core\world.h" />
     <ClInclude Include="src\ecs\archetype.h" />
+    <ClInclude Include="src\ecs\autoresetevent.h" />
     <ClInclude Include="src\ecs\component.h" />
     <ClInclude Include="src\ecs\entity.h" />
     <ClInclude Include="src\ecs\threadpool.h" />

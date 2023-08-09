@@ -40,17 +40,20 @@ int main()
 		frameRate.Frame(dt);
 
 		spawnCooldown -= dt;
-		if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
+		for(size_t i = 0; i < 100; i++)
 		{
-			float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
-			float m = 1.0f;
-			Color col = Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f);
-			Vector2 pos = world->Center() + Vector2(0.0f, size * 0.25f);
-			Vector2 acc = Vector2(std::sinf(time), -0.33f).Normalized() * 500000.0f;
+			if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
+			{
+				float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
+				float m = 1.0f;
+				Color col = Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f);
+				Vector2 pos = world->Center() + Vector2(0.0f, size * 0.25f);
+				Vector2 acc = Vector2(std::sinf(time), -0.33f).Normalized() * 500000.0f;
 
-			//spawnCooldown = 0.015f * r;
-			ecs.CreateEntity(Transform(Matrix4::PositionScale2d(pos, r * 2.0f)), RenderColor(col), PhysicsCircle(r, m, pos, acc));
-			physicsObjCount++;
+				//spawnCooldown = 0.015f * r;
+				ecs.CreateEntity(Transform(Matrix4::PositionScale2d(pos, r * 2.0f)), RenderColor(col), PhysicsCircle(r, m, pos, acc));
+				physicsObjCount++;
+			}
 		}
 
 		auto t0 = Clock::now();
@@ -63,6 +66,11 @@ int main()
 			Graphics::CirclesInstanced(reinterpret_cast<Matrix4*>(transform), reinterpret_cast<Color*>(renderColor), chunkSize);
 		});
 		auto t2 = Clock::now();
+
+		if(Input::KeyPressed(KeyCode::Space))
+		{
+			ImGui::Begin("");
+		}
 
 		if(ImGui::BeginMainMenuBar())
 		{

@@ -1,22 +1,22 @@
 #include "threadpool.h"
+#include <iostream>
 
 ThreadPool::ThreadPool()
 {
-    uint32_t threads = std::thread::hardware_concurrency();
+	uint32_t threads = std::thread::hardware_concurrency();
+	jobSlots = new JobSlot[threads];
+	condVars = std::vector<AutoResetEvent>(threads);
 	for(uint32_t i = 0; i < threads; i++)
 	{
-		std::thread t = std::thread(&ThreadPool::Worker, this);
+		jobSlots[i].free = true;
+		std::thread t = std::thread(&ThreadPool::Worker, this, i);
 		workerThreads.push_back(std::move(t));
 	}
 }
 
 ThreadPool::~ThreadPool()
 {
-	{
-		std::unique_lock<std::mutex> l { lock };
-		stop = true;
-		condVar.notify_all();
-	}
+	stop = true;
 
 	for(std::thread& t : workerThreads)
 	{
@@ -24,19 +24,24 @@ ThreadPool::~ThreadPool()
 	}
 }
 
-std::future<void> ThreadPool::QueueJob(std::function<void()> job)
+void ThreadPool::EnqueueJob(std::function<void()>&& job)
 {
-	std::shared_ptr<std::packaged_task<void()>> task = std::make_shared<std::packaged_task<void()>>(job);
-	std::function<void()> wrapper = [task]()
+	while(!jobSlots[slotIndex].free)
 	{
-		(*task)();
-	};
+		slotIndex = (slotIndex + 1) % workerThreads.size();
+	}
+	jobSlots[slotIndex].job = std::move(job);
+	jobSlots[slotIndex].free = false;
+	unfinishedJobs++;
+	condVars[slotIndex].Set();
+}
 
-	std::unique_lock<std::mutex> l { lock };
-	jobQueue.push(wrapper);
-	condVar.notify_one();
-
-	return task->get_future();
+void ThreadPool::WaitForCompletion()
+{
+	while(unfinishedJobs > 0)
+	{
+		std::this_thread::yield();
+	}
 }
 
 uint32_t ThreadPool::ThreadCount()
@@ -44,31 +49,32 @@ uint32_t ThreadPool::ThreadCount()
 	return workerThreads.size();
 }
 
-void ThreadPool::Worker()
+void ThreadPool::Worker(size_t index)
 {
-	std::function<void()> job;
-
 	while(true)
 	{
+		condVars[index].WaitOne();
+
+		if(stop)
 		{
-			std::unique_lock<std::mutex> l { lock };
-
-			condVar.wait(l, [this] { return stop || !jobQueue.empty(); });
-
-			if(stop)
-			{
-				break;
-			}
-
-			if(jobQueue.empty())
-			{
-				continue;
-			}
-
-			job = std::move(jobQueue.front());
-			jobQueue.pop();
+			break;
 		}
 
-		job();
+		if(jobSlots[index].free)
+		{
+			continue;
+		}
+
+		JobSlot& slot = jobSlots[index];
+		try
+		{
+			slot.job();
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what();
+		}
+		slot.free = true;
+		unfinishedJobs--;
 	}
 }
