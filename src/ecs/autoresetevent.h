@@ -16,20 +16,20 @@ public:
 
 	void Set()
 	{
-		std::lock_guard<std::mutex> l(mtx);
+		std::lock_guard<std::mutex> l { mtx };
 		set = true;
 		signal.notify_one();
 	}
 
 	void Reset()
 	{
-		std::lock_guard<std::mutex> l(mtx);
+		std::lock_guard<std::mutex> l { mtx };
 		set = false;
 	}
 
 	bool WaitOne()
 	{
-		std::unique_lock<std::mutex> l(mtx);
+		std::unique_lock<std::mutex> l { mtx };
 		while(!set)
 		{
 			signal.wait(l);

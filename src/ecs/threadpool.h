@@ -31,6 +31,7 @@ private:
 	std::atomic<size_t> slotIndex = 0;
 	std::atomic<size_t> unfinishedJobs = 0;
 	std::atomic<bool> stop = false;
+	AutoResetEvent waitEvent;
 
 	void Worker(size_t index);
 };

@@ -194,7 +194,7 @@ private:
 		}
 	}
 
-	static const std::vector<std::pair<size_t, size_t>> SplitWork(size_t workCount, size_t threadCount)
+	static std::vector<std::pair<size_t, size_t>> SplitWork(size_t workCount, size_t threadCount)
 	{
 		size_t sectionSize = workCount / threadCount;
 		size_t remainder = workCount % threadCount;

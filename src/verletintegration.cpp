@@ -23,12 +23,13 @@ int main()
 	const float gravity = -900.0f;
 	const unsigned int substeps = 8;
 
-	Window window = Window(static_cast<unsigned int>(size), static_cast<unsigned int>(size), "Verlet Integration");
+	Window window = Window(static_cast<unsigned int>(size), static_cast<unsigned int>(size), "Verlet Integration", -1, -1, true);
 	World* world = new CircleWorld(Color::From32(30, 30, 30), Vector2::one * size * 0.5f, size * 0.45f, Color::From32(15, 15, 15, 255));
 	EcsWorld ecs = EcsWorld();
 	FrameRateCounter frameRate = FrameRateCounter();
 	VerletSolver solver = VerletSolver(ecs, dynamic_cast<IConstraint*>(world), 1.0f / physicsSps, gravity, substeps);
 	solver.collision = false;
+	solver.updateMode = SolverUpdateMode::FrameDeltaTime;
 
 	double spawnCooldown = 0.0f;
 	double time = 0.0f;
@@ -66,11 +67,6 @@ int main()
 			Graphics::CirclesInstanced(reinterpret_cast<Matrix4*>(transform), reinterpret_cast<Color*>(renderColor), chunkSize);
 		});
 		auto t2 = Clock::now();
-
-		if(Input::KeyPressed(KeyCode::Space))
-		{
-			ImGui::Begin("");
-		}
 
 		if(ImGui::BeginMainMenuBar())
 		{

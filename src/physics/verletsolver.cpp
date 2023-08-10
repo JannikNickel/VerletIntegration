@@ -2,20 +2,40 @@
 #include "structs/vector2.h"
 #include "simulation/simulation.h"
 #include <cmath>
+#include <exception>
 
-VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps) : ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps), collision(true)
+VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps) : ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps), collision(true), updateMode(SolverUpdateMode::FrameDeltaTime)
 {
 
 }
 
 void VerletSolver::Update(float dt)
 {
-	static float timer = 0.0f;
-	timer += dt;
-	while(timer >= timeStep)
+	switch(updateMode)
 	{
-		Simulate(timeStep);
-		timer -= timeStep;
+		case SolverUpdateMode::FrameDeltaTime:
+		{
+			Simulate(dt);
+			break;
+		}
+		case SolverUpdateMode::FrameFixedStep:
+		{
+			Simulate(timeStep);
+			break;
+		}
+		case SolverUpdateMode::FixedFrameRate:
+		{
+			static float timer = 0.0f;
+			timer += dt;
+			while(timer >= timeStep)
+			{
+				Simulate(timeStep);
+				timer -= timeStep;
+			}
+			break;
+		}
+		default:
+			throw std::exception("[VerletSolver::Update] Missing switch case!");
 	}
 }
 
@@ -72,7 +92,7 @@ void VerletSolver::Collisions()
 
 void VerletSolver::Move(float dt)
 {
-	ecs.Query<Transform, PhysicsCircle>([dt](Transform& t, PhysicsCircle& p)
+	ecs.QueryMT<Transform, PhysicsCircle>(std::nullopt, [dt](Transform& t, PhysicsCircle& p)
 	{
 		Vector2& pos = t.Position();
 		const Vector2 vel = pos - p.prevPos;

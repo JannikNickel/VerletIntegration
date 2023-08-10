@@ -34,13 +34,14 @@ void ThreadPool::EnqueueJob(std::function<void()>&& job)
 	jobSlots[slotIndex].free = false;
 	unfinishedJobs++;
 	condVars[slotIndex].Set();
+	waitEvent.Reset();
 }
 
 void ThreadPool::WaitForCompletion()
 {
-	while(unfinishedJobs > 0)
+	if(unfinishedJobs.load() > 0)
 	{
-		std::this_thread::yield();
+		waitEvent.WaitOne();
 	}
 }
 
@@ -75,6 +76,10 @@ void ThreadPool::Worker(size_t index)
 			std::cerr << e.what();
 		}
 		slot.free = true;
-		unfinishedJobs--;
+
+		if((unfinishedJobs.fetch_sub(1) - 1) == 0)
+		{
+			waitEvent.Set();
+		}
 	}
 }
