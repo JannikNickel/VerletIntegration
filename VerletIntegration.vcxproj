@@ -20,7 +20,7 @@
     <ClCompile Include="external\imgui-1.89.7\imgui_tables.cpp" />
     <ClCompile Include="external\imgui-1.89.7\imgui_widgets.cpp" />
     <ClCompile Include="src\core\circleworld.cpp" />
-    <ClCompile Include="src\core\frameratecounter.cpp" />
+    <ClCompile Include="src\utils\framecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
     <ClCompile Include="src\ecs\archetype.cpp" />
     <ClCompile Include="src\ecs\component.cpp" />
@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\circleworld.h" />
-    <ClInclude Include="src\core\frameratecounter.h" />
+    <ClInclude Include="src\utils\framecounter.h" />
     <ClInclude Include="src\core\world.h" />
     <ClInclude Include="src\ecs\archetype.h" />
     <ClInclude Include="src\ecs\autoresetevent.h" />

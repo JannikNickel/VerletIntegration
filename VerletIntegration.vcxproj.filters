@@ -69,7 +69,7 @@
     <ClCompile Include="src\core\circleworld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\frameratecounter.cpp">
+    <ClCompile Include="src\utils\framecounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\physics\verletsolver.cpp">
@@ -116,7 +116,7 @@
     <ClInclude Include="src\core\circleworld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\frameratecounter.h">
+    <ClInclude Include="src\utils\framecounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\physics\verletsolver.h">

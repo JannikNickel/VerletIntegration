@@ -238,7 +238,7 @@ private:
 				std::tuple<Components*...> tPtrs = comps;
 				((std::get<Components*>(tPtrs) += offset), ...);
 
-				auto workerFunc = [&entityFunc, tPtrs = std::move(tPtrs), amount]() mutable
+				auto workerFunc = [entityFunc, tPtrs = std::move(tPtrs), amount]() mutable
 				{
 					for(size_t i = 0; i < amount; i++)
 					{
