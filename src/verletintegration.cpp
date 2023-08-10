@@ -30,7 +30,7 @@ int main()
 	FrameCounter renderCounter = FrameCounter(0.25);
 	FrameCounter physicsCounter = FrameCounter(0.25);
 	VerletSolver solver = VerletSolver(ecs, dynamic_cast<IConstraint*>(world), 1.0f / physicsSps, gravity, substeps);
-	solver.collision = false;
+	solver.collision = true;
 	solver.updateMode = SolverUpdateMode::FixedFrameRate;
 
 	double spawnCooldown = 0.0f;
@@ -43,7 +43,7 @@ int main()
 		frameCounter.Frame(dt);
 
 		spawnCooldown -= dt;
-		for(size_t i = 0; i < 100; i++)
+		for(size_t i = 0; i < 1; i++)
 		{
 			if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
 			{
@@ -53,7 +53,7 @@ int main()
 				Vector2 pos = world->Center() + Vector2(0.0f, size * 0.25f);
 				Vector2 acc = Vector2(std::sinf(time), -0.33f).Normalized() * 500000.0f;
 
-				//spawnCooldown = 0.015f * r;
+				spawnCooldown = 0.015f * r;
 				ecs.CreateEntity(Transform(Matrix4::PositionScale2d(pos, r * 2.0f)), RenderColor(col), PhysicsCircle(r, m, pos, acc));
 				physicsObjCount++;
 			}

@@ -26,7 +26,7 @@ void VerletSolver::Update(float dt)
 		case SolverUpdateMode::FixedFrameRate:
 		{
 			static float timer = 0.0f;
-			timer += dt;
+			timer += std::fminf(dt, 0.25f);
 			while(timer >= timeStep)
 			{
 				Simulate(timeStep);
