@@ -5,19 +5,9 @@
 #include <exception>
 #include <limits>
 
-struct CellValue
-{
-	Transform* t;
-	PhysicsCircle* p;
-
-	CellValue(Transform* t, PhysicsCircle* p) : t(t), p(p) { }
-};
-
-using Cell = std::vector<CellValue>;
-using Column = std::vector<Cell>;
-using Grid = std::vector<Column>;
-
-VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps) : ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps), collision(true), updateMode(SolverUpdateMode::FrameDeltaTime)
+VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps, float partitioningSize)
+	: ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps), partitioningSize(partitioningSize),
+	collision(true), updateMode(SolverUpdateMode::FrameDeltaTime), partitioning(constraint->Bounds().first, constraint->Bounds().second, partitioningSize)
 {
 
 }
@@ -102,53 +92,37 @@ void Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTransform, Physi
 
 void VerletSolver::Collisions()
 {
-	static const float cellSize = 25.0f;
-	static auto [bMin, bMax] = constraint->Bounds();
-	static Vector2 bSize = bMax - bMin;
-	static int32_t cellsX = static_cast<int32_t>(std::ceilf((bMax.x - bMin.x) / cellSize));
-	static int32_t cellsY = static_cast<int32_t>(std::ceilf((bMax.y - bMin.y) / cellSize));
-	static int32_t lastXCell = cellsX - 1;
-	static int32_t lastYCell = cellsY - 1;
-	static Grid grid = Grid(cellsX);
-	for(int32_t i = 0; i < cellsX; i++)
-	{
-		grid[i] = Column(cellsY);
-	}
-	ecs.QueryChunked<Transform, PhysicsCircle>(std::numeric_limits<size_t>::max(), [this](Transform* t, PhysicsCircle* p, size_t chunkSize)
-	{
-		for(int32_t i = 0; i < cellsX; i++)
-		{
-			for(int32_t k = 0; k < cellsY; k++)
-			{
-				grid[i][k].clear();
-			}
-		}
+	static int32_t cellsX = partitioning.CellsX();
+	static int32_t cellsY = partitioning.CellsY();
+	partitioning.Clear();
 
+	ecs.QueryChunked<Transform, PhysicsCircle>(std::numeric_limits<size_t>::max(), [&](Transform* t, PhysicsCircle* p, size_t chunkSize)
+	{
 		for(size_t i = 0; i < chunkSize; i++)
 		{
-			Vector2& pos = t[i].Position();
-			int32_t cx = static_cast<int32_t>((pos.x - bMin.x) / bSize.x * static_cast<float>(cellsX));
-			int32_t cy = static_cast<int32_t>((pos.y - bMin.y) / bSize.y * static_cast<float>(cellsY));
-			grid[std::clamp(cx, 0, lastXCell)][std::clamp(cy, 0, lastYCell)].push_back(CellValue(&t[i], &p[i]));
+			partitioning.Insert(&t[i], &p[i]);
 		}
 
+		//This can be run for [1, lastXCell] (same for y), but the simulation is less stable in that case
+		//Because the border cells dont check collisions within itself then
+		//The same happens when trying to iterate with += 2 to prevent 2 cell pairs from being calculated twice
 		for(int32_t i = 0; i < cellsX; i++)
 		{
 			for(int32_t k = 0; k < cellsY; k++)
 			{
-				Cell& cell = grid[i][k];
+				PartitioningCell& cell = partitioning.At(i, k);
 				for(int32_t x = i - 1; x < i + 2; x++)
 				{
 					for(int32_t y = k - 1; y < k + 2; y++)
 					{
-						if(x < 0 || x > lastXCell || y < 0 || y > lastYCell)
+						if(x < 0 || x > cellsX - 1 || y < 0 || y > cellsY - 1)
 						{
 							continue;
 						}
-						Cell& other = grid[x][y];
-						for(CellValue& a : cell)
+						PartitioningCell& other = partitioning.At(x, y);
+						for(PartitioningCellEntry& a : cell)
 						{
-							for(CellValue& b : other)
+							for(PartitioningCellEntry& b : other)
 							{
 								if(a.t == b.t)
 								{

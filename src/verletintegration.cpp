@@ -22,6 +22,8 @@ int main()
 	const float physicsSps = 60.0f;
 	const float gravity = -900.0f;
 	const unsigned int substeps = 8;
+	const float minParticleSize = 3.5f;
+	const float maxParticleSize = 10.0f;
 
 	Window window = Window(static_cast<unsigned int>(size), static_cast<unsigned int>(size), "Verlet Integration", -1, -1, true);
 	World* world = new CircleWorld(Color::From32(30, 30, 30), Vector2::one * size * 0.5f, size * 0.45f, Color::From32(15, 15, 15, 255));
@@ -29,7 +31,7 @@ int main()
 	FrameCounter frameCounter = FrameCounter(0.5);
 	FrameCounter renderCounter = FrameCounter(0.25);
 	FrameCounter physicsCounter = FrameCounter(0.25);
-	VerletSolver solver = VerletSolver(ecs, dynamic_cast<IConstraint*>(world), 1.0f / physicsSps, gravity, substeps);
+	VerletSolver solver = VerletSolver(ecs, dynamic_cast<IConstraint*>(world), 1.0f / physicsSps, gravity, substeps, maxParticleSize * 1.5f);
 	solver.collision = true;
 	solver.updateMode = SolverUpdateMode::FixedFrameRate;
 
@@ -49,7 +51,7 @@ int main()
 			spawnCooldown[i] -= dt;
 			if(spawnCooldown[i] <= 0.0f && Input::KeyHeld(KeyCode::Enter))
 			{
-				float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
+				float r = std::clamp(rand() / (float)RAND_MAX * maxParticleSize, minParticleSize, maxParticleSize);
 				float m = 1.0f;
 				Color col = Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f);
 				Vector2 pos = world->Center() + Vector2((static_cast<float>(i) - spawnAmount / 2.0f) * 15.0f, size * 0.25f);

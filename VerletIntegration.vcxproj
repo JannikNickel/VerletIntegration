@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\circleworld.h" />
+    <ClInclude Include="src\physics\partitioning.h" />
     <ClInclude Include="src\utils\framecounter.h" />
     <ClInclude Include="src\core\world.h" />
     <ClInclude Include="src\ecs\archetype.h" />
@@ -56,7 +57,6 @@
     <ClInclude Include="src\simulation\components\rendercolor.h" />
     <ClInclude Include="src\simulation\components\transform.h" />
     <ClInclude Include="src\structs\matrix4.h" />
-    <ClInclude Include="src\physics\verletobj.h" />
     <ClInclude Include="src\engine\window.h" />
   </ItemGroup>
   <ItemGroup>
