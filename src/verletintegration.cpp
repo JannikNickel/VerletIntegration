@@ -33,7 +33,8 @@ int main()
 	solver.collision = true;
 	solver.updateMode = SolverUpdateMode::FixedFrameRate;
 
-	double spawnCooldown = 0.0f;
+	const int spawnAmount = 10;
+	double spawnCooldown[spawnAmount] = { 0.0f };
 	double time = 0.0f;
 	size_t physicsObjCount = 0;
 
@@ -42,18 +43,19 @@ int main()
 		time += dt;
 		frameCounter.Frame(dt);
 
-		spawnCooldown -= dt;
-		for(size_t i = 0; i < 1; i++)
+		
+		for(size_t i = 0; i <= spawnAmount; i++)
 		{
-			if(spawnCooldown <= 0.0f && Input::KeyHeld(KeyCode::Enter))
+			spawnCooldown[i] -= dt;
+			if(spawnCooldown[i] <= 0.0f && Input::KeyHeld(KeyCode::Enter))
 			{
 				float r = std::clamp(rand() / (float)RAND_MAX * 10.0f, 3.5f, 10.0f);
 				float m = 1.0f;
 				Color col = Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f);
-				Vector2 pos = world->Center() + Vector2(0.0f, size * 0.25f);
-				Vector2 acc = Vector2(std::sinf(time), -0.33f).Normalized() * 500000.0f;
+				Vector2 pos = world->Center() + Vector2((static_cast<float>(i) - spawnAmount / 2.0f) * 15.0f, size * 0.25f);
+				Vector2 acc = Vector2(std::sinf(time), -0.33f * (spawnAmount > 1 ? 2.0f : 1.0f)).Normalized() * 500000.0f;
 
-				spawnCooldown = 0.015f * r;
+				spawnCooldown[i] = 0.015f * r;
 				ecs.CreateEntity(Transform(Matrix4::PositionScale2d(pos, r * 2.0f)), RenderColor(col), PhysicsCircle(r, m, pos, acc));
 				physicsObjCount++;
 			}

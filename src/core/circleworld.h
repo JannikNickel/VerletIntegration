@@ -10,7 +10,8 @@ public:
 	CircleWorld(Color background, Vector2 center, float radius, Color color);
 	void Render() override;
 	Vector2 Center() override;
-	void Contrain(Vector2& pos, const PhysicsCircle& p) override;
+	void Contrain(Vector2& pos, const PhysicsCircle& p) const override;
+	std::pair<Vector2, Vector2> Bounds() const override;
 
 private:
 	Vector2 center;

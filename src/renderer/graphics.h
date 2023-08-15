@@ -7,7 +7,7 @@ struct Graphics
 {
 	friend Window;
 
-	const static unsigned int instancingLimit = 1024;
+	static const unsigned int instancingLimit = 1024;
 
 	static void SetClearColor(Color color);
 	static void Quad(Vector2 pos, Vector2 size = Vector2::one, const Color& color = Color::white);

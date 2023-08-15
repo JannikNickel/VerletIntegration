@@ -8,7 +8,7 @@
 #include <sstream>
 #include <format>
 
-const static float quadVertices[] =
+static const float quadVertices[] =
 {
 	//POS					UV
 	-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
@@ -16,7 +16,7 @@ const static float quadVertices[] =
 	-0.5f, 0.5f, 0.0f,		0.0f, 1.0f,
 	0.5f, 0.5f, 0.0f,		1.0f, 1.0f,
 };
-const static unsigned int quadIndices[] =
+static const unsigned int quadIndices[] =
 {
 	0, 1, 2,
 	1, 3, 2

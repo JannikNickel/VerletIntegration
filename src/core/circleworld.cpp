@@ -18,7 +18,7 @@ Vector2 CircleWorld::Center()
 	return center;
 }
 
-void CircleWorld::Contrain(Vector2& pos, const PhysicsCircle& p)
+void CircleWorld::Contrain(Vector2& pos, const PhysicsCircle& p) const
 {
 	Vector2 dir = pos - center;
 	float dst = dir.Length();
@@ -27,4 +27,10 @@ void CircleWorld::Contrain(Vector2& pos, const PhysicsCircle& p)
 		Vector2 normDir = dir / dst;
 		pos = center + normDir * (radius - p.radius);
 	}
+}
+
+std::pair<Vector2, Vector2> CircleWorld::Bounds() const
+{
+	Vector2 size = Vector2(radius, radius);
+	return std::make_pair(center - size, center + size);
 }
