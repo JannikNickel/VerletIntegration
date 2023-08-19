@@ -42,5 +42,8 @@ private:
 	void Gravity();
 	void Constraint();
 	void Collisions();
+	void SolveCell(PartitioningCell& cell);
+	void SolveCells(PartitioningCell& cell0, PartitioningCell& cell1);
+	void Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTransform, PhysicsCircle& b);
 	void Move(float dt);
 };

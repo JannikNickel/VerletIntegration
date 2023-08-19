@@ -1,6 +1,5 @@
 #include <iostream>
 #include <algorithm>
-#include <chrono>
 
 #include "engine/window.h"
 #include "engine/input.h"
@@ -13,8 +12,6 @@
 #include "simulation/simulation.h"
 
 #include "imgui.h"
-
-using Clock = std::chrono::high_resolution_clock;
 
 int main()
 {
@@ -31,11 +28,11 @@ int main()
 	FrameCounter frameCounter = FrameCounter(0.5);
 	FrameCounter renderCounter = FrameCounter(0.25);
 	FrameCounter physicsCounter = FrameCounter(0.25);
-	VerletSolver solver = VerletSolver(ecs, dynamic_cast<IConstraint*>(world), 1.0f / physicsSps, gravity, substeps, maxParticleSize * 1.5f);
+	VerletSolver solver = VerletSolver(ecs, dynamic_cast<IConstraint*>(world), 1.0f / physicsSps, gravity, substeps, maxParticleSize * 2.5f);
 	solver.collision = true;
 	solver.updateMode = SolverUpdateMode::FixedFrameRate;
 
-	const int spawnAmount = 10;
+	const int spawnAmount = 8;
 	double spawnCooldown[spawnAmount] = { 0.0f };
 	double time = 0.0f;
 	size_t physicsObjCount = 0;
@@ -44,7 +41,6 @@ int main()
 	{
 		time += dt;
 		frameCounter.Frame(dt);
-
 		
 		for(size_t i = 0; i <= spawnAmount; i++)
 		{
@@ -63,18 +59,18 @@ int main()
 			}
 		}
 
-		auto tStart = Clock::now();
+		physicsCounter.BeginFrame();
 		solver.Update(dt);
-		physicsCounter.Frame(std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - tStart).count() * 1e-9);
+		physicsCounter.EndFrame();
 
-		tStart = Clock::now();
+		renderCounter.BeginFrame();
 		world->Render();
 		int iIndex = 0;
 		ecs.QueryChunked<Transform, RenderColor>(Graphics::instancingLimit, [](Transform* transform, RenderColor* renderColor, size_t chunkSize)
 		{
-			Graphics::CirclesInstanced(reinterpret_cast<Matrix4*>(transform), reinterpret_cast<Color*>(renderColor), chunkSize);
+			Graphics::CirclesInstanced(reinterpret_cast<const Matrix4*>(transform), reinterpret_cast<const Color*>(renderColor), chunkSize);
 		});
-		renderCounter.Frame(std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - tStart).count() * 1e-9);
+		renderCounter.EndFrame();
 
 		if(ImGui::BeginMainMenuBar())
 		{

@@ -1,10 +1,15 @@
 #pragma once
 #include <deque>
+#include <chrono>
 
 class FrameCounter
 {
+	using Clock = std::chrono::high_resolution_clock;
+
 public:
 	FrameCounter(double updateRate = 2.0f);
+	void BeginFrame();
+	void EndFrame();
 	void Frame(double dt);
 	double Framerate() const;
 	double Frametime() const;
@@ -17,4 +22,5 @@ private:
 	double frameSum = 0.0;
 	double time = 0.0;
 	size_t framecount = 0;
+	Clock::time_point tFrameStart;
 };

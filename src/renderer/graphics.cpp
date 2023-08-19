@@ -254,7 +254,7 @@ void Graphics::Circle(Vector2 pos, float radius, const Color& color)
 	glDrawElements(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0);
 }
 
-static void PrepareInstancedRendering(Matrix4* matrices, Color* colors, int instanceCount, unsigned int texture)
+static void PrepareInstancedRendering(const Matrix4* matrices, const Color* colors, int instanceCount, unsigned int texture)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, quadInstanceTransformBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * sizeof(Matrix4), matrices);
@@ -269,7 +269,7 @@ static void PrepareInstancedRendering(Matrix4* matrices, Color* colors, int inst
 	glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void Graphics::QuadsInstanced(Vector2* positions, Vector2* sizes, Color* colors, int instanceCount)
+void Graphics::QuadsInstanced(const Vector2* positions, const Vector2* sizes, const Color* colors, int instanceCount)
 {
 	for(int i = 0; i < instanceCount; i++)
 	{
@@ -281,7 +281,7 @@ void Graphics::QuadsInstanced(Vector2* positions, Vector2* sizes, Color* colors,
 	glDrawElementsInstanced(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0, instanceCount);
 }
 
-void Graphics::CirclesInstanced(Vector2* positions, float* radii, Color* colors, int instanceCount)
+void Graphics::CirclesInstanced(const Vector2* positions, const float* radii, const Color* colors, int instanceCount)
 {
 	for(int i = 0; i < instanceCount; i++)
 	{
@@ -293,7 +293,7 @@ void Graphics::CirclesInstanced(Vector2* positions, float* radii, Color* colors,
 	glDrawElementsInstanced(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0, instanceCount);
 }
 
-void Graphics::CirclesInstanced(Matrix4* matrices, Color* colors, int instanceCount)
+void Graphics::CirclesInstanced(const Matrix4* matrices, const Color* colors, int instanceCount)
 {
 	PrepareInstancedRendering(matrices, colors, instanceCount, circleTex);
 

@@ -4,6 +4,8 @@
 #include <cmath>
 #include <exception>
 #include <limits>
+#include <utility>
+#include <array>
 
 VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps, float partitioningSize)
 	: ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps), partitioningSize(partitioningSize),
@@ -74,7 +76,77 @@ void VerletSolver::Constraint()
 	});
 }
 
-void Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTransform, PhysicsCircle& b)
+void VerletSolver::Collisions()
+{
+	static const std::array<std::pair<int32_t, int32_t>, 4> cellOffsets =
+	{
+		std::make_pair(1, 1),
+		std::make_pair(1, 0),
+		std::make_pair(1, -1),
+		std::make_pair(0, -1)
+	};
+	static const int32_t cellsX = partitioning.CellsX();
+	static const int32_t cellsY = partitioning.CellsY();
+	static const int32_t lastXCell = cellsX - 1;
+	static const int32_t lastYCell = cellsY - 1;
+
+	ecs.QueryChunked<Transform, PhysicsCircle>(std::numeric_limits<size_t>::max(), [&](Transform* t, PhysicsCircle* p, size_t chunkSize)
+	{
+		partitioning.Clear();
+		for(size_t i = 0; i < chunkSize; i++)
+		{
+			partitioning.Insert(&t[i], &p[i]);
+		}
+
+		for(int32_t i = 0; i < cellsX; i++)
+		{
+			for(int32_t k = 0; k < cellsY; k++)
+			{
+				PartitioningCell& cell = partitioning.At(i, k);
+				SolveCell(cell);
+
+				for(const auto& [xOff, yOff] : cellOffsets)
+				{
+					int32_t x = i + xOff;
+					int32_t y = k + yOff;
+					if(((static_cast<uint32_t>(x) > lastXCell) | (static_cast<uint32_t>(y) > lastYCell)) != 0)
+					{
+						continue;
+					}
+
+					SolveCells(cell, partitioning.At(x, y));
+				}
+			}
+		}
+	});
+}
+
+void VerletSolver::SolveCell(PartitioningCell& cell)
+{
+	size_t count = cell.size();
+	for(size_t i = 0; i < count; i++)
+	{
+		PartitioningCellEntry& a = cell[i];
+		for(size_t k = i + 1; k < count; k++)
+		{
+			PartitioningCellEntry& b = cell[k];
+			Solve(*a.t, *a.p, *b.t, *b.p);
+		}
+	}
+}
+
+void VerletSolver::SolveCells(PartitioningCell& cell0, PartitioningCell& cell1)
+{
+	for(PartitioningCellEntry& a : cell0)
+	{
+		for(PartitioningCellEntry& b : cell1)
+		{
+			Solve(*a.t, *a.p, *b.t, *b.p);
+		}
+	}
+}
+
+void VerletSolver::Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTransform, PhysicsCircle& b)
 {
 	Vector2& aPos = aTransform.Position();
 	Vector2& bPos = bTransform.Position();
@@ -88,54 +160,6 @@ void Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTransform, Physi
 		aPos += normDir * (overlap * massRatio);
 		bPos -= normDir * (overlap * (1.0f - massRatio));
 	}
-}
-
-void VerletSolver::Collisions()
-{
-	static int32_t cellsX = partitioning.CellsX();
-	static int32_t cellsY = partitioning.CellsY();
-	partitioning.Clear();
-
-	ecs.QueryChunked<Transform, PhysicsCircle>(std::numeric_limits<size_t>::max(), [&](Transform* t, PhysicsCircle* p, size_t chunkSize)
-	{
-		for(size_t i = 0; i < chunkSize; i++)
-		{
-			partitioning.Insert(&t[i], &p[i]);
-		}
-
-		//This can be run for [1, lastXCell] (same for y), but the simulation is less stable in that case
-		//Because the border cells dont check collisions within itself then
-		//The same happens when trying to iterate with += 2 to prevent 2 cell pairs from being calculated twice
-		for(int32_t i = 0; i < cellsX; i++)
-		{
-			for(int32_t k = 0; k < cellsY; k++)
-			{
-				PartitioningCell& cell = partitioning.At(i, k);
-				for(int32_t x = i - 1; x < i + 2; x++)
-				{
-					for(int32_t y = k - 1; y < k + 2; y++)
-					{
-						if(x < 0 || x > cellsX - 1 || y < 0 || y > cellsY - 1)
-						{
-							continue;
-						}
-						PartitioningCell& other = partitioning.At(x, y);
-						for(PartitioningCellEntry& a : cell)
-						{
-							for(PartitioningCellEntry& b : other)
-							{
-								if(a.t == b.t)
-								{
-									continue;
-								}
-								Solve(*a.t, *a.p, *b.t, *b.p);
-							}
-						}
-					}
-				}
-			}
-		}
-	});
 }
 
 void VerletSolver::Move(float dt)

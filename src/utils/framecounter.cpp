@@ -5,6 +5,16 @@ FrameCounter::FrameCounter(double updateRate) : updateRate(updateRate)
 
 }
 
+void FrameCounter::BeginFrame()
+{
+	tFrameStart = Clock::now();
+}
+
+void FrameCounter::EndFrame()
+{
+	Frame(std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - tFrameStart).count() * 1e-9);
+}
+
 void FrameCounter::Frame(double dt)
 {
 	time += dt;

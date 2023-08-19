@@ -12,9 +12,9 @@ struct Graphics
 	static void SetClearColor(Color color);
 	static void Quad(Vector2 pos, Vector2 size = Vector2::one, const Color& color = Color::white);
 	static void Circle(Vector2 pos, float radius, const Color& color = Color::white);
-	static void QuadsInstanced(Vector2* positions, Vector2* sizes, Color* colors, int instanceCount);
-	static void CirclesInstanced(Vector2* positions, float* radii, Color* colors, int instanceCount);
-	static void CirclesInstanced(Matrix4* matrices, Color* colors, int instanceCount);
+	static void QuadsInstanced(const Vector2* positions, const Vector2* sizes, const Color* colors, int instanceCount);
+	static void CirclesInstanced(const Vector2* positions, const float* radii, const Color* colors, int instanceCount);
+	static void CirclesInstanced(const Matrix4* matrices, const Color* colors, int instanceCount);
 
 private:
 	static void Init(Window* window, unsigned int width, unsigned int height);
