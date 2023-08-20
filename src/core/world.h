@@ -10,7 +10,7 @@ public:
 
 	virtual ~World();
 	virtual void Render();
-	virtual Vector2 Center() = 0;
+	virtual Vector2 Center() const = 0;
 
 protected:
 	Color background;

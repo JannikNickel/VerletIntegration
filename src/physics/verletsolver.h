@@ -2,7 +2,6 @@
 #include "constraint.h"
 #include "partitioning.h"
 #include "ecs/world.h"
-#include <vector>
 
 enum class SolverUpdateMode
 {

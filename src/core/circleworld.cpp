@@ -13,7 +13,7 @@ void CircleWorld::Render()
 	Graphics::Circle(center, radius, color);
 }
 
-Vector2 CircleWorld::Center()
+Vector2 CircleWorld::Center() const
 {
 	return center;
 }
@@ -21,11 +21,12 @@ Vector2 CircleWorld::Center()
 void CircleWorld::Contrain(Vector2& pos, const PhysicsCircle& p) const
 {
 	Vector2 dir = pos - center;
-	float dst = dir.Length();
-	if(dst + p.radius > radius)
+	float dst = dir.SqrLength();
+	float rad = radius - p.radius;
+	if(dst > rad * rad)
 	{
-		Vector2 normDir = dir / dst;
-		pos = center + normDir * (radius - p.radius);
+		Vector2 normDir = dir / std::sqrtf(dst);
+		pos = center + normDir * rad;
 	}
 }
 

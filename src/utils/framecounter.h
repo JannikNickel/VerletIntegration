@@ -9,7 +9,7 @@ class FrameCounter
 public:
 	FrameCounter(double updateRate = 2.0f);
 	void BeginFrame();
-	void EndFrame();
+	double EndFrame();
 	void Frame(double dt);
 	double Framerate() const;
 	double Frametime() const;

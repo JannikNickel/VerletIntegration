@@ -4,10 +4,10 @@
 #include "structs/vector2.h"
 #include "structs/color.h"
 
-class CircleWorld : public World, public IConstraint
+struct RectWorld : public World, public IConstraint
 {
 public:
-	CircleWorld(Color background, Vector2 center, float radius, Color color);
+	RectWorld(Color background, Vector2 center, Vector2 size, Color color);
 	void Render() override;
 	Vector2 Center() const override;
 	void Contrain(Vector2& pos, const PhysicsCircle& p) const override;
@@ -15,6 +15,6 @@ public:
 
 private:
 	Vector2 center;
-	float radius;
+	Vector2 extends;
 	Color color;
 };

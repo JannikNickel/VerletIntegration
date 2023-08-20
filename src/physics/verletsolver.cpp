@@ -151,9 +151,12 @@ void VerletSolver::Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTr
 	Vector2& aPos = aTransform.Position();
 	Vector2& bPos = bTransform.Position();
 	Vector2 dir = aPos - bPos;
-	float dst = dir.Length();
-	if(dst < a.radius + b.radius)
+	float dst = dir.SqrLength();
+	float r = a.radius + b.radius;
+	r *= r;
+	if(dst < r)
 	{
+		dst = std::sqrtf(dst);
 		Vector2 normDir = dir / dst;
 		float overlap = a.radius + b.radius - dst;
 		float massRatio = b.mass / (a.mass + b.mass);

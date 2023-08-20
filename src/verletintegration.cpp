@@ -6,6 +6,7 @@
 #include "renderer/graphics.h"
 #include "core/world.h"
 #include "core/circleworld.h"
+#include "core/rectworld.h"
 #include "utils/framecounter.h"
 #include "physics/verletsolver.h"
 #include "ecs/world.h"
@@ -21,9 +22,12 @@ int main()
 	const unsigned int substeps = 8;
 	const float minParticleSize = 3.5f;
 	const float maxParticleSize = 10.0f;
+	const bool circleWorld = false;
 
 	Window window = Window(static_cast<unsigned int>(size), static_cast<unsigned int>(size), "Verlet Integration", -1, -1, true);
-	World* world = new CircleWorld(Color::From32(30, 30, 30), Vector2::one * size * 0.5f, size * 0.45f, Color::From32(15, 15, 15, 255));
+	World* world = circleWorld ?
+		static_cast<World*>(new CircleWorld(Color::From32(30, 30, 30), Vector2::one * size * 0.5f, size * 0.45f, Color::From32(15, 15, 15, 255)))
+		: static_cast<World*>(new RectWorld(Color::From32(30, 30, 30), Vector2::one * size * 0.5f, Vector2::one * size, Color::From32(15, 15, 15, 255)));
 	EcsWorld ecs = EcsWorld();
 	FrameCounter frameCounter = FrameCounter(0.5);
 	FrameCounter renderCounter = FrameCounter(0.25);
@@ -32,7 +36,7 @@ int main()
 	solver.collision = true;
 	solver.updateMode = SolverUpdateMode::FixedFrameRate;
 
-	const int spawnAmount = 8;
+	const int spawnAmount = 16;
 	double spawnCooldown[spawnAmount] = { 0.0f };
 	double time = 0.0f;
 	size_t physicsObjCount = 0;

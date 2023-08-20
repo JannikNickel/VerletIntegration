@@ -20,6 +20,7 @@
     <ClCompile Include="external\imgui-1.89.7\imgui_tables.cpp" />
     <ClCompile Include="external\imgui-1.89.7\imgui_widgets.cpp" />
     <ClCompile Include="src\core\circleworld.cpp" />
+    <ClCompile Include="src\core\rectworld.cpp" />
     <ClCompile Include="src\utils\framecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
     <ClCompile Include="src\ecs\archetype.cpp" />
@@ -37,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\circleworld.h" />
+    <ClInclude Include="src\core\rectworld.h" />
     <ClInclude Include="src\physics\partitioning.h" />
     <ClInclude Include="src\utils\framecounter.h" />
     <ClInclude Include="src\core\world.h" />
@@ -58,6 +60,7 @@
     <ClInclude Include="src\simulation\components\transform.h" />
     <ClInclude Include="src\structs\matrix4.h" />
     <ClInclude Include="src\engine\window.h" />
+    <ClInclude Include="src\utils\math.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default2d.frag">
