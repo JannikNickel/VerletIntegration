@@ -16,12 +16,12 @@
 
 int main()
 {
-	const float size = 720.0f;
+	const float size = 720.0f * 1.5f;
 	const float physicsSps = 60.0f;
 	const float gravity = -900.0f;
 	const unsigned int substeps = 8;
-	const float minParticleSize = 3.5f;
-	const float maxParticleSize = 10.0f;
+	const float minParticleSize = 3.5f * 0.5f;
+	const float maxParticleSize = 10.0f * 0.5f;
 	const bool circleWorld = false;
 
 	Window window = Window(static_cast<unsigned int>(size), static_cast<unsigned int>(size), "Verlet Integration", -1, -1, true);
@@ -32,7 +32,7 @@ int main()
 	FrameCounter frameCounter = FrameCounter(0.5);
 	FrameCounter renderCounter = FrameCounter(0.25);
 	FrameCounter physicsCounter = FrameCounter(0.25);
-	VerletSolver solver = VerletSolver(ecs, dynamic_cast<IConstraint*>(world), 1.0f / physicsSps, gravity, substeps, maxParticleSize * 2.5f);
+	VerletSolver solver = VerletSolver(ecs, dynamic_cast<IConstraint*>(world), 1.0f / physicsSps, gravity, substeps, maxParticleSize * 2.0f);
 	solver.collision = true;
 	solver.updateMode = SolverUpdateMode::FixedFrameRate;
 
@@ -40,6 +40,8 @@ int main()
 	double spawnCooldown[spawnAmount] = { 0.0f };
 	double time = 0.0f;
 	size_t physicsObjCount = 0;
+
+	size_t limit = 8000 * 2;
 
 	window.Show([&](double dt)
 	{
@@ -49,7 +51,7 @@ int main()
 		for(size_t i = 0; i <= spawnAmount; i++)
 		{
 			spawnCooldown[i] -= dt;
-			if(spawnCooldown[i] <= 0.0f && Input::KeyHeld(KeyCode::Enter))
+			if(physicsObjCount < limit && spawnCooldown[i] <= 0.0f/* && Input::KeyHeld(KeyCode::Enter)*/)
 			{
 				float r = std::clamp(rand() / (float)RAND_MAX * maxParticleSize, minParticleSize, maxParticleSize);
 				float m = 1.0f;
@@ -81,6 +83,17 @@ int main()
 			ImGui::SetNextItemWidth(size);
 			ImGui::LabelText("", "FPS = %d, OBJECTS = %d, SIMULATION = %.2f ms, RENDERPREP = %.2f ms, RENDER = %.2f ms", (int)frameCounter.Framerate(), physicsObjCount, physicsCounter.Frametime() * 1000, renderCounter.Frametime() * 1000, window.LastFrameRenderTime());
 			ImGui::EndMainMenuBar();
+		}
+		ImGui::SetNextWindowPos({ 5.0f, 25.0f });
+		ImGui::SetNextWindowBgAlpha(0.25f);
+		if(ImGui::Begin("Solver", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::LabelText("", "Gravity phase = %.2f ms", solver.GravityPhaseCounter().Frametime() * 1000.0);
+			ImGui::LabelText("", "Constraint phase = %.2f ms", solver.ConstraintPhaseCounter().Frametime() * 1000.0);
+			ImGui::LabelText("", "Broad phase = %.2f ms", solver.BroadPhaseCounter().Frametime() * 1000.0);
+			ImGui::LabelText("", "Narrow phase = %.2f ms", solver.NarrowPhaseCounter().Frametime() * 1000.0);
+			ImGui::LabelText("", "Move phase = %.2f ms", solver.MovePhaseCounter().Frametime() * 1000.0);
+			ImGui::End();
 		}
 	});
 

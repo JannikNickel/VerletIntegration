@@ -42,6 +42,8 @@ void VerletSolver::Update(float dt)
 		default:
 			throw std::exception("[VerletSolver::Update] Missing switch case!");
 	}
+
+	CollectStats();
 }
 
 void VerletSolver::Simulate(float dt)
@@ -62,18 +64,22 @@ void VerletSolver::Simulate(float dt)
 
 void VerletSolver::Gravity()
 {
+	gravityPhaseCounter.BeginSubFrame();
 	ecs.QueryMT<PhysicsCircle>(std::nullopt, [this](PhysicsCircle& p)
 	{
 		p.acc.y += gravity;
 	});
+	gravityPhaseCounter.EndSubFrame();
 }
 
 void VerletSolver::Constraint()
 {
+	constraintPhaseCounter.BeginSubFrame();
 	ecs.QueryMT<Transform, PhysicsCircle>(std::nullopt, [this](Transform& t, PhysicsCircle& p)
 	{
 		constraint->Contrain(t.Position(), p);
 	});
+	constraintPhaseCounter.EndSubFrame();
 }
 
 void VerletSolver::Collisions()
@@ -92,32 +98,43 @@ void VerletSolver::Collisions()
 
 	ecs.QueryChunked<Transform, PhysicsCircle>(std::numeric_limits<size_t>::max(), [&](Transform* t, PhysicsCircle* p, size_t chunkSize)
 	{
+		broadPhaseCounter.BeginSubFrame();
 		partitioning.Clear();
 		for(size_t i = 0; i < chunkSize; i++)
 		{
 			partitioning.Insert(&t[i], &p[i]);
 		}
+		broadPhaseCounter.EndSubFrame();
 
-		for(int32_t i = 0; i < cellsX; i++)
+		narrowPhaseCounter.BeginSubFrame();
+		for(const auto& [offset, amount] : ThreadPool::SplitWork(cellsX, threadPool.ThreadCount()))
 		{
-			for(int32_t k = 0; k < cellsY; k++)
+			threadPool.EnqueueJob([this, offset, amount]
 			{
-				PartitioningCell& cell = partitioning.At(i, k);
-				SolveCell(cell);
-
-				for(const auto& [xOff, yOff] : cellOffsets)
+				for(int32_t i = offset; i < offset + amount; i++)
 				{
-					int32_t x = i + xOff;
-					int32_t y = k + yOff;
-					if(((static_cast<uint32_t>(x) > lastXCell) | (static_cast<uint32_t>(y) > lastYCell)) != 0)
+					for(int32_t k = 0; k < cellsY; k++)
 					{
-						continue;
-					}
+						PartitioningCell& cell = partitioning.At(i, k);
+						SolveCell(cell);
 
-					SolveCells(cell, partitioning.At(x, y));
+						for(const auto& [xOff, yOff] : cellOffsets)
+						{
+							int32_t x = i + xOff;
+							int32_t y = k + yOff;
+							if(((static_cast<uint32_t>(x) > lastXCell) | (static_cast<uint32_t>(y) > lastYCell)) != 0)
+							{
+								continue;
+							}
+
+							SolveCells(cell, partitioning.At(x, y));
+						}
+					}
 				}
-			}
+			});
 		}
+		threadPool.WaitForCompletion();
+		narrowPhaseCounter.EndSubFrame();
 	});
 }
 
@@ -167,6 +184,7 @@ void VerletSolver::Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTr
 
 void VerletSolver::Move(float dt)
 {
+	movePhaseCounter.BeginSubFrame();
 	ecs.QueryMT<Transform, PhysicsCircle>(std::nullopt, [dt](Transform& t, PhysicsCircle& p)
 	{
 		Vector2& pos = t.Position();
@@ -175,4 +193,39 @@ void VerletSolver::Move(float dt)
 		pos += vel + p.acc * (dt * dt);
 		p.acc = Vector2::zero;
 	});
+	movePhaseCounter.EndSubFrame();
+}
+
+void VerletSolver::CollectStats()
+{
+	gravityPhaseCounter.EndFrame();
+	constraintPhaseCounter.EndFrame();
+	broadPhaseCounter.EndFrame();
+	narrowPhaseCounter.EndFrame();
+	movePhaseCounter.EndFrame();
+}
+
+const FrameCounter& VerletSolver::GravityPhaseCounter() const
+{
+	return gravityPhaseCounter;
+}
+
+const FrameCounter& VerletSolver::ConstraintPhaseCounter() const
+{
+	return constraintPhaseCounter;
+}
+
+const FrameCounter& VerletSolver::BroadPhaseCounter() const
+{
+	return broadPhaseCounter;
+}
+
+const FrameCounter& VerletSolver::NarrowPhaseCounter() const
+{
+	return narrowPhaseCounter;
+}
+
+const FrameCounter& VerletSolver::MovePhaseCounter() const
+{
+	return movePhaseCounter;
 }

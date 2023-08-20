@@ -50,6 +50,24 @@ uint32_t ThreadPool::ThreadCount()
 	return workerThreads.size();
 }
 
+std::vector<std::pair<size_t, size_t>> ThreadPool::SplitWork(size_t workAmount, size_t workerAmount)
+{
+	size_t sectionSize = workAmount / workerAmount;
+	size_t remainder = workAmount % workerAmount;
+	std::vector<std::pair<size_t, size_t>> ranges = {};
+	ranges.reserve(workerAmount);
+
+	size_t start = 0;
+	for(size_t i = 0; i < workerAmount; i++)
+	{
+		size_t end = start + sectionSize + static_cast<size_t>(i < remainder);
+		ranges.emplace_back(start, end - start);
+		start = end;
+	}
+
+	return ranges;
+}
+
 void ThreadPool::Worker(size_t index)
 {
 	while(true)

@@ -1,6 +1,7 @@
 #pragma once
 #include <deque>
 #include <chrono>
+#include <optional>
 
 class FrameCounter
 {
@@ -10,6 +11,8 @@ public:
 	FrameCounter(double updateRate = 2.0f);
 	void BeginFrame();
 	double EndFrame();
+	void BeginSubFrame();
+	double EndSubFrame();
 	void Frame(double dt);
 	double Framerate() const;
 	double Frametime() const;
@@ -22,5 +25,8 @@ private:
 	double frameSum = 0.0;
 	double time = 0.0;
 	size_t framecount = 0;
-	Clock::time_point tFrameStart;
+	std::optional<Clock::time_point> tFrameStart = std::nullopt;
+	double subFrameSum = 0.0;
+
+	double CurrentFrameDt() const;
 };

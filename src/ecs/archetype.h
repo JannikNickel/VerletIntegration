@@ -194,24 +194,6 @@ private:
 		}
 	}
 
-	static std::vector<std::pair<size_t, size_t>> SplitWork(size_t workCount, size_t threadCount)
-	{
-		size_t sectionSize = workCount / threadCount;
-		size_t remainder = workCount % threadCount;
-		std::vector<std::pair<size_t, size_t>> ranges = {};
-		ranges.reserve(threadCount);
-
-		size_t start = 0;
-		for(size_t i = 0; i < threadCount; i++)
-		{
-			size_t end = start + sectionSize + static_cast<size_t>(i < remainder);
-			ranges.emplace_back(start, end - start);
-			start = end;
-		}
-
-		return ranges;
-	}
-
 	template<typename Func, typename... Components>
 	static void QueryComponentsMT(Func&& entityFunc, ThreadPool& threadPool, const std::optional<uint32_t>& threads = std::nullopt)
 	{
@@ -224,7 +206,7 @@ private:
 		{
 			auto [comps, compCount] = QueryComponentData<Components...>(id, indices);
 
-			std::vector<std::pair<size_t, size_t>> sections = SplitWork(compCount, threadCount);
+			std::vector<std::pair<size_t, size_t>> sections = ThreadPool::SplitWork(compCount, threadCount);
 			std::vector<std::thread> handles = {};
 			for(size_t i = 0; i < threadCount; i++)
 			{
