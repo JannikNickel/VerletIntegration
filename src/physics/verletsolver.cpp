@@ -52,34 +52,12 @@ void VerletSolver::Simulate(float dt)
 	float stepDt = dt / static_cast<float>(steps);
 	for(unsigned int i = 0; i < steps; i++)
 	{
-		Gravity();
-		Constraint();
 		if(collision)
 		{
 			Collisions();
 		}
-		Move(stepDt);
+		UpdateObjects(stepDt);
 	}
-}
-
-void VerletSolver::Gravity()
-{
-	gravityPhaseCounter.BeginSubFrame();
-	ecs.QueryMT<PhysicsCircle>(std::nullopt, [this](PhysicsCircle& p)
-	{
-		p.acc.y += gravity;
-	});
-	gravityPhaseCounter.EndSubFrame();
-}
-
-void VerletSolver::Constraint()
-{
-	constraintPhaseCounter.BeginSubFrame();
-	ecs.QueryMT<Transform, PhysicsCircle>(std::nullopt, [this](Transform& t, PhysicsCircle& p)
-	{
-		constraint->Contrain(t.Position(), p);
-	});
-	constraintPhaseCounter.EndSubFrame();
 }
 
 void VerletSolver::Collisions()
@@ -182,37 +160,32 @@ void VerletSolver::Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTr
 	}
 }
 
-void VerletSolver::Move(float dt)
+void VerletSolver::UpdateObjects(float dt)
 {
-	movePhaseCounter.BeginSubFrame();
-	ecs.QueryMT<Transform, PhysicsCircle>(std::nullopt, [dt](Transform& t, PhysicsCircle& p)
+	updatePhaseCounter.BeginSubFrame();
+	ecs.QueryMT<Transform, PhysicsCircle>(std::nullopt, [this, dt](Transform& t, PhysicsCircle& p)
 	{
+		//Gravity
+		p.acc.y += gravity;
+
+		//Constrain
+		constraint->Contrain(t.Position(), p);
+
+		//Update
 		Vector2& pos = t.Position();
 		const Vector2 vel = pos - p.prevPos;
 		p.prevPos = pos;
 		pos += vel + p.acc * (dt * dt);
 		p.acc = Vector2::zero;
 	});
-	movePhaseCounter.EndSubFrame();
+	updatePhaseCounter.EndSubFrame();
 }
 
 void VerletSolver::CollectStats()
 {
-	gravityPhaseCounter.EndFrame();
-	constraintPhaseCounter.EndFrame();
 	broadPhaseCounter.EndFrame();
 	narrowPhaseCounter.EndFrame();
-	movePhaseCounter.EndFrame();
-}
-
-const FrameCounter& VerletSolver::GravityPhaseCounter() const
-{
-	return gravityPhaseCounter;
-}
-
-const FrameCounter& VerletSolver::ConstraintPhaseCounter() const
-{
-	return constraintPhaseCounter;
+	updatePhaseCounter.EndFrame();
 }
 
 const FrameCounter& VerletSolver::BroadPhaseCounter() const
@@ -225,7 +198,7 @@ const FrameCounter& VerletSolver::NarrowPhaseCounter() const
 	return narrowPhaseCounter;
 }
 
-const FrameCounter& VerletSolver::MovePhaseCounter() const
+const FrameCounter& VerletSolver::UpdatePhaseCounter() const
 {
-	return movePhaseCounter;
+	return updatePhaseCounter;
 }

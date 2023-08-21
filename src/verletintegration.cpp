@@ -55,7 +55,7 @@ int main()
 			{
 				float r = std::clamp(rand() / (float)RAND_MAX * maxParticleSize, minParticleSize, maxParticleSize);
 				float m = 1.0f;
-				Color col = Color::FromHSV(rand() / (float)RAND_MAX, 0.75f, 0.75f);
+				Color col = Color::FromHSV(time * 0.025f, 0.75f, 0.75f);
 				Vector2 pos = world->Center() + Vector2((static_cast<float>(i) - spawnAmount / 2.0f) * 15.0f, size * 0.25f);
 				Vector2 acc = Vector2(std::sinf(time), -0.33f * (spawnAmount > 1 ? 2.0f : 1.0f)).Normalized() * 500000.0f;
 
@@ -92,7 +92,7 @@ int main()
 			ImGui::LabelText("", "Constraint phase = %.2f ms", solver.ConstraintPhaseCounter().Frametime() * 1000.0);
 			ImGui::LabelText("", "Broad phase = %.2f ms", solver.BroadPhaseCounter().Frametime() * 1000.0);
 			ImGui::LabelText("", "Narrow phase = %.2f ms", solver.NarrowPhaseCounter().Frametime() * 1000.0);
-			ImGui::LabelText("", "Move phase = %.2f ms", solver.MovePhaseCounter().Frametime() * 1000.0);
+			ImGui::LabelText("", "Move phase = %.2f ms", solver.UpdatePhaseCounter().Frametime() * 1000.0);
 			ImGui::End();
 		}
 	});

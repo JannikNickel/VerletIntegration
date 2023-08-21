@@ -30,11 +30,9 @@ public:
 
 	VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps = 1, float partitioningSize = 25.0f);
 	void Update(float dt);
-	const FrameCounter& GravityPhaseCounter() const;
-	const FrameCounter& ConstraintPhaseCounter() const;
 	const FrameCounter& BroadPhaseCounter() const;
 	const FrameCounter& NarrowPhaseCounter() const;
-	const FrameCounter& MovePhaseCounter() const;
+	const FrameCounter& UpdatePhaseCounter() const;
 
 private:
 	float timeStep;
@@ -42,20 +40,16 @@ private:
 	EcsWorld& ecs;
 	IConstraint* constraint;
 	PartitioningGrid partitioning;
-	FrameCounter gravityPhaseCounter = FrameCounter(0.25f);
-	FrameCounter constraintPhaseCounter = FrameCounter(0.25f);
 	FrameCounter broadPhaseCounter = FrameCounter(0.25f);
 	FrameCounter narrowPhaseCounter = FrameCounter(0.25f);
-	FrameCounter movePhaseCounter = FrameCounter(0.25f);
+	FrameCounter updatePhaseCounter = FrameCounter(0.25f);
 	ThreadPool threadPool = {};
 
 	void CollectStats();
 	void Simulate(float dt);
-	void Gravity();
-	void Constraint();
 	void Collisions();
 	void SolveCell(PartitioningCell& cell);
 	void SolveCells(PartitioningCell& cell0, PartitioningCell& cell1);
 	void Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTransform, PhysicsCircle& b);
-	void Move(float dt);
+	void UpdateObjects(float dt);
 };

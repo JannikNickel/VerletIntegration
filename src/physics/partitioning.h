@@ -11,6 +11,7 @@ struct PartitioningCellEntry
 	PhysicsCircle* p;
 
 	PartitioningCellEntry(Transform* t, PhysicsCircle* p) : t(t), p(p) { }
+	PartitioningCellEntry() : t(nullptr), p(nullptr) { }
 };
 
 using PartitioningCell = std::vector<PartitioningCellEntry>;
@@ -41,7 +42,7 @@ public:
 
 	PartitioningCell& At(int32_t x, int32_t y)
 	{
-		return cells[y * cellsX + x];
+		return cells[x * cellsY + y];
 	}
 
 	void Insert(Transform* t, PhysicsCircle* p)
@@ -49,7 +50,7 @@ public:
 		Vector2& pos = t->Position();
 		int32_t cx = static_cast<int32_t>((pos.x - bMin.x) / bSize.x * static_cast<float>(cellsX));
 		int32_t cy = static_cast<int32_t>((pos.y - bMin.y) / bSize.y * static_cast<float>(cellsY));
-		cells[std::clamp(cy, 0, lastYCell) * cellsX + std::clamp(cx, 0, lastXCell)].push_back(PartitioningCellEntry(t, p));
+		cells[std::clamp(cx, 0, lastXCell) * cellsY + std::clamp(cy, 0, lastYCell)].push_back(PartitioningCellEntry(t, p));
 	}
 
 	int32_t CellsX() const { return cellsX; }
