@@ -48,7 +48,7 @@ int main()
 		time += dt;
 		frameCounter.Frame(dt);
 		
-		for(size_t i = 0; i <= spawnAmount; i++)
+		for(size_t i = 0; i < spawnAmount; i++)
 		{
 			spawnCooldown[i] -= dt;
 			if(physicsObjCount < limit && spawnCooldown[i] <= 0.0f/* && Input::KeyHeld(KeyCode::Enter)*/)
@@ -88,11 +88,9 @@ int main()
 		ImGui::SetNextWindowBgAlpha(0.25f);
 		if(ImGui::Begin("Solver", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			ImGui::LabelText("", "Gravity phase = %.2f ms", solver.GravityPhaseCounter().Frametime() * 1000.0);
-			ImGui::LabelText("", "Constraint phase = %.2f ms", solver.ConstraintPhaseCounter().Frametime() * 1000.0);
 			ImGui::LabelText("", "Broad phase = %.2f ms", solver.BroadPhaseCounter().Frametime() * 1000.0);
 			ImGui::LabelText("", "Narrow phase = %.2f ms", solver.NarrowPhaseCounter().Frametime() * 1000.0);
-			ImGui::LabelText("", "Move phase = %.2f ms", solver.UpdatePhaseCounter().Frametime() * 1000.0);
+			ImGui::LabelText("", "Update phase = %.2f ms", solver.UpdatePhaseCounter().Frametime() * 1000.0);
 			ImGui::End();
 		}
 	});

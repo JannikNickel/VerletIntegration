@@ -5,7 +5,6 @@
 #include <exception>
 #include <limits>
 #include <utility>
-#include <array>
 
 VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps, float partitioningSize)
 	: ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps), partitioningSize(partitioningSize),
@@ -146,7 +145,7 @@ void VerletSolver::Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTr
 	Vector2& aPos = aTransform.Position();
 	Vector2& bPos = bTransform.Position();
 	Vector2 dir = aPos - bPos;
-	float dst = dir.SqrLength();
+	float dst = std::max(dir.SqrLength(), 0.001f);
 	float r = a.radius + b.radius;
 	r *= r;
 	if(dst < r)
