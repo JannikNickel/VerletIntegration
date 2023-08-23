@@ -73,7 +73,7 @@ void VerletSolver::Collisions()
 	static const int32_t lastXCell = cellsX - 1;
 	static const int32_t lastYCell = cellsY - 1;
 
-	ecs.QueryChunked<Transform, PhysicsCircle>(std::numeric_limits<size_t>::max(), [&](Transform* t, PhysicsCircle* p, size_t chunkSize)
+	ecs.QueryChunked<Transform, Particle>(std::numeric_limits<size_t>::max(), [&](Transform* t, Particle* p, size_t chunkSize)
 	{
 		broadPhaseCounter.BeginSubFrame();
 		partitioning.Clear();
@@ -140,7 +140,7 @@ void VerletSolver::SolveCells(PartitioningCell& cell0, PartitioningCell& cell1)
 	}
 }
 
-void VerletSolver::Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTransform, PhysicsCircle& b)
+void VerletSolver::Solve(Transform& aTransform, Particle& a, Transform& bTransform, Particle& b)
 {
 	Vector2& aPos = aTransform.Position();
 	Vector2& bPos = bTransform.Position();
@@ -162,8 +162,11 @@ void VerletSolver::Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTr
 void VerletSolver::UpdateObjects(float dt)
 {
 	updatePhaseCounter.BeginSubFrame();
-	ecs.QueryMT<Transform, PhysicsCircle>(std::nullopt, [this, dt](Transform& t, PhysicsCircle& p)
+	ecs.QueryMT<Transform, Particle>(std::nullopt, [this, dt](Transform& t, Particle& p)
 	{
+		//Make sure applied forces (like initial) are represented as force over 1 second to make it delta time and substep independent
+		p.acc *= (1.0f / dt);
+
 		//Gravity
 		p.acc.y += gravity;
 

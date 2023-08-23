@@ -50,6 +50,6 @@ private:
 	void Collisions();
 	void SolveCell(PartitioningCell& cell);
 	void SolveCells(PartitioningCell& cell0, PartitioningCell& cell1);
-	void Solve(Transform& aTransform, PhysicsCircle& a, Transform& bTransform, PhysicsCircle& b);
+	void Solve(Transform& aTransform, Particle& a, Transform& bTransform, Particle& b);
 	void UpdateObjects(float dt);
 };

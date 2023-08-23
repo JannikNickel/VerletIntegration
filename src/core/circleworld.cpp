@@ -18,7 +18,7 @@ Vector2 CircleWorld::Center() const
 	return center;
 }
 
-void CircleWorld::Contrain(Vector2& pos, const PhysicsCircle& p) const
+void CircleWorld::Contrain(Vector2& pos, const Particle& p) const
 {
 	Vector2 dir = pos - center;
 	float dst = dir.SqrLength();

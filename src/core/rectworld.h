@@ -10,7 +10,7 @@ public:
 	RectWorld(Color background, Vector2 center, Vector2 size, Color color);
 	void Render() override;
 	Vector2 Center() const override;
-	void Contrain(Vector2& pos, const PhysicsCircle& p) const override;
+	void Contrain(Vector2& pos, const Particle& p) const override;
 	std::pair<Vector2, Vector2> Bounds() const override;
 
 private:

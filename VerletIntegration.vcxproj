@@ -55,7 +55,7 @@
     <ClInclude Include="src\engine\keycode.h" />
     <ClInclude Include="src\simulation\simulation.h" />
     <ClInclude Include="src\structs\color.h" />
-    <ClInclude Include="src\simulation\components\physicscircle.h" />
+    <ClInclude Include="src\simulation\components\particle.h" />
     <ClInclude Include="src\simulation\components\rendercolor.h" />
     <ClInclude Include="src\simulation\components\transform.h" />
     <ClInclude Include="src\structs\matrix4.h" />

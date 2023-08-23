@@ -8,9 +8,9 @@
 struct PartitioningCellEntry
 {
 	Transform* t;
-	PhysicsCircle* p;
+	Particle* p;
 
-	PartitioningCellEntry(Transform* t, PhysicsCircle* p) : t(t), p(p) { }
+	PartitioningCellEntry(Transform* t, Particle* p) : t(t), p(p) { }
 	PartitioningCellEntry() : t(nullptr), p(nullptr) { }
 };
 
@@ -45,7 +45,7 @@ public:
 		return cells[x * cellsY + y];
 	}
 
-	void Insert(Transform* t, PhysicsCircle* p)
+	void Insert(Transform* t, Particle* p)
 	{
 		Vector2& pos = t->Position();
 		int32_t cx = static_cast<int32_t>((pos.x - bMin.x) / bSize.x * static_cast<float>(cellsX));

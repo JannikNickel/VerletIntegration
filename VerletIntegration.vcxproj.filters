@@ -140,7 +140,7 @@
     <ClInclude Include="src\simulation\components\transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\simulation\components\physicscircle.h">
+    <ClInclude Include="src\simulation\components\particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\simulation\simulation.h">

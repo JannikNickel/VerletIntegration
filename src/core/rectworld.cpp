@@ -19,7 +19,7 @@ Vector2 RectWorld::Center() const
 	return center;
 }
 
-void RectWorld::Contrain(Vector2& pos, const PhysicsCircle& p) const
+void RectWorld::Contrain(Vector2& pos, const Particle& p) const
 {
 	float xDiff = pos.x - center.x;
 	float extX = extends.x - p.radius;
