@@ -167,6 +167,9 @@ void VerletSolver::UpdateObjects(float dt)
 		//Make sure applied forces (like initial) are represented as force over 1 second to make it delta time and substep independent
 		p.acc *= (1.0f / dt);
 
+		//Apply mass to forces
+		p.acc /= p.mass;
+
 		//Gravity
 		p.acc.y += gravity;
 
