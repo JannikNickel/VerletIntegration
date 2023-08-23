@@ -22,6 +22,7 @@ int main()
 	const unsigned int substeps = 8;
 	const float minParticleSize = 3.5f * 0.5f;
 	const float maxParticleSize = 10.0f * 0.5f;
+	const float particleBounciness = 0.1f;
 	const bool circleWorld = false;
 
 	Window window = Window(static_cast<unsigned int>(size), static_cast<unsigned int>(size), "Verlet Integration", -1, -1, true);
@@ -51,16 +52,16 @@ int main()
 		for(size_t i = 0; i < spawnAmount; i++)
 		{
 			spawnCooldown[i] -= dt;
-			if(physicsObjCount < limit && spawnCooldown[i] <= 0.0f/* && Input::KeyHeld(KeyCode::Enter)*/)
+			if(physicsObjCount < limit && spawnCooldown[i] <= 0.0f && Input::KeyHeld(KeyCode::Enter))
 			{
 				float r = std::clamp(rand() / (float)RAND_MAX * maxParticleSize, minParticleSize, maxParticleSize);
 				float m = 1.0f;
 				Color col = Color::FromHSV(time * 0.025f, 0.75f, 0.75f);
 				Vector2 pos = world->Center() + Vector2((static_cast<float>(i) - spawnAmount / 2.0f) * 15.0f, size * 0.25f);
-				Vector2 acc = Vector2(std::sinf(time), -0.33f * (spawnAmount > 1 ? 2.0f : 1.0f)).Normalized() * 500.0f;
+				Vector2 acc = Vector2(std::sinf(time), -0.33f * (spawnAmount > 1 ? 2.0f : 1.0f)).Normalized() * 1500.0f;
 
 				spawnCooldown[i] = 0.015f * r;
-				ecs.CreateEntity(Transform(Matrix4::PositionScale2d(pos, r * 2.0f)), RenderColor(col), Particle(r, m, pos, acc));
+				ecs.CreateEntity(Transform(Matrix4::PositionScale2d(pos, r * 2.0f)), RenderColor(col), Particle(r, m, particleBounciness, pos, acc));
 				physicsObjCount++;
 			}
 		}

@@ -15,6 +15,8 @@ struct Vector2
 	float Length() const;
 	float SqrLength() const;
 	Vector2 Normalized() const;
+	Vector2 PerpCW() const;
+	Vector2 PerpCCW() const;
 
 	static float Distance(Vector2 a, Vector2 b);
 	static Vector2 Lerp(Vector2 a, Vector2 b, float t);

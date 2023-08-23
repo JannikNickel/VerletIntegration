@@ -37,6 +37,16 @@ Vector2 Vector2::Normalized() const
 	return *this;
 }
 
+Vector2 Vector2::PerpCW() const
+{
+	return Vector2(y, -x);
+}
+
+Vector2 Vector2::PerpCCW() const
+{
+	return Vector2(-y, x);
+}
+
 float Vector2::Distance(Vector2 a, Vector2 b)
 {
 	return (b - a).Length();

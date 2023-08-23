@@ -7,6 +7,6 @@ class IConstraint
 {
 public:
 	virtual ~IConstraint() { };
-	virtual void Contrain(Vector2& pos, const Particle& p) const = 0;
+	virtual void Contrain(Vector2& pos, Particle& p) const = 0;
 	virtual std::pair<Vector2, Vector2> Bounds() const = 0;
 };

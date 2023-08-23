@@ -19,22 +19,26 @@ Vector2 RectWorld::Center() const
 	return center;
 }
 
-void RectWorld::Contrain(Vector2& pos, const Particle& p) const
+void RectWorld::Contrain(Vector2& pos, Particle& p) const
 {
 	float xDiff = pos.x - center.x;
 	float extX = extends.x - p.radius;
 	if(std::fabsf(xDiff) > extX)
 	{
+		Vector2 vel = pos - p.prevPos;
 		float sgn = Math::Sgn(xDiff);
 		pos.x = center.x + sgn * extX;
+		p.prevPos = pos + Vector2(vel.x * p.bounciness, -vel.y);
 	}
 
 	float yDiff = pos.y - center.y;
 	float extY = extends.y - p.radius;
 	if(std::fabsf(yDiff) > extY)
 	{
+		Vector2 vel = pos - p.prevPos;
 		float sgn = Math::Sgn(yDiff);
 		pos.y = center.y + sgn * extY;
+		p.prevPos = pos + Vector2(-vel.x, vel.y * p.bounciness);
 	}
 }
 
