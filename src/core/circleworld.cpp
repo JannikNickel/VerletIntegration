@@ -18,6 +18,11 @@ Vector2 CircleWorld::Center() const
 	return center;
 }
 
+bool CircleWorld::Contains(Vector2 point) const
+{
+	return Vector2::Distance(center, point) <= radius;
+}
+
 void CircleWorld::Contrain(Vector2& pos, Particle& p) const
 {
 	Vector2 dir = pos - center;

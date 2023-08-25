@@ -32,6 +32,8 @@ public:
 
 	int32_t Size() { return size; }
 	std::unique_ptr<World> CreateWorld();
+	void AddObject(const std::shared_ptr<SceneObject>& obj);
+	const std::vector<std::shared_ptr<SceneObject>>& Objects() const;
 
 private:
 	int32_t size;

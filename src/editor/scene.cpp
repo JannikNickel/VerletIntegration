@@ -14,3 +14,13 @@ std::unique_ptr<World> Scene::CreateWorld()
 			return nullptr;
 	}
 }
+
+void Scene::AddObject(const std::shared_ptr<SceneObject>& obj)
+{
+	objects.push_back(obj);
+}
+
+const std::vector<std::shared_ptr<SceneObject>>& Scene::Objects() const
+{
+	return objects;
+}

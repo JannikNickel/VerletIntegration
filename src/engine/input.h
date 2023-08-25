@@ -8,8 +8,8 @@ class Input
 	friend Window;
 
 public:
-	static Vector2 GetMousePosition();
-	static Vector2 GetMouseDelta();
+	static Vector2 MousePosition();
+	static Vector2 MouseDelta();
 	static bool KeyPressed(KeyCode code);
 	static bool KeyHeld(KeyCode code);
 	static bool KeyReleased(KeyCode code);

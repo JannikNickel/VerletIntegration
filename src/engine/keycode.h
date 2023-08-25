@@ -2,9 +2,9 @@
 
 enum class KeyCode : int
 {
-	LeftMouseButton = 0,
-	RightMouseButton = 1,
-	MiddleMouseButton = 2,
+	LMB = 0,
+	RMB = 1,
+	MMB = 2,
 	A = 65,
 	B = 66,
 	C = 67,

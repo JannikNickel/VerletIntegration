@@ -19,6 +19,13 @@ Vector2 RectWorld::Center() const
 	return center;
 }
 
+bool RectWorld::Contains(Vector2 point) const
+{
+	Vector2 min = center - extends;
+	Vector2 max = center + extends;
+	return min.x < point.x && max.x > point.x && min.y < point.y && max.y > point.y;
+}
+
 void RectWorld::Contrain(Vector2& pos, Particle& p) const
 {
 	float xDiff = pos.x - center.x;

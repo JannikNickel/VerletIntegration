@@ -42,6 +42,7 @@
     <ClInclude Include="src\core\circleworld.h" />
     <ClInclude Include="src\core\rectworld.h" />
     <ClInclude Include="src\editor\editor.h" />
+    <ClInclude Include="src\editor\particleobject.h" />
     <ClInclude Include="src\editor\scene.h" />
     <ClInclude Include="src\editor\sceneobject.h" />
     <ClInclude Include="src\editor\guihelper.h" />

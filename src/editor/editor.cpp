@@ -1,29 +1,34 @@
 #include "editor.h"
 #include "guihelper.h"
+#include "particleobject.h"
 #include "renderer/graphics.h"
+#include "engine/input.h"
 #include "imgui.h"
 #include <algorithm>
 #include <cstdint>
 
+static const Color previewValidColor = Color::From32(53, 132, 222, 128);
+static const Color previewInvalidColor = Color::From32(222, 53, 53, 128);
+static const Color sceneObjectColor = Color::From32(255, 255, 255, 200);
+
 struct SimulationPopupData
 {
 	int32_t sceneSize = 1080;
-	WorldData worldData = {	WorldShape::Rect, { Vector2(sceneSize, sceneSize) }, Color::From32(30, 30, 30),	Color::From32(15, 15, 15) };
+	WorldData worldData = {	WorldShape::Rect, { Vector2(sceneSize, sceneSize) }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) };
 };
 
 void Editor::Update(double dt)
 {
-	/*ImGui::ShowDemoWindow();
-	return;*/
-
-	MainMenuBar();
-
-	if(currentPopup != nullptr)
+	static bool init = false;
+	if(!init)
 	{
-		(*currentPopup)();
+		init = true;
+		OpenScene(std::make_shared<Scene>(1080, WorldData { WorldShape::Circle, { .radius = 500.0f }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) }));
 	}
 
 	Render();
+	UI();
+	Placement();
 }
 
 void Editor::Render()
@@ -31,6 +36,34 @@ void Editor::Render()
 	if(world != nullptr)
 	{
 		world->Render();
+	}
+	for(const std::shared_ptr<SceneObject>& obj : scene->Objects())
+	{
+		obj->Render(sceneObjectColor);
+	}
+}
+
+void Editor::UI()
+{
+	MainMenuBar();
+	if(currentPopup != nullptr)
+	{
+		(*currentPopup)();
+	}
+}
+
+void Editor::Placement()
+{
+	if(currentPreview != nullptr)
+	{
+		Vector2 pos = Input::MousePosition();
+		bool valid = world->Contains(pos);
+		currentPreview->position = pos;
+		currentPreview->Render(valid ? previewValidColor : previewInvalidColor);
+		if(valid && Input::KeyPressed(KeyCode::LMB))
+		{
+			scene->AddObject(std::move(currentPreview));
+		}
 	}
 }
 
@@ -40,8 +73,11 @@ void Editor::OpenScene(std::shared_ptr<Scene> scene)
 	this->world = scene->CreateWorld();
 
 	Graphics::SetProjection(scene->Size(), scene->Size());
+}
 
-	//TODO load scene
+void Editor::CreatePreview(std::unique_ptr<SceneObject>&& obj)
+{
+	currentPreview = std::move(obj);
 }
 
 void Editor::MainMenuBar()
@@ -101,7 +137,7 @@ void Editor::AddMenu()
 {
 	if(ImGui::MenuItem("Particle", ""))
 	{
-
+		CreatePreview(std::make_unique<ParticleObject>(Vector2::zero));
 	}
 	if(ImGui::MenuItem("Particle Spawner", ""))
 	{

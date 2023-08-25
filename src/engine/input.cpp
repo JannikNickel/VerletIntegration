@@ -11,12 +11,12 @@ static std::pair<unsigned char, bool> keyStates[static_cast<int>(KeyCode::_END)]
 static void HandleGLFWKeyInput(GLFWwindow* window, int key, int scancode, int action, int mods);
 static void HandleGLFWInput(GLFWwindow* window, int key, int action, int mods);
 
-Vector2 Input::GetMousePosition()
+Vector2 Input::MousePosition()
 {
 	return Vector2(mouseX, mouseY);
 }
 
-Vector2 Input::GetMouseDelta()
+Vector2 Input::MouseDelta()
 {
 	return Vector2(mouseDeltaX, mouseDeltaY);
 }
@@ -24,7 +24,7 @@ Vector2 Input::GetMouseDelta()
 static bool CompareKeyState(KeyCode code, int target)
 {
 	int index = static_cast<int>(code);
-	if(index <= 0 || index >= static_cast<int>(KeyCode::_END))
+	if(index < 0 || index >= static_cast<int>(KeyCode::_END))
 	{
 		return false;
 	}
@@ -61,7 +61,10 @@ void Input::Update(GLFWwindow* window)
 {
 	double px = mouseX;
 	double py = mouseY;
+	int w, h;
+	glfwGetWindowSize(window, &w, &h);
 	glfwGetCursorPos(window, &mouseX, &mouseY);
+	mouseY = h - mouseY;
 	mouseDeltaX = mouseX - px;
 	mouseDeltaY = mouseY - py;
 

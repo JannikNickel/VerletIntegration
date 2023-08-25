@@ -11,6 +11,7 @@ public:
 	virtual ~World();
 	virtual void Render();
 	virtual Vector2 Center() const = 0;
+	virtual bool Contains(Vector2 point) const = 0;
 
 protected:
 	Color background;
