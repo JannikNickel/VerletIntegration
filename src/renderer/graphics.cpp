@@ -23,6 +23,8 @@ static const unsigned int quadIndices[] =
 };
 
 static Window* window;
+static unsigned int windowWidth;
+static unsigned int windowHeight;
 
 static unsigned int quadVBO, quadVAO, quadEBO;
 
@@ -98,11 +100,22 @@ static unsigned int CompileShaderProgram(const char* vShaderPath, const char* fS
 	return shaderProgram;
 }
 
-static void SetViewProjMat(unsigned int shader, const Matrix4& view, const Matrix4& proj)
+static void SetViewMat(unsigned int shader, const Matrix4& view)
 {
 	glUseProgram(shader);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&view));
+}
+
+static void SetProjMat(unsigned int shader, const Matrix4& proj)
+{
+	glUseProgram(shader);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&proj));
+}
+
+static void SetViewProjMat(unsigned int shader, const Matrix4& view, const Matrix4& proj)
+{
+	SetViewMat(shader, view);
+	SetProjMat(shader, proj);
 }
 
 static void CreateVertexArrayObject(unsigned int* vao, unsigned int* vbo, unsigned int* ebo, const float* vertices, int verticesLength, const unsigned int* indices, int indicesLength, unsigned int* instanceTransformBuffer = nullptr, unsigned int* instanceColorBuffer = nullptr)
@@ -179,6 +192,8 @@ static unsigned int CreateTexture(const char* path)
 void Graphics::Init(Window* window, unsigned int width, unsigned int height)
 {
 	::window = window;
+	windowWidth = width;
+	windowHeight = height;
 
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
@@ -220,6 +235,13 @@ void Graphics::Shutdown()
 
 	glDeleteTextures(1, &quadTex);
 	glDeleteTextures(1, &circleTex);
+}
+
+void Graphics::SetProjection(unsigned int width, unsigned int height)
+{
+	Matrix4 proj = Matrix4::Ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
+	SetProjMat(shaderProgram, proj);
+	SetProjMat(instancedShaderProgram, proj);
 }
 
 void Graphics::SetClearColor(Color color)

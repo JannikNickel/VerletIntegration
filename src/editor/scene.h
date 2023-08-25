@@ -21,6 +21,8 @@ struct WorldData
 		Vector2 size;
 		float radius;
 	} bounds;
+	Color background;
+	Color color;
 };
 
 class Scene
@@ -28,7 +30,8 @@ class Scene
 public:
 	Scene(int32_t size, WorldData world) : size(size), world(world), objects({}) { }
 
-	std::unique_ptr<World> CreateWorld(Color background, Color color);
+	int32_t Size() { return size; }
+	std::unique_ptr<World> CreateWorld();
 
 private:
 	int32_t size;

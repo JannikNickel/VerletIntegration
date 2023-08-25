@@ -21,5 +21,5 @@ private:
 	void FileMenu();
 	void AddMenu();
 
-	void NewSimulationPopup();
+	void NewSimulationPopup(struct SimulationPopupData& data);
 };
