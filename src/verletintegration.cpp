@@ -11,7 +11,7 @@ static const float windowSize = 1080;
 
 int main()
 {
-	Window window = Window(static_cast<unsigned int>(windowSize), static_cast<unsigned int>(windowSize), "Verlet Integration", -1, -1, true);
+	Window window = Window(static_cast<unsigned int>(windowSize), static_cast<unsigned int>(windowSize), "Verlet Integration", 6000, 100, true);
 	FrameCounter frameCounter = FrameCounter(0.5);
 
 	Editor editor = Editor();

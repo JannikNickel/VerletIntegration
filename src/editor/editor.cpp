@@ -10,6 +10,8 @@
 static const Color previewValidColor = Color::From32(53, 132, 222, 128);
 static const Color previewInvalidColor = Color::From32(222, 53, 53, 128);
 static const Color sceneObjectColor = Color::From32(255, 255, 255, 200);
+static const Color selectedColor = Color::From32(222, 152, 53, 255);
+static const Color selectedHoverColor = Color::From32(222, 183, 111, 255);
 
 struct SimulationPopupData
 {
@@ -29,6 +31,7 @@ void Editor::Update(double dt)
 	Render();
 	UI();
 	Placement();
+	Selection();
 }
 
 void Editor::Render()
@@ -39,7 +42,7 @@ void Editor::Render()
 	}
 	for(const std::shared_ptr<SceneObject>& obj : scene->Objects())
 	{
-		obj->Render(sceneObjectColor);
+		obj->Render(sceneObjectColor * (currentSelected == obj ? selectedColor : (currentHovered == obj ? selectedHoverColor : Color::white)));
 	}
 }
 
@@ -67,7 +70,29 @@ void Editor::Placement()
 	}
 }
 
-void Editor::OpenScene(std::shared_ptr<Scene> scene)
+void Editor::Selection()
+{
+	if(currentPreview != nullptr)
+	{
+		return;
+	}
+
+	Vector2 mousePos = Input::MousePosition();
+	currentHovered = nullptr;
+	for(const std::shared_ptr<SceneObject>& obj : scene->Objects())
+	{
+		if(obj->IsHovered(mousePos))
+		{
+			currentHovered = obj;
+		}
+	}
+	if(Input::KeyPressed(KeyCode::LMB))
+	{
+		SelectObject(currentHovered);
+	}
+}
+
+void Editor::OpenScene(const std::shared_ptr<Scene>& scene)
 {
 	this->scene = scene;
 	this->world = scene->CreateWorld();
@@ -78,6 +103,11 @@ void Editor::OpenScene(std::shared_ptr<Scene> scene)
 void Editor::CreatePreview(std::unique_ptr<SceneObject>&& obj)
 {
 	currentPreview = std::move(obj);
+}
+
+void Editor::SelectObject(const std::shared_ptr<SceneObject>& obj)
+{
+	currentSelected = obj;
 }
 
 void Editor::MainMenuBar()

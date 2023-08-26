@@ -11,6 +11,7 @@ public:
 	virtual ~SceneObject() { }
 
 	virtual void Render(const Color& color) const = 0;
+	virtual bool IsHovered(Vector2 mousePos) const = 0;
 
 protected:
 	Vector2 position;
