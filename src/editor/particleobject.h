@@ -4,7 +4,7 @@
 #include "imgui.h"
 #include <algorithm>
 
-class ParticleObject : public SceneObject
+class ParticleObject : public CloneableSceneObject<ParticleObject>
 {
 public:
 	float radius = 10.0f;
@@ -12,7 +12,7 @@ public:
 	float bounciness = 0.1f;
 	Color color = Color::white;
 
-	ParticleObject(Vector2 position) : SceneObject(position)
+	ParticleObject(Vector2 position) : CloneableSceneObject(position)
 	{
 		
 	}
@@ -22,9 +22,9 @@ public:
 		return "Particle";
 	}
 
-	void Render(const Color& color) const override
+	void Render(float dt, const std::optional<Color>& color) const override
 	{
-		Graphics::Circle(position, radius, color);
+		Graphics::Circle(position, radius, (ignColTimer -= dt) > 0.0f ? this->color : color.value_or(this->color));
 	}
 
 	bool IsHovered(Vector2 mousePos) const override
@@ -32,27 +32,32 @@ public:
 		return Vector2::Distance(position, mousePos) <= radius;
 	}
 
-	void Edit() override
+	EditResult Edit() override
 	{
 		ImGui::LabelText("", "Radius");
-		if(ImGui::InputFloat("##radiusInput", &radius, 0, 0, "%0.2f"))
-		{
-			radius = std::clamp(radius, 1.0f, 10.0f);
-		}
+		GuiHelper::ClampedFloatInput("##radius", &radius, "%0.2f", 1.0f, 10.0f);
 
 		ImGui::LabelText("", "Mass");
-		if(ImGui::InputFloat("##massInput", &mass, 0, 0, "%0.2f"))
-		{
-			mass = std::clamp(mass, 0.01f, 10000.0f);
-		}
+		GuiHelper::ClampedFloatInput("##massInput", &mass, "%0.2f", 0.01f, 10000.0f);
 
 		ImGui::LabelText("", "Bounciness");
-		if(ImGui::InputFloat("##bouncinessInput", &bounciness, 0, 0, "%0.2f"))
-		{
-			bounciness = std::clamp(bounciness, 0.0f, 1.0f);
-		}
+		GuiHelper::ClampedFloatInput("##bouncinessInput", &bounciness, "%0.2f", 0.0f, 1.0f);
 
 		ImGui::LabelText("", "Color");
-		ImGui::ColorEdit4("##colorInput", &color.r, ImGuiColorEditFlags_InputHSV);
+		if(ImGui::ColorEdit4("##colorInput", &color.r, ImGuiColorEditFlags_DisplayHex))
+		{
+			ignColTimer = 2.0f;
+		}
+
+		ImGui::Spacing();
+		int result = GuiHelper::HorizontalButtonSplit("Delete", "Duplicate");
+		if(result > 0.0f)
+		{
+			ignColTimer = 0.0;
+		}
+		return static_cast<EditResult>(result);
 	}
+
+private:
+	mutable float ignColTimer = 0.0;
 };

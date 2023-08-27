@@ -1,6 +1,8 @@
 #pragma once
 #include "imgui.h"
 #include "magic_enum.hpp"
+#include <algorithm>
+#include <limits>
 
 namespace GuiHelper
 {
@@ -19,12 +21,12 @@ namespace GuiHelper
 	{
 		const ImGuiStyle& style = ImGui::GetStyle();
 		float width = ImGui::GetContentRegionAvail().x;
-		if(ImGui::Button("Create", { width * 0.5f - style.ItemInnerSpacing.x, 0 }))
+		if(ImGui::Button(button0, { width * 0.5f - style.ItemInnerSpacing.x, 0 }))
 		{
 			return 1;
 		}
 		ImGui::SameLine();
-		if(ImGui::Button("Cancel", { width * 0.5f - style.ItemInnerSpacing.x, 0 }))
+		if(ImGui::Button(button1, { width * 0.5f - style.ItemInnerSpacing.x, 0 }))
 		{
 			return 2;
 		}
@@ -48,5 +50,15 @@ namespace GuiHelper
 			ImGui::EndCombo();
 		}
 		return changed;
+	}
+
+	inline bool ClampedFloatInput(const char* label, float* value, const char* format = "%0.2f", float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max())
+	{
+		if(ImGui::InputFloat(label, value, 0.0f, 0.0f, format))
+		{
+			*value = std::clamp(*value, min, max);
+			return true;
+		}
+		return false;
 	}
 }

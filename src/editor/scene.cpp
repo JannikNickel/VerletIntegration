@@ -1,6 +1,7 @@
 #include "scene.h"
 #include "core/rectworld.h"
 #include "core/circleworld.h"
+#include <algorithm>
 
 std::unique_ptr<World> Scene::CreateWorld()
 {
@@ -18,6 +19,14 @@ std::unique_ptr<World> Scene::CreateWorld()
 void Scene::AddObject(const std::shared_ptr<SceneObject>& obj)
 {
 	objects.push_back(obj);
+}
+
+void Scene::RemoveObject(const std::shared_ptr<SceneObject>& obj)
+{
+	objects.erase(std::remove_if(objects.begin(), objects.end(), [&target = obj](const std::shared_ptr<SceneObject>& obj)
+	{
+		return obj == target;
+	}));
 }
 
 const std::vector<std::shared_ptr<SceneObject>>& Scene::Objects() const

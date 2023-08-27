@@ -34,22 +34,25 @@ void Editor::Update(double dt)
 		OpenScene(std::make_shared<Scene>(1080, WorldData { WorldShape::Circle, { .radius = 500.0f }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) }));
 	}
 
-	Render();
+	Render(dt);
 	UI();
 	Selection();
 	SelectionInteraction();
-	Placement();
+	Placement(dt);
 }
 
-void Editor::Render()
+void Editor::Render(double dt)
 {
 	if(world != nullptr)
 	{
 		world->Render();
 	}
+
+	std::shared_ptr<SceneObject> selected = currentSelected.lock();
+	std::shared_ptr<SceneObject> hovered = currentHovered.lock();
 	for(const std::shared_ptr<SceneObject>& obj : scene->Objects())
 	{
-		obj->Render(sceneObjectColor * (currentSelected == obj ? selectedColor : (currentHovered == obj ? selectedHoverColor : Color::white)));
+		obj->Render(dt, selected == obj ? std::make_optional(selectedColor) : (hovered == obj ? std::make_optional(selectedHoverColor) : std::nullopt));
 	}
 }
 
@@ -62,14 +65,14 @@ void Editor::UI()
 	}
 }
 
-void Editor::Placement()
+void Editor::Placement(double dt)
 {
 	if(currentPreview != nullptr)
 	{
 		Vector2 pos = Input::MousePosition();
-		bool valid = world->Contains(pos) && GetHoveredObject() == nullptr;
+		bool valid = world->Contains(pos) && GetHoveredObject().expired();
 		currentPreview->position = pos;
-		currentPreview->Render(valid ? previewValidColor : previewInvalidColor);
+		currentPreview->Render(dt, valid ? previewValidColor : previewInvalidColor);
 		if(valid && Input::KeyPressed(KeyCode::LMB))
 		{
 			scene->AddObject(std::move(currentPreview));
@@ -85,7 +88,7 @@ void Editor::Selection()
 	}
 
 	currentHovered = GetHoveredObject();
-	if(Input::KeyPressed(KeyCode::LMB) && !ImGui::IsAnyItemHovered())
+	if(Input::KeyPressed(KeyCode::LMB) && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow | ImGuiHoveredFlags_AllowWhenBlockedByPopup))
 	{
 		SelectObject(currentHovered);
 	}
@@ -93,15 +96,25 @@ void Editor::Selection()
 
 void Editor::SelectionInteraction()
 {
-	if(currentSelected != nullptr)
+	if(std::shared_ptr<SceneObject> selected = currentSelected.lock())
 	{
-		Vector2 pos = currentSelected->position;
+		Vector2 pos = selected->position;
 		float xDir = pos.x / static_cast<float>(scene->Size()) > 0.75f ? -1.0f : 1.0f;
 		ImGui::SetNextWindowPos({ pos.x + xDir * 25.0f, window->Size().y - pos.y - GuiHelper::TitleBarHeight() * 0.5f }, ImGuiCond_Appearing, { (-xDir + 1.0f) * 0.5f, 0.0f });
-		if(ImGui::Begin(currentSelected->ObjectName(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+		EditResult result = EditResult::None;
+		if(ImGui::Begin(selected->ObjectName(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			currentSelected->Edit();
+			result = selected->Edit();
 			ImGui::End();
+		}
+
+		if(result == EditResult::Delete || Input::KeyPressed(KeyCode::Delete))
+		{
+			scene->RemoveObject(selected);
+		}
+		else if(result == EditResult::Duplicate)
+		{
+			CreatePreview(selected->Clone());
 		}
 	}
 }
@@ -116,16 +129,16 @@ void Editor::OpenScene(const std::shared_ptr<Scene>& scene)
 
 void Editor::CreatePreview(std::unique_ptr<SceneObject>&& obj)
 {
-	SelectObject(nullptr);
+	SelectObject({});
 	currentPreview = std::move(obj);
 }
 
-void Editor::SelectObject(const std::shared_ptr<SceneObject>& obj)
+void Editor::SelectObject(const std::weak_ptr<SceneObject>& obj)
 {
 	currentSelected = obj;
 }
 
-std::shared_ptr<SceneObject> Editor::GetHoveredObject()
+std::weak_ptr<SceneObject> Editor::GetHoveredObject()
 {
 	Vector2 mousePos = Input::MousePosition();
 	for(const std::shared_ptr<SceneObject>& obj : scene->Objects() | std::views::reverse)
@@ -135,7 +148,7 @@ std::shared_ptr<SceneObject> Editor::GetHoveredObject()
 			return obj;
 		}
 	}
-	return nullptr;
+	return std::weak_ptr<SceneObject>();
 }
 
 void Editor::MainMenuBar()

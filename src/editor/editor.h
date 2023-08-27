@@ -17,23 +17,23 @@ private:
 
 	std::unique_ptr<std::function<void()>> currentPopup = nullptr;
 	std::unique_ptr<SceneObject> currentPreview = nullptr;
-	std::shared_ptr<SceneObject> currentSelected = nullptr;
-	std::shared_ptr<SceneObject> currentHovered = nullptr;
+	std::weak_ptr<SceneObject> currentSelected = std::weak_ptr<SceneObject>();
+	std::weak_ptr<SceneObject> currentHovered = std::weak_ptr<SceneObject>();
 
 	std::shared_ptr<Scene> scene = nullptr;
 	std::unique_ptr<World> world = nullptr;
 
-	void Render();
+	void Render(double dt);
 	void UI();
-	void Placement();
+	void Placement(double dt);
 	void Selection();
 	void SelectionInteraction();
 
 	void OpenScene(const std::shared_ptr<Scene>& scene);
 	void CreatePreview(std::unique_ptr<SceneObject>&& obj);
-	void SelectObject(const std::shared_ptr<SceneObject>& obj);
+	void SelectObject(const std::weak_ptr<SceneObject>& obj);
 
-	std::shared_ptr<SceneObject> GetHoveredObject();
+	std::weak_ptr<SceneObject> GetHoveredObject();
 
 	void MainMenuBar();
 	void FileMenu();
