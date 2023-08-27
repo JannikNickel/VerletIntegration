@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 #include "engine/window.h"
 #include "utils/framecounter.h"
@@ -11,12 +12,11 @@ static const float windowSize = 1080;
 
 int main()
 {
-	Window window = Window(static_cast<unsigned int>(windowSize), static_cast<unsigned int>(windowSize), "Verlet Integration", 6000, 100, true);
+	std::shared_ptr<Window> window = std::make_shared<Window>(static_cast<unsigned int>(windowSize), static_cast<unsigned int>(windowSize), "Verlet Integration", -1, -1, true);
 	FrameCounter frameCounter = FrameCounter(0.5);
+	Editor editor = Editor(window);
 
-	Editor editor = Editor();
-
-	window.Show([&](double dt)
+	window->Show([&](double dt)
 	{
 		frameCounter.Frame(dt);
 

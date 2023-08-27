@@ -4,6 +4,12 @@
 
 namespace GuiHelper
 {
+	inline float TitleBarHeight()
+	{
+		const ImGuiStyle& style = ImGui::GetStyle();
+		return ImGui::GetFontSize() + style.FramePadding.y * 2.0f;
+	}
+
 	inline void CenterNextWindow()
 	{
 		ImGui::SetNextWindowPos({ ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.5f }, ImGuiCond_Always, { 0.5f, 0.5f });

@@ -6,6 +6,7 @@
 #include "imgui.h"
 #include <algorithm>
 #include <cstdint>
+#include <ranges>
 
 static const Color previewValidColor = Color::From32(53, 132, 222, 128);
 static const Color previewInvalidColor = Color::From32(222, 53, 53, 128);
@@ -19,6 +20,11 @@ struct SimulationPopupData
 	WorldData worldData = {	WorldShape::Rect, { Vector2(sceneSize, sceneSize) }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) };
 };
 
+Editor::Editor(const std::shared_ptr<Window>& window) : window(window)
+{
+
+}
+
 void Editor::Update(double dt)
 {
 	static bool init = false;
@@ -30,8 +36,9 @@ void Editor::Update(double dt)
 
 	Render();
 	UI();
-	Placement();
 	Selection();
+	SelectionInteraction();
+	Placement();
 }
 
 void Editor::Render()
@@ -60,7 +67,7 @@ void Editor::Placement()
 	if(currentPreview != nullptr)
 	{
 		Vector2 pos = Input::MousePosition();
-		bool valid = world->Contains(pos);
+		bool valid = world->Contains(pos) && GetHoveredObject() == nullptr;
 		currentPreview->position = pos;
 		currentPreview->Render(valid ? previewValidColor : previewInvalidColor);
 		if(valid && Input::KeyPressed(KeyCode::LMB))
@@ -77,18 +84,25 @@ void Editor::Selection()
 		return;
 	}
 
-	Vector2 mousePos = Input::MousePosition();
-	currentHovered = nullptr;
-	for(const std::shared_ptr<SceneObject>& obj : scene->Objects())
-	{
-		if(obj->IsHovered(mousePos))
-		{
-			currentHovered = obj;
-		}
-	}
-	if(Input::KeyPressed(KeyCode::LMB))
+	currentHovered = GetHoveredObject();
+	if(Input::KeyPressed(KeyCode::LMB) && !ImGui::IsAnyItemHovered())
 	{
 		SelectObject(currentHovered);
+	}
+}
+
+void Editor::SelectionInteraction()
+{
+	if(currentSelected != nullptr)
+	{
+		Vector2 pos = currentSelected->position;
+		float xDir = pos.x / static_cast<float>(scene->Size()) > 0.75f ? -1.0f : 1.0f;
+		ImGui::SetNextWindowPos({ pos.x + xDir * 25.0f, window->Size().y - pos.y - GuiHelper::TitleBarHeight() * 0.5f }, ImGuiCond_Appearing, { (-xDir + 1.0f) * 0.5f, 0.0f });
+		if(ImGui::Begin(currentSelected->ObjectName(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			currentSelected->Edit();
+			ImGui::End();
+		}
 	}
 }
 
@@ -102,12 +116,26 @@ void Editor::OpenScene(const std::shared_ptr<Scene>& scene)
 
 void Editor::CreatePreview(std::unique_ptr<SceneObject>&& obj)
 {
+	SelectObject(nullptr);
 	currentPreview = std::move(obj);
 }
 
 void Editor::SelectObject(const std::shared_ptr<SceneObject>& obj)
 {
 	currentSelected = obj;
+}
+
+std::shared_ptr<SceneObject> Editor::GetHoveredObject()
+{
+	Vector2 mousePos = Input::MousePosition();
+	for(const std::shared_ptr<SceneObject>& obj : scene->Objects() | std::views::reverse)
+	{
+		if(obj->IsHovered(mousePos))
+		{
+			return obj;
+		}
+	}
+	return nullptr;
 }
 
 void Editor::MainMenuBar()

@@ -1,5 +1,6 @@
 #pragma once
 #include "structs/color.h"
+#include "structs/vector2.h"
 #include <functional>
 
 class Window
@@ -11,7 +12,8 @@ public:
 
 	void Show(std::function<void(double)> update);
 	void Close();
-	float LastFrameRenderTime();	
+	Vector2 Size();
+	float LastFrameRenderTime();
 
 private:
 	unsigned int width;
