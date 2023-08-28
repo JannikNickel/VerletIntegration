@@ -102,7 +102,7 @@ void Editor::SelectionInteraction()
 		float xDir = pos.x / static_cast<float>(scene->Size()) > 0.75f ? -1.0f : 1.0f;
 		ImGui::SetNextWindowPos({ pos.x + xDir * 25.0f, window->Size().y - pos.y - GuiHelper::TitleBarHeight() * 0.5f }, ImGuiCond_Appearing, { (-xDir + 1.0f) * 0.5f, 0.0f });
 		EditResult result = EditResult::None;
-		if(ImGui::Begin(selected->ObjectName(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+		if(ImGui::Begin(selected->TypeIdentifier(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			result = selected->Edit();
 			ImGui::End();
@@ -196,7 +196,8 @@ void Editor::FileMenu()
 	}
 	if(ImGui::MenuItem("Save", "Ctrl+S"))
 	{
-
+		JsonObj json = scene->Serialize();
+		std::cout << json.dump(4) << std::endl;
 	}
 	if(ImGui::MenuItem("Save As..."))
 	{

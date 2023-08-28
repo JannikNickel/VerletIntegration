@@ -1,31 +1,13 @@
 #pragma once
+#include "serialization/serializable.h"
 #include "sceneobject.h"
-#include "structs/vector2.h"
-#include "structs/color.h"
+#include "worlddata.h"
 #include "core/world.h"
 #include <cstdint>
 #include <vector>
 #include <memory>
 
-enum class WorldShape
-{
-	Rect,
-	Circle
-};
-
-struct WorldData
-{
-	WorldShape shape;
-	union
-	{
-		Vector2 size;
-		float radius;
-	} bounds;
-	Color background;
-	Color color;
-};
-
-class Scene
+class Scene : public ISerializable
 {
 public:
 	Scene(int32_t size, WorldData world) : size(size), world(world), objects({}) { }
@@ -35,6 +17,9 @@ public:
 	void AddObject(const std::shared_ptr<SceneObject>& obj);
 	void RemoveObject(const std::shared_ptr<SceneObject>& obj);
 	const std::vector<std::shared_ptr<SceneObject>>& Objects() const;
+
+	JsonObj Serialize() const override;
+	void Deserialize() override;
 
 private:
 	int32_t size;

@@ -93,6 +93,12 @@
     <ClCompile Include="src\editor\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\editor\sceneobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\editor\worlddata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\window.h">
@@ -180,6 +186,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\editor\particleobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\nameof.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\editor\serialization\serializable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\editor\serialization\serializationhelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\editor\worlddata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

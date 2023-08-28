@@ -1,6 +1,7 @@
 #pragma once
 #include "structs/vector2.h"
 #include "structs/color.h"
+#include "serialization/serializable.h"
 #include <optional>
 #include <memory>
 
@@ -11,7 +12,7 @@ enum class EditResult
 	Duplicate
 };
 
-class SceneObject
+class SceneObject : public ISerializable
 {
 	friend class Editor;
 
@@ -19,12 +20,14 @@ public:
 	SceneObject(Vector2 position) : position(position) { }
 	virtual ~SceneObject() { }
 
-	virtual const char* ObjectName() const = 0;
+	virtual const char* TypeIdentifier() const = 0;
 	virtual void Render(float dt, const std::optional<Color>& color) const = 0;
 	virtual bool IsHovered(Vector2 mousePos) const = 0;
 	virtual EditResult Edit() = 0;
 
 	virtual std::unique_ptr<SceneObject> Clone() const = 0;
+	JsonObj Serialize() const override;
+	void Deserialize() override;
 
 protected:
 	Vector2 position;

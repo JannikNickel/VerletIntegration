@@ -23,6 +23,8 @@
     <ClCompile Include="src\core\rectworld.cpp" />
     <ClCompile Include="src\editor\editor.cpp" />
     <ClCompile Include="src\editor\scene.cpp" />
+    <ClCompile Include="src\editor\sceneobject.cpp" />
+    <ClCompile Include="src\editor\worlddata.cpp" />
     <ClCompile Include="src\utils\framecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
     <ClCompile Include="src\ecs\archetype.cpp" />
@@ -46,6 +48,9 @@
     <ClInclude Include="src\editor\scene.h" />
     <ClInclude Include="src\editor\sceneobject.h" />
     <ClInclude Include="src\editor\guihelper.h" />
+    <ClInclude Include="src\editor\serialization\serializable.h" />
+    <ClInclude Include="src\editor\serialization\serializationhelper.h" />
+    <ClInclude Include="src\editor\worlddata.h" />
     <ClInclude Include="src\physics\partitioning.h" />
     <ClInclude Include="src\utils\framecounter.h" />
     <ClInclude Include="src\core\world.h" />
@@ -68,6 +73,7 @@
     <ClInclude Include="src\structs\matrix4.h" />
     <ClInclude Include="src\engine\window.h" />
     <ClInclude Include="src\utils\math.h" />
+    <ClInclude Include="src\utils\nameof.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default2d.frag">
@@ -127,7 +133,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;$(SolutionDir)external\magic_enum_v0.9.3\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;$(SolutionDir)external\magic_enum_v0.9.3\include\;$(SolutionDir)external\nlohmann_json\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,7 +155,7 @@ XCOPY /E /Y "$(SolutionDir)resources" "$(OutDIr)resources\"</Command>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;$(SolutionDir)external\magic_enum_v0.9.3\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;$(SolutionDir)external\magic_enum_v0.9.3\include\;$(SolutionDir)external\nlohmann_json\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

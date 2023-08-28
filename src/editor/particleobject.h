@@ -1,6 +1,8 @@
 #pragma once
 #include "sceneobject.h"
 #include "renderer/graphics.h"
+#include "utils/nameof.h"
+#include "serialization/serializationhelper.h"
 #include "imgui.h"
 #include <algorithm>
 
@@ -17,9 +19,9 @@ public:
 		
 	}
 
-	const char* ObjectName() const override
+	const char* TypeIdentifier() const override
 	{
-		return "Particle";
+		return NAMEOF(ParticleObject);
 	}
 
 	void Render(float dt, const std::optional<Color>& color) const override
@@ -56,6 +58,16 @@ public:
 			ignColTimer = 0.0;
 		}
 		return static_cast<EditResult>(result);
+	}
+
+	JsonObj Serialize() const override
+	{
+		JsonObj json = SceneObject::Serialize();
+		json[NAMEOF(radius)] = radius;
+		json[NAMEOF(mass)] = mass;
+		json[NAMEOF(bounciness)] = bounciness;
+		json[NAMEOF(color)] = SerializationHelper::Serialize(color);
+		return json;
 	}
 
 private:
