@@ -1,11 +1,35 @@
 #pragma once
 #include "imgui.h"
+#include "structs/color.h"
 #include "magic_enum.hpp"
 #include <algorithm>
 #include <limits>
+#include <optional>
 
 namespace GuiHelper
 {
+	inline void PushStyleColor(ImGuiCol col, const std::optional<Color>& color, bool copyAlpha = false)
+	{
+		const ImVec4& defCol = ImGui::GetStyle().Colors[col];
+		ImGui::PushStyleColor(col, color.has_value() ? ImVec4 { color.value().r, color.value().g, color.value().b, copyAlpha ? defCol.w : color.value().a }	: defCol);
+	}
+
+	inline void BeginDisabled(bool disabled)
+	{
+		if(disabled)
+		{
+			ImGui::BeginDisabled();
+		}
+	}
+
+	inline void EndDisabled(bool disabled)
+	{
+		if(disabled)
+		{
+			ImGui::EndDisabled();
+		}
+	}
+
 	inline float TitleBarHeight()
 	{
 		const ImGuiStyle& style = ImGui::GetStyle();
@@ -17,16 +41,33 @@ namespace GuiHelper
 		ImGui::SetNextWindowPos({ ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.5f }, ImGuiCond_Always, { 0.5f, 0.5f });
 	}
 
-	inline int HorizontalButtonSplit(const char* button0, const char* button1)
+	inline int HorizontalButtonHalf(const char* button, float fullWidth, const std::optional<Color>& color = std::nullopt, bool disabled = false)
 	{
-		const ImGuiStyle& style = ImGui::GetStyle();
+		PushStyleColor(ImGuiCol_Button, color, true);
+		PushStyleColor(ImGuiCol_ButtonActive, color, true);
+		PushStyleColor(ImGuiCol_ButtonHovered, color, true);
+		if(disabled)
+		{
+			ImGui::BeginDisabled();
+		}
+		bool result = ImGui::Button(button, { fullWidth * 0.5f - ImGui::GetStyle().ItemInnerSpacing.x, 0 });
+		if(disabled)
+		{
+			ImGui::EndDisabled();
+		}
+		ImGui::PopStyleColor(3);
+		return result;
+	}
+
+	inline int HorizontalButtonSplit(const char* button0, const char* button1, const std::optional<Color>& b0Color = std::nullopt, const std::optional<Color>& b1Color = std::nullopt, bool b0Disabled = false, bool b1Disabled = false)
+	{
 		float width = ImGui::GetContentRegionAvail().x;
-		if(ImGui::Button(button0, { width * 0.5f - style.ItemInnerSpacing.x, 0 }))
+		if(HorizontalButtonHalf(button0, width, b0Color, b0Disabled))
 		{
 			return 1;
 		}
 		ImGui::SameLine();
-		if(ImGui::Button(button1, { width * 0.5f - style.ItemInnerSpacing.x, 0 }))
+		if(HorizontalButtonHalf(button1, width, b1Color, b1Disabled))
 		{
 			return 2;
 		}

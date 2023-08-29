@@ -18,6 +18,11 @@ Color Color::operator*(const Color& other) const
     return Color(r * other.r, g * other.g, b * other.b, a * other.a);
 }
 
+Color Color::WithAlpha(float alpha) const
+{
+    return Color(r, g, b, alpha);
+}
+
 Color Color::From32(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
 	return Color(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);

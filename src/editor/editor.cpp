@@ -6,13 +6,15 @@
 #include "imgui.h"
 #include <algorithm>
 #include <cstdint>
-#include <ranges>
 
 static const Color previewValidColor = Color::From32(53, 132, 222, 128);
 static const Color previewInvalidColor = Color::From32(222, 53, 53, 128);
 static const Color sceneObjectColor = Color::From32(255, 255, 255, 200);
 static const Color selectedColor = Color::From32(222, 152, 53, 255);
 static const Color selectedHoverColor = Color::From32(222, 183, 111, 255);
+
+static const Color uiErrorColor = Color::From32(255, 53, 53, 200);
+static const Color uiSuccessColor = Color::From32(53, 222, 78, 200);
 
 struct SimulationPopupData
 {
@@ -35,7 +37,7 @@ void Editor::Update(double dt)
 	}
 
 	Render(dt);
-	UI();
+	UI(dt);
 	Selection();
 	SelectionInteraction();
 	Placement(dt);
@@ -56,12 +58,20 @@ void Editor::Render(double dt)
 	}
 }
 
-void Editor::UI()
+void Editor::UI(double dt)
 {
 	MainMenuBar();
 	if(currentPopup != nullptr)
 	{
 		(*currentPopup)();
+	}
+	if(currentNotification.has_value())
+	{
+		ShowNotification(currentNotification.value());
+		if((currentNotification.value().duration -= dt) <= 0.0f)
+		{
+			SetNotification(std::nullopt);
+		}
 	}
 }
 
@@ -119,12 +129,40 @@ void Editor::SelectionInteraction()
 	}
 }
 
-void Editor::OpenScene(const std::shared_ptr<Scene>& scene)
+void Editor::SetPopup(std::unique_ptr<std::function<void()>> popupFunc)
+{
+	currentPopup = std::move(popupFunc);
+}
+
+void Editor::SetNotification(const std::optional<Notification>& notification)
+{
+	currentNotification = notification;
+}
+
+void Editor::OpenScene(const std::shared_ptr<Scene>& scene, const std::optional<FileName>& file)
 {
 	this->scene = scene;
 	this->world = scene->CreateWorld();
+	this->currentSaveFile = file;
 
 	Graphics::SetProjection(scene->Size(), scene->Size());
+}
+
+void Editor::SaveCurrent(const std::optional<FileName>& file)
+{
+	if(file.has_value())
+	{
+		currentSaveFile = file;
+	}
+	if(currentSaveFile.has_value())
+	{
+		if(storage.SaveFile(currentSaveFile.value(), scene->Serialize()))
+		{
+			SetNotification(Notification("Saved scene!", uiSuccessColor.WithAlpha(0.5f)));
+			return;
+		}
+	}
+	SetNotification(Notification("Could not save scene!", uiErrorColor.WithAlpha(0.5f)));
 }
 
 void Editor::CreatePreview(std::unique_ptr<SceneObject>&& obj)
@@ -176,32 +214,34 @@ void Editor::MainMenuBar()
 
 void Editor::FileMenu()
 {
-	if(ImGui::MenuItem("New Simulation", "Ctrl+N"))
+	if(ImGui::MenuItem("New Simulation", ""))
 	{
-		currentPopup = std::make_unique<std::function<void()>>([this, data = SimulationPopupData()]() mutable
+		SetPopup(std::make_unique<std::function<void()>>([this, data = SimulationPopupData()]() mutable
 		{
 			NewSimulationPopup(data);
-		});
+		}));
 	}
-	if(ImGui::MenuItem("Open", "Ctrl+O"))
+	if(ImGui::MenuItem("Open", ""))
 	{
 
 	}
 	if(ImGui::BeginMenu("Open Recent"))
 	{
-		ImGui::MenuItem("0.json");
-		ImGui::MenuItem("1.json");
-		ImGui::MenuItem("2.json");
+		//TODO
 		ImGui::EndMenu();
 	}
-	if(ImGui::MenuItem("Save", "Ctrl+S"))
+	GuiHelper::BeginDisabled(!currentSaveFile.has_value());
+	if(ImGui::MenuItem("Save", currentSaveFile.has_value() ? currentSaveFile.value().CStr() : ""))
 	{
-		JsonObj json = scene->Serialize();
-		std::cout << json.dump(4) << std::endl;
+		SaveCurrent();
 	}
+	GuiHelper::EndDisabled(!currentSaveFile.has_value());
 	if(ImGui::MenuItem("Save As..."))
 	{
-
+		SetPopup(std::make_unique<std::function<void()>>([this, path = std::array<char, 32>()]() mutable
+		{
+			NewSaveFilePopup(path);
+		}));
 	}
 }
 
@@ -223,6 +263,20 @@ void Editor::AddMenu()
 	{
 
 	}
+}
+
+void Editor::ShowNotification(const Notification& notification)
+{
+	float textWidth = ImGui::CalcTextSize(notification.message.c_str()).x;
+	ImGui::SetNextWindowPos({ ImGui::GetIO().DisplaySize.x * 0.5f, window->Size().y * 0.2f }, ImGuiCond_Always, { 0.5f, 0.0f });
+	ImGui::SetNextWindowSize({ textWidth + ImGui::GetStyle().WindowPadding.x * 2.0f, -1.0f }, ImGuiCond_Always);
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, { notification.color.r, notification.color.g, notification.color.b, notification.color.a });
+	if(ImGui::Begin("##notification", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::TextWrapped(notification.message.c_str());
+		ImGui::End();
+	}
+	ImGui::PopStyleColor();
 }
 
 void Editor::NewSimulationPopup(SimulationPopupData& data)
@@ -287,7 +341,46 @@ void Editor::NewSimulationPopup(SimulationPopupData& data)
 		if(result > 0)
 		{
 			ImGui::CloseCurrentPopup();
-			currentPopup = nullptr;
+			SetPopup(nullptr);
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void Editor::NewSaveFilePopup(std::array<char, 32>& path)
+{
+	GuiHelper::CenterNextWindow();
+	ImGui::OpenPopup("Save As");
+	if(ImGui::BeginPopupModal("Save As", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::InputTextWithHint("##pathInput", "Enter file name...", path.data(), path.size(), ImGuiInputTextFlags_CharsNoBlank);
+		std::optional<std::string> error = storage.IsValidFileName(path.data());
+		bool exists = storage.FileExists(path.data());
+		
+		if(error.has_value())
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, { uiErrorColor.r, uiErrorColor.g, uiErrorColor.b, uiErrorColor.a });
+			ImGui::TextWrapped(error.value().c_str());
+			ImGui::PopStyleColor();
+		}
+		else if(exists)
+		{
+			ImGui::BeginDisabled();
+			ImGui::TextWrapped("The file already exists! You can overwrite it...");
+			ImGui::EndDisabled();
+		}
+
+		ImGui::Spacing();
+		int result = GuiHelper::HorizontalButtonSplit(exists ? "Overwrite" : "Save", "Cancel", exists ? std::make_optional(uiErrorColor) : std::nullopt, std::nullopt, error.has_value());
+		if(result == 1)
+		{
+			SaveCurrent(path.data());
+		}
+		if(result > 0)
+		{
+			ImGui::CloseCurrentPopup();
+			SetPopup(nullptr);
 		}
 
 		ImGui::EndPopup();
