@@ -1,7 +1,9 @@
 #include "scene.h"
+#include "particleobject.h"
 #include "core/rectworld.h"
 #include "core/circleworld.h"
 #include "utils/nameof.h"
+#include "magic_enum.hpp"
 #include <algorithm>
 
 std::unique_ptr<World> Scene::CreateWorld()
@@ -48,7 +50,33 @@ JsonObj Scene::Serialize() const
 	return json;
 }
 
-void Scene::Deserialize()
+void Scene::Deserialize(const JsonObj& json)
 {
+	size = json[NAMEOF(size)];
+	world.Deserialize(json[NAMEOF(world)]);
 
+	JsonObj objects = json[NAMEOF(objects)];
+	for(size_t i = 0; i < objects.size(); i++)
+	{
+		JsonObj objJson = objects[i];
+		SceneObjectType type = magic_enum::enum_cast<SceneObjectType>(static_cast<std::string>(objJson[ISerializable::typeKey])).value();
+		std::shared_ptr<SceneObject> obj = nullptr;
+		switch(type)
+		{
+			case SceneObjectType::Particle:
+				obj = std::make_shared<ParticleObject>();
+				break;
+			case SceneObjectType::Spawner:
+				break;
+			case SceneObjectType::Link:
+				break;
+			default:
+				throw std::exception("Unknown SceneObjectType!");
+		}
+		if(obj != nullptr)
+		{
+			obj->Deserialize(objJson);
+			AddObject(obj);
+		}
+	}
 }

@@ -35,7 +35,7 @@ private:
 	std::weak_ptr<SceneObject> currentSelected = std::weak_ptr<SceneObject>();
 	std::weak_ptr<SceneObject> currentHovered = std::weak_ptr<SceneObject>();
 
-	std::shared_ptr<Scene> scene = nullptr;
+	std::unique_ptr<Scene> scene = nullptr;
 	std::unique_ptr<World> world = nullptr;
 	std::optional<FileName> currentSaveFile = std::nullopt;
 
@@ -48,10 +48,11 @@ private:
 	void SetPopup(std::unique_ptr<std::function<void()>> popupFunc);
 	void SetNotification(const std::optional<Notification>& notification);
 
-	void OpenScene(const std::shared_ptr<Scene>& scene, const std::optional<FileName>& file = std::nullopt);
+	void OpenScene(std::unique_ptr<Scene> scene, const std::optional<FileName>& file = std::nullopt);
+	void LoadScene(const FileName& file);
 	void SaveCurrent(const std::optional<FileName>& file = std::nullopt);
 
-	void CreatePreview(std::unique_ptr<SceneObject>&& obj);
+	void CreatePreview(std::unique_ptr<SceneObject> obj);
 	void SelectObject(const std::weak_ptr<SceneObject>& obj);
 
 	std::weak_ptr<SceneObject> GetHoveredObject();

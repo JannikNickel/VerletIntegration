@@ -4,6 +4,7 @@
 #include "utils/nameof.h"
 #include "serialization/serializationhelper.h"
 #include "imgui.h"
+#include "guihelper.h"
 #include <algorithm>
 
 class ParticleObject : public CloneableSceneObject<ParticleObject>
@@ -19,9 +20,14 @@ public:
 		
 	}
 
-	const char* TypeIdentifier() const override
+	ParticleObject()
 	{
-		return NAMEOF(ParticleObject);
+		
+	}
+
+	SceneObjectType ObjType() const override
+	{
+		return SceneObjectType::Particle;
 	}
 
 	void Render(float dt, const std::optional<Color>& color) const override
@@ -68,6 +74,15 @@ public:
 		json[NAMEOF(bounciness)] = bounciness;
 		json[NAMEOF(color)] = SerializationHelper::Serialize(color);
 		return json;
+	}
+
+	void Deserialize(const JsonObj& json) override
+	{
+		SceneObject::Deserialize(json);
+		radius = json[NAMEOF(radius)];
+		mass = json[NAMEOF(mass)];
+		bounciness = json[NAMEOF(bounciness)];
+		color = SerializationHelper::Deserialize<Color>(json[NAMEOF(color)]);
 	}
 
 private:

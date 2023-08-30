@@ -1,9 +1,11 @@
 #include "editor.h"
 #include "guihelper.h"
 #include "particleobject.h"
+#include "serialization/serializable.h"
 #include "renderer/graphics.h"
 #include "engine/input.h"
 #include "imgui.h"
+#include "magic_enum.hpp"
 #include <algorithm>
 #include <cstdint>
 
@@ -33,7 +35,7 @@ void Editor::Update(double dt)
 	if(!init)
 	{
 		init = true;
-		OpenScene(std::make_shared<Scene>(1080, WorldData { WorldShape::Circle, { .radius = 500.0f }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) }));
+		OpenScene(std::make_unique<Scene>(1080, WorldData { WorldShape::Circle, { .radius = 500.0f }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) }));
 	}
 
 	Render(dt);
@@ -112,7 +114,8 @@ void Editor::SelectionInteraction()
 		float xDir = pos.x / static_cast<float>(scene->Size()) > 0.75f ? -1.0f : 1.0f;
 		ImGui::SetNextWindowPos({ pos.x + xDir * 25.0f, window->Size().y - pos.y - GuiHelper::TitleBarHeight() * 0.5f }, ImGuiCond_Appearing, { (-xDir + 1.0f) * 0.5f, 0.0f });
 		EditResult result = EditResult::None;
-		if(ImGui::Begin(selected->TypeIdentifier(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+		std::string title = std::string(magic_enum::enum_name(selected->ObjType()));
+		if(ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			result = selected->Edit();
 			ImGui::End();
@@ -139,13 +142,35 @@ void Editor::SetNotification(const std::optional<Notification>& notification)
 	currentNotification = notification;
 }
 
-void Editor::OpenScene(const std::shared_ptr<Scene>& scene, const std::optional<FileName>& file)
+void Editor::OpenScene(std::unique_ptr<Scene> scene, const std::optional<FileName>& file)
 {
-	this->scene = scene;
-	this->world = scene->CreateWorld();
-	this->currentSaveFile = file;
-
 	Graphics::SetProjection(scene->Size(), scene->Size());
+	this->world = scene->CreateWorld();
+	this->scene = std::move(scene);
+	this->currentSaveFile = file;
+}
+
+void Editor::LoadScene(const FileName& file)
+{
+	std::optional<JsonObj> json = storage.LoadFile(file);
+	if(!json.has_value())
+	{
+		SetNotification(Notification("Could not parse file!", uiErrorColor));
+		return;
+	}
+
+	std::unique_ptr<Scene> scene = std::make_unique<Scene>();
+	try
+	{
+		scene->Deserialize(json.value());
+	}
+	catch(const std::exception& e)
+	{
+		SetNotification(Notification(std::format("Could not deserialize file! ({0})", e.what()), uiErrorColor));
+		return;
+	}
+
+	OpenScene(std::move(scene), file);
 }
 
 void Editor::SaveCurrent(const std::optional<FileName>& file)
@@ -165,7 +190,7 @@ void Editor::SaveCurrent(const std::optional<FileName>& file)
 	SetNotification(Notification("Could not save scene!", uiErrorColor.WithAlpha(0.5f)));
 }
 
-void Editor::CreatePreview(std::unique_ptr<SceneObject>&& obj)
+void Editor::CreatePreview(std::unique_ptr<SceneObject> obj)
 {
 	SelectObject({});
 	currentPreview = std::move(obj);
@@ -227,7 +252,14 @@ void Editor::FileMenu()
 	}
 	if(ImGui::BeginMenu("Open Recent"))
 	{
-		//TODO
+		for(const FileName& file : storage.RecentFiles())
+		{
+			if(ImGui::MenuItem(file.CStr()))
+			{
+				LoadScene(file);
+				break;
+			}
+		}
 		ImGui::EndMenu();
 	}
 	GuiHelper::BeginDisabled(!currentSaveFile.has_value());
@@ -336,7 +368,7 @@ void Editor::NewSimulationPopup(SimulationPopupData& data)
 		int result = GuiHelper::HorizontalButtonSplit("Create", "Cancel");
 		if(result == 1)
 		{
-			OpenScene(std::make_shared<Scene>(data.sceneSize, data.worldData));
+			OpenScene(std::make_unique<Scene>(data.sceneSize, data.worldData));
 		}
 		if(result > 0)
 		{

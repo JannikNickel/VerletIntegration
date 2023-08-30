@@ -9,6 +9,11 @@ WorldData::WorldData(WorldShape shape, WorldDimensions bounds, const Color& back
 	
 }
 
+WorldData::WorldData() : WorldData(WorldShape::Rect, WorldDimensions { Vector2::zero }, Color::black, Color::black)
+{
+
+}
+
 JsonObj WorldData::Serialize() const
 {
 	JsonObj json = {};
@@ -22,14 +27,27 @@ JsonObj WorldData::Serialize() const
 			json[NAMEOF(bounds)] = bounds.radius;
 			break;
 		default:
-			throw std::exception("Unknown world shape!");
+			throw std::exception("Unknown WorldShape!");
 	}
 	json[NAMEOF(background)] = SerializationHelper::Serialize(background);
 	json[NAMEOF(color)] = SerializationHelper::Serialize(color);
 	return json;
 }
 
-void WorldData::Deserialize()
+void WorldData::Deserialize(const JsonObj& json)
 {
-
+	shape = magic_enum::enum_cast<WorldShape>(static_cast<std::string>(json[NAMEOF(shape)])).value();
+	switch(shape)
+	{
+		case WorldShape::Rect:
+			bounds = WorldDimensions { .size = SerializationHelper::Deserialize<Vector2>(json[NAMEOF(bounds)]) };
+			break;
+		case WorldShape::Circle:
+			bounds = WorldDimensions { .radius = json[NAMEOF(bounds)] };
+			break;
+		default:
+			throw std::exception("Unknown WorldShape!");
+	}
+	background = SerializationHelper::Deserialize<Color>(json[NAMEOF(background)]);
+	color = SerializationHelper::Deserialize<Color>(json[NAMEOF(color)]);
 }

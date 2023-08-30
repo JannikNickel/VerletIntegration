@@ -11,6 +11,7 @@ class Scene : public ISerializable
 {
 public:
 	Scene(int32_t size, WorldData world) : size(size), world(world), objects({}) { }
+	Scene() : Scene(0, WorldData()) { }
 
 	int32_t Size() { return size; }
 	std::unique_ptr<World> CreateWorld();
@@ -19,7 +20,7 @@ public:
 	const std::vector<std::shared_ptr<SceneObject>>& Objects() const;
 
 	JsonObj Serialize() const override;
-	void Deserialize() override;
+	void Deserialize(const JsonObj& json) override;
 
 private:
 	int32_t size;

@@ -3,6 +3,7 @@
 #include <format>
 #include <filesystem>
 #include <fstream>
+#include <queue>
 
 static const char forbiddenFsChars[] = { '\\', '/', ':', '*', '?', '"', '<', '>', '|', '\0', '.' };
 
@@ -12,7 +13,9 @@ SceneStorage::SceneStorage(const std::string& sceneDir) : sceneDir(sceneDir.ends
 	{
 		std::filesystem::create_directory(this->sceneDir);
 	}
-	catch(const std::exception&) { }
+	catch(const std::exception&) {}
+
+	UpdateRecentFiles();
 }
 
 std::optional<std::string> SceneStorage::IsValidFileName(const FileName& fileName) const
@@ -50,10 +53,65 @@ bool SceneStorage::SaveFile(const FileName& fileName, const JsonObj& data)
 	}
 	out << data.dump(4);
 	out.close();
+
+	UpdateRecentFiles();
 	return !out.fail();
+}
+
+std::optional<JsonObj> SceneStorage::LoadFile(const FileName& fileName)
+{
+	const std::string path = GetRelFilePath(fileName);
+	std::ifstream in = std::ifstream(path);
+	if(!in.is_open())
+	{
+		return std::nullopt;
+	}
+
+	JsonObj json = JsonObj::parse(in);
+	in.close();
+	return !in.fail() ? std::make_optional(json) : std::nullopt;
+}
+
+const std::vector<FileName>& SceneStorage::RecentFiles() const
+{
+	return recentFiles;
 }
 
 std::string SceneStorage::GetRelFilePath(const FileName& fileName) const
 {
 	return sceneDir + fileName.name + fileExtension;
+}
+
+struct CmpFileLastWrite
+{
+	bool operator()(const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b)
+	{
+		return a.last_write_time() < b.last_write_time();
+	}
+};
+
+void SceneStorage::UpdateRecentFiles()
+{
+	std::priority_queue<std::filesystem::directory_entry, std::vector<std::filesystem::directory_entry>, CmpFileLastWrite> best = {};
+	for(const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(sceneDir))
+	{
+		if(!entry.is_regular_file())
+		{
+			continue;
+		}
+		best.push(entry);
+		if(best.size() > recentLimit)
+		{
+			best.pop();
+		}
+	}
+
+	recentFiles.clear();
+	while(!best.empty())
+	{
+		std::filesystem::path p = best.top().path().filename();
+		p.replace_extension();
+		recentFiles.push_back(p.string());
+		best.pop();
+	}
 }

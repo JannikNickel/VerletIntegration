@@ -25,4 +25,22 @@ namespace SerializationHelper
 			{ NAMEOF(value.a), value.a }
 		};
 	}
+
+	template<typename T> requires std::same_as<T, Color> || std::same_as<T, Vector2>
+	inline T Deserialize(const JsonObj& json)
+	{
+		return T();
+	}
+
+	template<>
+	inline Color Deserialize<Color>(const JsonObj& json)
+	{
+		return Color(json[NAMEOF(Color::r)], json[NAMEOF(Color::g)], json[NAMEOF(Color::b)], json[NAMEOF(Color::a)]);
+	}
+
+	template<>
+	inline Vector2 Deserialize<Vector2>(const JsonObj& json)
+	{
+		return Vector2(json[NAMEOF(Vector2::x)], json[NAMEOF(Vector2::y)]);
+	}
 }

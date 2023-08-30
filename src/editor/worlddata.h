@@ -24,8 +24,9 @@ struct WorldData : public ISerializable
 	Color color;
 
 	WorldData(WorldShape shape, WorldDimensions bounds, const Color& background, const Color& color);
+	WorldData();
 
 	JsonObj Serialize() const override;
-	void Deserialize() override;
+	void Deserialize(const JsonObj& json) override;
 
 };
