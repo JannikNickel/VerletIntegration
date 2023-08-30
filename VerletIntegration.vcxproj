@@ -29,7 +29,6 @@
     <ClCompile Include="src\simulation\simulation.cpp" />
     <ClCompile Include="src\utils\framecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
-    <ClCompile Include="src\ecs\archetype.cpp" />
     <ClCompile Include="src\ecs\component.cpp" />
     <ClCompile Include="src\ecs\threadpool.cpp" />
     <ClCompile Include="src\physics\verletsolver.cpp" />
@@ -45,6 +44,7 @@
   <ItemGroup>
     <ClInclude Include="src\core\circleworld.h" />
     <ClInclude Include="src\core\rectworld.h" />
+    <ClInclude Include="src\ecs\archetypemanager.h" />
     <ClInclude Include="src\editor\editor.h" />
     <ClInclude Include="src\editor\particleobject.h" />
     <ClInclude Include="src\editor\scene.h" />
