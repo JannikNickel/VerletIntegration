@@ -22,6 +22,7 @@ enum class SceneObjectType
 class SceneObject : public ISerializable
 {
 	friend class Editor;
+	friend class Scene;
 
 public:
 	SceneObject(Vector2 position) : position(position) { }

@@ -1,14 +1,14 @@
 #include "verletsolver.h"
 #include "structs/vector2.h"
-#include "simulation/simulation.h"
+#include "simulation/components.h"
 #include <cmath>
 #include <exception>
 #include <limits>
 #include <utility>
 
-VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps, float partitioningSize)
+VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint& constraint, float timeStep, float gravity, unsigned int substeps, float partitioningSize)
 	: ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps), partitioningSize(partitioningSize),
-	collision(true), updateMode(SolverUpdateMode::FrameDeltaTime), partitioning(constraint->Bounds().first, constraint->Bounds().second, partitioningSize)
+	collision(true), updateMode(SolverUpdateMode::FrameDeltaTime), partitioning(constraint.Bounds().first, constraint.Bounds().second, partitioningSize)
 {
 
 }
@@ -174,7 +174,7 @@ void VerletSolver::UpdateObjects(float dt)
 		p.acc.y += gravity;
 
 		//Constrain
-		constraint->Contrain(t.Position(), p);
+		constraint.Contrain(t.Position(), p);
 
 		//Update
 		Vector2& pos = t.Position();

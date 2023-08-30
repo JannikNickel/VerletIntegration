@@ -4,7 +4,7 @@
 #include "structs/vector2.h"
 #include "structs/color.h"
 
-struct RectWorld : public World, public IConstraint
+struct RectWorld : public World
 {
 public:
 	RectWorld(Color background, Vector2 center, Vector2 size, Color color);

@@ -53,7 +53,7 @@ enum class KeyCode : int
 	Backslash = 92,
 	RightBracket = 93,
 	GraveAccent = 96,
-	_Escape = 256,
+	Escape = 256,
 	Enter = 257,
 	Tab = 258,
 	Backspace = 259,

@@ -4,7 +4,7 @@
 #include "structs/vector2.h"
 #include "structs/color.h"
 
-class CircleWorld : public World, public IConstraint
+class CircleWorld : public World
 {
 public:
 	CircleWorld(Color background, Vector2 center, float radius, Color color);

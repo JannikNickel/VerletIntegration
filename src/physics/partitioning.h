@@ -1,5 +1,5 @@
 #pragma once
-#include "simulation/simulation.h"
+#include "simulation/components.h"
 #include <cstdint>
 #include <cmath>
 #include <vector>

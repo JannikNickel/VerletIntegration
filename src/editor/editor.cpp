@@ -31,7 +31,7 @@ struct LoadFilePopupData
 	std::optional<FileName> selected = std::nullopt;
 };
 
-Editor::Editor(const std::shared_ptr<Window>& window) : window(window)
+Editor::Editor(const std::shared_ptr<Window>& window, const std::function<void(Simulation)>& simulationCallback) : window(window), simulationCallback(simulationCallback)
 {
 
 }
@@ -237,9 +237,9 @@ void Editor::MainMenuBar()
 			AddMenu();
 			ImGui::EndMenu();
 		}
-		if(ImGui::MenuItem("Simulate"))
+		if(ImGui::MenuItem("Simulate", nullptr, nullptr, scene != nullptr))
 		{
-
+			simulationCallback(scene->CreateSimulation());
 		}
 
 		ImGui::EndMainMenuBar();

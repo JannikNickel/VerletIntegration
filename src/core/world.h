@@ -3,7 +3,7 @@
 #include "structs/color.h"
 #include "structs/vector2.h"
 
-class World
+class World : public IConstraint
 {
 public:
 	World(Color backgroundColor);

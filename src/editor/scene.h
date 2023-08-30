@@ -3,6 +3,7 @@
 #include "sceneobject.h"
 #include "worlddata.h"
 #include "core/world.h"
+#include "simulation/simulation.h"
 #include <cstdint>
 #include <vector>
 #include <memory>
@@ -14,13 +15,17 @@ public:
 	Scene() : Scene(0, WorldData()) { }
 
 	int32_t Size() { return size; }
+	const std::vector<std::shared_ptr<SceneObject>>& Objects() const { return objects; }
+
 	std::unique_ptr<World> CreateWorld();
+	Simulation CreateSimulation();
+
 	void AddObject(const std::shared_ptr<SceneObject>& obj);
 	void RemoveObject(const std::shared_ptr<SceneObject>& obj);
-	const std::vector<std::shared_ptr<SceneObject>>& Objects() const;
 
 	JsonObj Serialize() const override;
 	void Deserialize(const JsonObj& json) override;
+
 
 private:
 	int32_t size;

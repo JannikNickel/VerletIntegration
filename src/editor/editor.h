@@ -5,6 +5,7 @@
 #include "core/world.h"
 #include "engine/window.h"
 #include "structs/color.h"
+#include "simulation/simulation.h"
 #include <memory>
 #include <functional>
 #include <string>
@@ -22,11 +23,12 @@ class Editor
 	};
 
 public:
-	Editor(const std::shared_ptr<Window>& window);
+	Editor(const std::shared_ptr<Window>& window, const std::function<void(Simulation)>& simulationCallback);
 	void Update(double dt);
 
 private:
 	std::shared_ptr<Window> window;
+	std::function<void(Simulation)> simulationCallback;
 	SceneStorage storage = SceneStorage("scenes");
 
 	std::unique_ptr<std::function<void()>> currentPopup = nullptr;

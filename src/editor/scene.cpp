@@ -19,6 +19,26 @@ std::unique_ptr<World> Scene::CreateWorld()
 	}
 }
 
+Simulation Scene::CreateSimulation()
+{
+	Simulation sim = Simulation(CreateWorld());
+	for(const std::shared_ptr<SceneObject>& obj : objects)
+	{
+		switch(obj->ObjType())
+		{
+			case SceneObjectType::Particle:
+			{
+				ParticleObject& p = static_cast<ParticleObject&>(*obj.get());
+				sim.AddParticle(Particle(p.radius, p.mass, p.bounciness, obj->position, Vector2::zero), obj->position, p.color);
+				break;
+			}
+			default:
+				continue;
+		}
+	}
+	return sim;
+}
+
 void Scene::AddObject(const std::shared_ptr<SceneObject>& obj)
 {
 	objects.push_back(obj);
@@ -30,11 +50,6 @@ void Scene::RemoveObject(const std::shared_ptr<SceneObject>& obj)
 	{
 		return obj == target;
 	}));
-}
-
-const std::vector<std::shared_ptr<SceneObject>>& Scene::Objects() const
-{
-	return objects;
 }
 
 JsonObj Scene::Serialize() const

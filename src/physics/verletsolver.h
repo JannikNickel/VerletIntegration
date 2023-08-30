@@ -28,7 +28,7 @@ public:
 	bool collision;
 	SolverUpdateMode updateMode;
 
-	VerletSolver(EcsWorld& ecs, IConstraint* constraint, float timeStep, float gravity, unsigned int substeps = 1, float partitioningSize = 25.0f);
+	VerletSolver(EcsWorld& ecs, IConstraint& constraint, float timeStep, float gravity, unsigned int substeps = 1, float partitioningSize = 25.0f);
 	void Update(float dt);
 	const FrameCounter& BroadPhaseCounter() const;
 	const FrameCounter& NarrowPhaseCounter() const;
@@ -38,7 +38,7 @@ private:
 	float timeStep;
 	float partitioningSize;
 	EcsWorld& ecs;
-	IConstraint* constraint;
+	IConstraint& constraint;
 	PartitioningGrid partitioning;
 	FrameCounter broadPhaseCounter = FrameCounter(0.25f);
 	FrameCounter narrowPhaseCounter = FrameCounter(0.25f);
