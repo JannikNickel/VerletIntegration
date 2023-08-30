@@ -8,6 +8,7 @@
 #include "magic_enum.hpp"
 #include <algorithm>
 #include <cstdint>
+#include <format>
 
 static const Color previewValidColor = Color::From32(53, 132, 222, 128);
 static const Color previewInvalidColor = Color::From32(222, 53, 53, 128);
@@ -22,6 +23,12 @@ struct SimulationPopupData
 {
 	int32_t sceneSize = 1080;
 	WorldData worldData = {	WorldShape::Rect, { Vector2(sceneSize, sceneSize) }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) };
+};
+
+struct LoadFilePopupData
+{
+	std::array<char, 32> path = { 0 };
+	std::optional<FileName> selected = std::nullopt;
 };
 
 Editor::Editor(const std::shared_ptr<Window>& window) : window(window)
@@ -148,6 +155,8 @@ void Editor::OpenScene(std::unique_ptr<Scene> scene, const std::optional<FileNam
 	this->world = scene->CreateWorld();
 	this->scene = std::move(scene);
 	this->currentSaveFile = file;
+
+	SetNotification(Notification(file.has_value() ? std::format("Opened scene \"{0}\"!", file.value().Str()) : "Opened scene!", uiSuccessColor));
 }
 
 void Editor::LoadScene(const FileName& file)
@@ -248,7 +257,10 @@ void Editor::FileMenu()
 	}
 	if(ImGui::MenuItem("Open", ""))
 	{
-
+		SetPopup(std::make_unique<std::function<void()>>([this, data = LoadFilePopupData()]() mutable
+		{
+			LoadFilePopup(data);
+		}));
 	}
 	if(ImGui::BeginMenu("Open Recent"))
 	{
@@ -302,7 +314,7 @@ void Editor::ShowNotification(const Notification& notification)
 	float textWidth = ImGui::CalcTextSize(notification.message.c_str()).x;
 	ImGui::SetNextWindowPos({ ImGui::GetIO().DisplaySize.x * 0.5f, window->Size().y * 0.2f }, ImGuiCond_Always, { 0.5f, 0.0f });
 	ImGui::SetNextWindowSize({ textWidth + ImGui::GetStyle().WindowPadding.x * 2.0f, -1.0f }, ImGuiCond_Always);
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, { notification.color.r, notification.color.g, notification.color.b, notification.color.a });
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, { notification.color.r, notification.color.g, notification.color.b, 0.5f });
 	if(ImGui::Begin("##notification", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		ImGui::TextWrapped(notification.message.c_str());
@@ -386,7 +398,7 @@ void Editor::NewSaveFilePopup(std::array<char, 32>& path)
 	ImGui::OpenPopup("Save As");
 	if(ImGui::BeginPopupModal("Save As", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 	{
-		ImGui::InputTextWithHint("##pathInput", "Enter file name...", path.data(), path.size(), ImGuiInputTextFlags_CharsNoBlank);
+		ImGui::InputTextWithHint("##pathInput", "Enter file name...", path.data(), path.size() - 1, ImGuiInputTextFlags_CharsNoBlank);
 		std::optional<std::string> error = storage.IsValidFileName(path.data());
 		bool exists = storage.FileExists(path.data());
 		
@@ -408,6 +420,56 @@ void Editor::NewSaveFilePopup(std::array<char, 32>& path)
 		if(result == 1)
 		{
 			SaveCurrent(path.data());
+		}
+		if(result > 0)
+		{
+			ImGui::CloseCurrentPopup();
+			SetPopup(nullptr);
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+void Editor::LoadFilePopup(LoadFilePopupData& data)
+{
+	GuiHelper::CenterNextWindow();
+	ImGui::OpenPopup("Load");
+	if(ImGui::BeginPopupModal("Load", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::InputTextWithHint("##pathInput", "Search file...", data.path.data(), data.path.size() - 1, ImGuiInputTextFlags_CharsNoBlank);
+		ImGui::Spacing();
+
+		std::string filter = std::string(data.path.data());
+		if(ImGui::BeginChild("Files", { ImGui::GetContentRegionAvail().x, 50.0f }))
+		{
+			int32_t amount = 0;
+			storage.ForEach([&](FileName file)
+			{
+				if(file.Str().find(filter) != std::string::npos)
+				{
+					bool selected = data.selected == file;
+					if(ImGui::Selectable(file.CStr(), &selected))
+					{
+						data.selected = selected ? std::make_optional(file) : std::nullopt;
+					}
+					amount++;
+				}
+			});
+			if(amount == 0)
+			{
+				ImGui::BeginDisabled();
+				ImGui::TextWrapped("No files match the search...");
+				ImGui::EndDisabled();
+			}
+			ImGui::EndChild();
+		}
+
+		ImGui::Spacing();
+		int result = GuiHelper::HorizontalButtonSplit("Load", "Cancel", std::nullopt, std::nullopt, !data.selected.has_value());
+		if(result == 1)
+		{
+			LoadScene(data.selected.value());
 		}
 		if(result > 0)
 		{

@@ -77,6 +77,25 @@ const std::vector<FileName>& SceneStorage::RecentFiles() const
 	return recentFiles;
 }
 
+FileName FileNameFromPath(const std::filesystem::path& path)
+{
+	std::filesystem::path p = path.filename();
+	p.replace_extension();
+	return p.string();
+}
+
+void SceneStorage::ForEach(std::function<void(FileName file)> elementCallback) const
+{
+	for(const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(sceneDir))
+	{
+		if(!entry.is_regular_file())
+		{
+			continue;
+		}
+		elementCallback(FileNameFromPath(entry.path()));
+	}
+}
+
 std::string SceneStorage::GetRelFilePath(const FileName& fileName) const
 {
 	return sceneDir + fileName.name + fileExtension;
@@ -109,9 +128,7 @@ void SceneStorage::UpdateRecentFiles()
 	recentFiles.clear();
 	while(!best.empty())
 	{
-		std::filesystem::path p = best.top().path().filename();
-		p.replace_extension();
-		recentFiles.push_back(p.string());
+		recentFiles.push_back(FileNameFromPath(best.top().path()));
 		best.pop();
 	}
 }

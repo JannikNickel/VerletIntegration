@@ -64,4 +64,5 @@ private:
 	void ShowNotification(const Notification& notification);
 	void NewSimulationPopup(struct SimulationPopupData& data);
 	void NewSaveFilePopup(std::array<char, 32>& path);
+	void LoadFilePopup(struct LoadFilePopupData& data);
 };

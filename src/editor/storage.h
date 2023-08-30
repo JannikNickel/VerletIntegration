@@ -1,9 +1,9 @@
 #pragma once
+#include "serialization/serializable.h"
+#include "utils/stringutils.h"
 #include <string>
 #include <optional>
 #include <vector>
-#include "serialization/serializable.h"
-#include "utils/stringutils.h"
 
 class SceneStorage;
 
@@ -14,11 +14,22 @@ class FileName
 public:
 	FileName(const std::string& name) : name(StringUtils::Trim(name)) { }
 	FileName(const char* name) : name(StringUtils::Trim(name)) { }
+	const std::string& Str() const { return name; }
 	const char* CStr() const { return name.c_str(); }
 
 private:
 	std::string name;
 };
+
+inline bool operator==(const FileName& lhs, const FileName& rhs)
+{
+	return lhs.Str() == rhs.Str();
+}
+
+inline bool operator!=(const FileName& lhs, const FileName& rhs)
+{
+	return !operator==(lhs, rhs);
+}
 
 class SceneStorage
 {
@@ -30,6 +41,7 @@ public:
 	bool SaveFile(const FileName& fileName, const JsonObj& data);
 	std::optional<JsonObj> LoadFile(const FileName& fileName);
 	const std::vector<FileName>& RecentFiles() const;
+	void ForEach(std::function<void(FileName file)> elementCallback) const;
 
 private:
 	static inline const std::string fileExtension = ".json";
