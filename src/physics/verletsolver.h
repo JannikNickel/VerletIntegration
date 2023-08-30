@@ -1,34 +1,21 @@
 #pragma once
+#include "solversettings.h"
 #include "constraint.h"
 #include "partitioning.h"
 #include "ecs/world.h"
 #include "utils/framecounter.h"
-
-enum class SolverUpdateMode
-{
-	/// <summary>
-	/// Solver updates once per frame rendered using the frame delta time step
-	/// </summary>
-	FrameDeltaTime,
-	/// <summary>
-	/// Solver updates once per frame rendered using a fixed time step
-	/// </summary>
-	FrameFixedStep,
-	/// <summary>
-	/// Solver updates at a fixed frame rate (0 or multiple times each rendered frame) using a fixed delta time step
-	/// </summary>
-	FixedFrameRate
-};
+#include "structs/vector2.h"
+#include <cstdint>
 
 class VerletSolver
 {
 public:
-	float gravity;
-	unsigned int substeps;
+	Vector2 gravity;
+	uint32_t substeps;
 	bool collision;
 	SolverUpdateMode updateMode;
 
-	VerletSolver(EcsWorld& ecs, IConstraint& constraint, float timeStep, float gravity, unsigned int substeps = 1, float partitioningSize = 25.0f);
+	VerletSolver(EcsWorld& ecs, IConstraint& constraint, const SolverSettings& settings);
 	void Update(float dt);
 	const FrameCounter& BroadPhaseCounter() const;
 	const FrameCounter& NarrowPhaseCounter() const;

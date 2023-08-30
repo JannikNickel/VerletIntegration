@@ -28,5 +28,4 @@ struct WorldData : public ISerializable
 
 	JsonObj Serialize() const override;
 	void Deserialize(const JsonObj& json) override;
-
 };

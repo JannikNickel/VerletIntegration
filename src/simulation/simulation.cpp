@@ -1,11 +1,10 @@
 #include "simulation.h"
 #include "renderer/graphics.h"
 
-Simulation::Simulation(std::unique_ptr<World> world) : world(std::move(world))
+Simulation::Simulation(std::unique_ptr<World> world, const SolverSettings& solverSettings) : world(std::move(world))
 {
 	ecs = std::make_unique<EcsWorld>();
-	solver = std::make_unique<VerletSolver>(*ecs.get(), static_cast<IConstraint&>(*this->world.get()), 1.0f / 60.0f, -900.0f, 8, 10.0f * 2.0f);
-	solver->updateMode = SolverUpdateMode::FixedFrameRate;
+	solver = std::make_unique<VerletSolver>(*ecs.get(), static_cast<IConstraint&>(*this->world.get()), solverSettings);
 }
 
 void Simulation::Update(double dt)

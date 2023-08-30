@@ -2,6 +2,7 @@
 #include "serialization/serializable.h"
 #include "sceneobject.h"
 #include "worlddata.h"
+#include "physicsdata.h"
 #include "core/world.h"
 #include "simulation/simulation.h"
 #include <cstdint>
@@ -10,8 +11,10 @@
 
 class Scene : public ISerializable
 {
+	friend class Editor;
+
 public:
-	Scene(int32_t size, WorldData world) : size(size), world(world), objects({}) { }
+	Scene(int32_t size, WorldData world) : size(size), world(world), physics(PhysicsData()), objects({}) { }
 	Scene() : Scene(0, WorldData()) { }
 
 	int32_t Size() { return size; }
@@ -26,9 +29,9 @@ public:
 	JsonObj Serialize() const override;
 	void Deserialize(const JsonObj& json) override;
 
-
 private:
 	int32_t size;
 	WorldData world;
+	PhysicsData physics;
 	std::vector<std::shared_ptr<SceneObject>> objects;
 };

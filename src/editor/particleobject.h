@@ -10,6 +10,9 @@
 class ParticleObject : public CloneableSceneObject<ParticleObject>
 {
 public:
+	static inline const float minSize = 1.0f;
+	static inline const float maxSize = 10.0f;
+
 	float radius = 10.0f;
 	float mass = 1.0f;
 	float bounciness = 0.1f;
@@ -43,7 +46,7 @@ public:
 	EditResult Edit() override
 	{
 		ImGui::LabelText("", "Radius");
-		GuiHelper::ClampedFloatInput("##radius", &radius, "%0.2f", 1.0f, 10.0f);
+		GuiHelper::ClampedFloatInput("##radius", &radius, "%0.2f", minSize, maxSize);
 
 		ImGui::LabelText("", "Mass");
 		GuiHelper::ClampedFloatInput("##massInput", &mass, "%0.2f", 0.01f, 10000.0f);

@@ -6,9 +6,9 @@
 #include <limits>
 #include <utility>
 
-VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint& constraint, float timeStep, float gravity, unsigned int substeps, float partitioningSize)
-	: ecs(ecs), constraint(constraint), timeStep(timeStep), gravity(gravity), substeps(substeps), partitioningSize(partitioningSize),
-	collision(true), updateMode(SolverUpdateMode::FrameDeltaTime), partitioning(constraint.Bounds().first, constraint.Bounds().second, partitioningSize)
+VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint& constraint, const SolverSettings& settings)
+	: ecs(ecs), constraint(constraint), timeStep(settings.timestep), gravity(settings.gravity), substeps(settings.substeps), partitioningSize(settings.partitioningSize),
+	collision(settings.collision), updateMode(settings.updateMode), partitioning(constraint.Bounds().first, constraint.Bounds().second, settings.partitioningSize)
 {
 
 }
@@ -171,7 +171,8 @@ void VerletSolver::UpdateObjects(float dt)
 		p.acc /= p.mass;
 
 		//Gravity
-		p.acc.y += gravity;
+		p.acc.x += gravity.x;
+		p.acc.y += gravity.y;
 
 		//Constrain
 		constraint.Contrain(t.Position(), p);

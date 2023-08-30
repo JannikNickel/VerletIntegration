@@ -10,7 +10,7 @@ class Simulation
 	friend class Scene;
 
 public:
-	Simulation(std::unique_ptr<World> world);
+	Simulation(std::unique_ptr<World> world, const SolverSettings& solverSettings);
 
 	void Update(double dt);
 	void Render();

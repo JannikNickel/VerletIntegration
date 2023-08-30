@@ -22,6 +22,7 @@
     <ClCompile Include="src\core\circleworld.cpp" />
     <ClCompile Include="src\core\rectworld.cpp" />
     <ClCompile Include="src\editor\editor.cpp" />
+    <ClCompile Include="src\editor\physicsdata.cpp" />
     <ClCompile Include="src\editor\scene.cpp" />
     <ClCompile Include="src\editor\sceneobject.cpp" />
     <ClCompile Include="src\editor\storage.cpp" />
@@ -47,6 +48,7 @@
     <ClInclude Include="src\ecs\archetypemanager.h" />
     <ClInclude Include="src\editor\editor.h" />
     <ClInclude Include="src\editor\particleobject.h" />
+    <ClInclude Include="src\editor\physicsdata.h" />
     <ClInclude Include="src\editor\scene.h" />
     <ClInclude Include="src\editor\sceneobject.h" />
     <ClInclude Include="src\editor\guihelper.h" />
@@ -55,6 +57,7 @@
     <ClInclude Include="src\editor\storage.h" />
     <ClInclude Include="src\editor\worlddata.h" />
     <ClInclude Include="src\physics\partitioning.h" />
+    <ClInclude Include="src\physics\solversettings.h" />
     <ClInclude Include="src\simulation\components.h" />
     <ClInclude Include="src\utils\framecounter.h" />
     <ClInclude Include="src\core\world.h" />

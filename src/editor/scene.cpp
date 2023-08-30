@@ -21,7 +21,9 @@ std::unique_ptr<World> Scene::CreateWorld()
 
 Simulation Scene::CreateSimulation()
 {
-	Simulation sim = Simulation(CreateWorld());
+	SolverSettings settings = this->physics.Settings();
+	settings.partitioningSize = ParticleObject::maxSize * 2.0f;
+	Simulation sim = Simulation(CreateWorld(), settings);
 	for(const std::shared_ptr<SceneObject>& obj : objects)
 	{
 		switch(obj->ObjType())
@@ -57,6 +59,7 @@ JsonObj Scene::Serialize() const
 	JsonObj json = {};
 	json[NAMEOF(size)] = size;
 	json[NAMEOF(world)] = world.Serialize();
+	json[NAMEOF(physics)] = physics.Serialize();
 	json[NAMEOF(objects)] = {};
 	for(const std::shared_ptr<SceneObject>& obj : objects)
 	{
@@ -69,6 +72,7 @@ void Scene::Deserialize(const JsonObj& json)
 {
 	size = json[NAMEOF(size)];
 	world.Deserialize(json[NAMEOF(world)]);
+	physics.Deserialize(json[NAMEOF(physics)]);
 
 	JsonObj objects = json[NAMEOF(objects)];
 	for(size_t i = 0; i < objects.size(); i++)

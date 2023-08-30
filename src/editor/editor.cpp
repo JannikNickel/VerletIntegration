@@ -172,7 +172,7 @@ void Editor::LoadScene(const FileName& file)
 	try
 	{
 		scene->Deserialize(json.value());
-	}
+	} 
 	catch(const std::exception& e)
 	{
 		SetNotification(Notification(std::format("Could not deserialize file! ({0})", e.what()), uiErrorColor));
@@ -235,6 +235,11 @@ void Editor::MainMenuBar()
 		if(ImGui::BeginMenu("Add"))
 		{
 			AddMenu();
+			ImGui::EndMenu();
+		}
+		if(ImGui::BeginMenu("Physics"))
+		{
+			scene->physics.Edit();
 			ImGui::EndMenu();
 		}
 		if(ImGui::MenuItem("Simulate", nullptr, nullptr, scene != nullptr))
