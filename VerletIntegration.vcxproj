@@ -27,6 +27,7 @@
     <ClCompile Include="src\editor\sceneobject.cpp" />
     <ClCompile Include="src\editor\storage.cpp" />
     <ClCompile Include="src\editor\worlddata.cpp" />
+    <ClCompile Include="src\renderer\texture.cpp" />
     <ClCompile Include="src\simulation\simulation.cpp" />
     <ClCompile Include="src\utils\framecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
@@ -58,6 +59,7 @@
     <ClInclude Include="src\editor\worlddata.h" />
     <ClInclude Include="src\physics\partitioning.h" />
     <ClInclude Include="src\physics\solversettings.h" />
+    <ClInclude Include="src\renderer\texture.h" />
     <ClInclude Include="src\simulation\components.h" />
     <ClInclude Include="src\utils\framecounter.h" />
     <ClInclude Include="src\core\world.h" />
@@ -81,6 +83,7 @@
     <ClInclude Include="src\engine\window.h" />
     <ClInclude Include="src\utils\math.h" />
     <ClInclude Include="src\utils\nameof.h" />
+    <ClInclude Include="src\utils\optionalref.h" />
     <ClInclude Include="src\utils\stringutils.h" />
   </ItemGroup>
   <ItemGroup>
