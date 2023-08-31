@@ -14,23 +14,34 @@ static const float quadVertices[] =
 	-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
 	0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
 	-0.5f, 0.5f, 0.0f,		0.0f, 1.0f,
-	0.5f, 0.5f, 0.0f,		1.0f, 1.0f,
+	0.5f, 0.5f, 0.0f,		1.0f, 1.0f
 };
 static const unsigned int quadIndices[] =
 {
 	0, 1, 2,
 	1, 3, 2
 };
+static const float lineVertices[] =
+{
+	//POS					UV
+	-0.5f, 0.0f, 0.0f,		0.0f, 0.0f,
+	0.5f, 0.0f, 0.0f,		1.0f, 1.0f
+};
 
 static Window* window;
 static unsigned int windowWidth;
 static unsigned int windowHeight;
 
-static unsigned int quadVBO, quadVAO, quadEBO;
+static unsigned int quadVAO, quadVBO, quadEBO;
+static unsigned int lineVAO, lineVBO;
 
-static unsigned int quadInstancedVBO, quadInstancedVAO, quadInstancedEBO;
+static unsigned int quadInstancedVAO, quadInstancedVBO, quadInstancedEBO;
 static unsigned int quadInstanceTransformBuffer;
 static unsigned int quadInstanceColorBuffer;
+
+static unsigned int lineInstancedVAO, lineInstancedVBO;
+static unsigned int lineInstanceTransformBuffer;
+static unsigned int lineInstanceColorBuffer;
 
 static unsigned int shaderProgram;
 static unsigned int shaderModelLoc;
@@ -122,14 +133,20 @@ static void CreateVertexArrayObject(unsigned int* vao, unsigned int* vbo, unsign
 {
 	glGenVertexArrays(1, vao);
 	glGenBuffers(1, vbo);
-	glGenBuffers(1, ebo);
+	if(indices != nullptr)
+	{
+		glGenBuffers(1, ebo);
+	}
 	glBindVertexArray(*vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, *vbo);
-	glBufferData(GL_ARRAY_BUFFER, verticesLength, quadVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verticesLength, vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesLength, quadIndices, GL_STATIC_DRAW);
+	if(indices != nullptr)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesLength, indices, GL_STATIC_DRAW);
+	}
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -213,6 +230,8 @@ void Graphics::Init(Window* window, unsigned int width, unsigned int height)
 
 	CreateVertexArrayObject(&quadVAO, &quadVBO, &quadEBO, quadVertices, sizeof(quadVertices), quadIndices, sizeof(quadIndices));
 	CreateVertexArrayObject(&quadInstancedVAO, &quadInstancedVBO, &quadInstancedEBO, quadVertices, sizeof(quadVertices), quadIndices, sizeof(quadIndices), &quadInstanceTransformBuffer, &quadInstanceColorBuffer);
+	CreateVertexArrayObject(&lineVAO, &lineVBO, nullptr, lineVertices, sizeof(lineVertices), nullptr, 0);
+	CreateVertexArrayObject(&lineInstancedVAO, &lineInstancedVBO, nullptr, lineVertices, sizeof(lineVertices), nullptr, 0, &lineInstanceTransformBuffer, &lineInstanceColorBuffer);
 
 	quadTex = CreateTexture("resources/square.png");
 	circleTex = CreateTexture("resources/circle.png");
@@ -232,6 +251,14 @@ void Graphics::Shutdown()
 	glDeleteBuffers(1, &quadInstancedEBO);
 	glDeleteBuffers(1, &quadInstanceTransformBuffer);
 	glDeleteBuffers(1, &quadInstanceColorBuffer);
+
+	glDeleteVertexArrays(1, &lineVAO);
+	glDeleteBuffers(1, &lineVBO);
+
+	glDeleteVertexArrays(1, &lineInstancedVAO);
+	glDeleteBuffers(1, &lineInstancedVBO);
+	glDeleteBuffers(1, &lineInstanceTransformBuffer);
+	glDeleteBuffers(1, &lineInstanceColorBuffer);
 
 	glDeleteTextures(1, &quadTex);
 	glDeleteTextures(1, &circleTex);
@@ -276,12 +303,20 @@ void Graphics::Circle(Vector2 pos, float radius, const Color& color)
 	glDrawElements(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0);
 }
 
-static void PrepareInstancedRendering(const Matrix4* matrices, const Color* colors, int instanceCount, unsigned int texture)
+void Graphics::Line(Vector2 from, Vector2 to, const Color& color)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, quadInstanceTransformBuffer);
+	PrepareShader(Matrix4::Line(from, to), color, quadTex);
+
+	glBindVertexArray(lineVAO);
+	glDrawArrays(GL_LINES, 0, 2);
+}
+
+static void PrepareInstancedRendering(unsigned int transformBuffer, const Matrix4* matrices, unsigned int colorBuffer, const Color* colors, int instanceCount, unsigned int texture)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, transformBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * sizeof(Matrix4), matrices);
 
-	glBindBuffer(GL_ARRAY_BUFFER, quadInstanceColorBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * sizeof(Color), colors);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -297,7 +332,7 @@ void Graphics::QuadsInstanced(const Vector2* positions, const Vector2* sizes, co
 	{
 		instanceTransforms[i] = Matrix4::PositionScale2d(positions[i], sizes[i] * 2.0f);
 	}
-	PrepareInstancedRendering(instanceTransforms, colors, instanceCount, quadTex);
+	PrepareInstancedRendering(quadInstanceTransformBuffer, instanceTransforms, quadInstanceColorBuffer, colors, instanceCount, quadTex);
 
 	glBindVertexArray(quadInstancedVAO);
 	glDrawElementsInstanced(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0, instanceCount);
@@ -309,7 +344,7 @@ void Graphics::CirclesInstanced(const Vector2* positions, const float* radii, co
 	{
 		instanceTransforms[i] = Matrix4::PositionScale2d(positions[i], radii[i] * 2.0f);
 	}
-	PrepareInstancedRendering(instanceTransforms, colors, instanceCount, circleTex);
+	PrepareInstancedRendering(quadInstanceTransformBuffer, instanceTransforms, quadInstanceColorBuffer, colors, instanceCount, circleTex);
 
 	glBindVertexArray(quadInstancedVAO);
 	glDrawElementsInstanced(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0, instanceCount);
@@ -317,8 +352,16 @@ void Graphics::CirclesInstanced(const Vector2* positions, const float* radii, co
 
 void Graphics::CirclesInstanced(const Matrix4* matrices, const Color* colors, int instanceCount)
 {
-	PrepareInstancedRendering(matrices, colors, instanceCount, circleTex);
+	PrepareInstancedRendering(quadInstanceTransformBuffer, matrices, quadInstanceColorBuffer, colors, instanceCount, circleTex);
 
 	glBindVertexArray(quadInstancedVAO);
 	glDrawElementsInstanced(GL_TRIANGLES, sizeof(quadIndices), GL_UNSIGNED_INT, 0, instanceCount);
+}
+
+void Graphics::LinesInstanced(const Matrix4* matrices, const Color* colors, int instanceCount)
+{
+	PrepareInstancedRendering(lineInstanceTransformBuffer, matrices, lineInstanceColorBuffer, colors, instanceCount, quadTex);
+
+	glBindVertexArray(lineInstancedVAO);
+	glDrawArraysInstanced(GL_LINES, 0, 2, instanceCount);
 }

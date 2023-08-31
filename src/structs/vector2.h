@@ -14,6 +14,7 @@ struct Vector2
 
 	float Length() const;
 	float SqrLength() const;
+	float Normalize();
 	Vector2 Normalized() const;
 	Vector2 PerpCW() const;
 	Vector2 PerpCCW() const;

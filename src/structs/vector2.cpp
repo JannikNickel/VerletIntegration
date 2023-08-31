@@ -27,6 +27,17 @@ float Vector2::SqrLength() const
 	return x * x + y * y;
 }
 
+float Vector2::Normalize()
+{
+	float length = Length();
+	if(length > 0.0f)
+	{
+		x /= length;
+		y /= length;
+	}
+	return length;
+}
+
 Vector2 Vector2::Normalized() const
 {
 	float length = Length();
