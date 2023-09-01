@@ -39,18 +39,18 @@ Editor::Editor(const std::shared_ptr<Window>& window, const std::function<void(S
 
 void Editor::Update(double dt)
 {
-	static bool init = false;
-	if(!init)
+	static bool init = [this]()
 	{
-		init = true;
-		OpenScene(std::make_unique<Scene>(1080, WorldData { WorldShape::Circle, { .radius = 500.0f }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) }));
-	}
+		OpenScene(std::make_unique<Scene>(1080, WorldData { WorldShape::Circle, {.radius = 500.0f }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) }));
+		return true;
+	}();
 
 	Render(dt);
 	UI(dt);
 	Selection();
 	SelectionInteraction();
 	Placement(dt);
+	Insertion();
 }
 
 void Editor::Render(double dt)
@@ -97,6 +97,10 @@ void Editor::Placement(double dt)
 		{
 			scene->AddObject(std::move(currentPreview));
 		}
+		else if(Input::KeyPressed(KeyCode::Escape))
+		{
+			currentPreview = nullptr;
+		}
 	}
 }
 
@@ -136,6 +140,21 @@ void Editor::SelectionInteraction()
 		else if(result == EditResult::Duplicate)
 		{
 			CreatePreview(selected->Clone());
+		}
+		else if(Input::KeyHeld(KeyCode::LeftControl) && Input::KeyPressed(KeyCode::C))
+		{
+			currentCopied = selected->Clone();
+		}
+	}
+}
+
+void Editor::Insertion()
+{
+	if(currentCopied != nullptr)
+	{
+		if(Input::KeyHeld(KeyCode::LeftControl) && Input::KeyPressed(KeyCode::V))
+		{
+			CreatePreview(currentCopied->Clone());
 		}
 	}
 }

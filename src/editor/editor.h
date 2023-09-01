@@ -36,6 +36,7 @@ private:
 	std::unique_ptr<SceneObject> currentPreview = nullptr;
 	std::weak_ptr<SceneObject> currentSelected = std::weak_ptr<SceneObject>();
 	std::weak_ptr<SceneObject> currentHovered = std::weak_ptr<SceneObject>();
+	std::unique_ptr<SceneObject> currentCopied = nullptr;
 
 	std::unique_ptr<Scene> scene = nullptr;
 	std::unique_ptr<World> world = nullptr;
@@ -46,6 +47,7 @@ private:
 	void Placement(double dt);
 	void Selection();
 	void SelectionInteraction();
+	void Insertion();
 
 	void SetPopup(std::unique_ptr<std::function<void()>> popupFunc);
 	void SetNotification(const std::optional<Notification>& notification);
