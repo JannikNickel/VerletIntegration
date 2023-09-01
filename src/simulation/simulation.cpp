@@ -30,9 +30,15 @@ void Simulation::AddParticle(Particle&& particle, Vector2 pos, const Color& colo
 {
 	particle.prevPos = pos;
 	ecs->CreateEntity(Transform(Matrix4::PositionScale2d(pos, particle.radius * 2.0f)), RenderColor(color), std::move(particle));
+	particleAmount++;
 }
 
 void Simulation::AddSpawner(Spawner&& spawner)
 {
 	spawners.push_back(std::move(spawner));
+}
+
+uint32_t Simulation::ParticleAmount() const
+{
+	return particleAmount;
 }

@@ -6,8 +6,33 @@
 void Spawner::Update(Simulation& simulation, float dt)
 {
 	time += dt;
-	spawnTimer -= dt;
 
+	if(time < settings.initialDelay)
+	{
+		return;
+	}
+	
+	float condValue = 0.0f;
+	switch(settings.spawnCondition)
+	{
+		case SpawnCondition::Duration:
+			condValue = time;
+			break;
+		case SpawnCondition::LocalAmount:
+			condValue = spawned;
+			break;
+		case SpawnCondition::GlobalAmount:
+			condValue = simulation.ParticleAmount();
+			break;
+		default:
+			break;
+	}
+	if(condValue >= settings.spawnConditionValue)
+	{
+		return;
+	}
+
+	spawnTimer -= dt;
 	if(spawnTimer <= 0.0f)
 	{
 		float r = random.Range(settings.pSize.x, settings.pSize.y);
@@ -34,6 +59,7 @@ void Spawner::Update(Simulation& simulation, float dt)
 		float dirOffset = random.Range(-settings.spawnDirectionVariation, settings.spawnDirectionVariation) * 0.5f;
 
 		simulation.AddParticle(Particle(r, m, b, position, settings.SpawnDirVector(dirOffset) * f), position, c);
+		spawned++;
 		spawnTimer += settings.spawnRate * (settings.scaleSpawnRate ? r : 1.0f);
 	}
 }

@@ -24,10 +24,21 @@ enum class SpawnDirectionMode
 	//TODO are the options above useful
 };
 
+enum class SpawnCondition
+{
+	Always,
+	Duration,
+	LocalAmount,
+	GlobalAmount
+};
+
 struct SpawnerSettings
 {
 	float spawnRate = 0.5f;
 	bool scaleSpawnRate = true;
+	float initialDelay = 0.0f;
+	SpawnCondition spawnCondition = SpawnCondition::Always;
+	float spawnConditionValue = 1000.0f;
 
 	Vector2 pSize = Vector2(3.0f, 7.5f);
 	float pMass = 1.0f;
@@ -47,5 +58,8 @@ struct SpawnerSettings
 	SpawnRepeatMode spawnDirectionRepeatMode = SpawnRepeatMode::Reverse;
 	float spawnDirectionDuration = 5.0f;
 
-	Vector2 SpawnDirVector(float offset = 0.0f) const { return Vector2::Rotate(Vector2(0.0f, -1.0f), spawnDirection + offset); };
+	Vector2 SpawnDirVector(float offset = 0.0f) const
+	{
+		return Vector2::Rotate(Vector2(0.0f, -1.0f), spawnDirection + offset);
+	};
 };

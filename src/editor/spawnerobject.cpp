@@ -43,15 +43,30 @@ bool SpawnerObject::IsHovered(Vector2 mousePos) const
 
 EditResult SpawnerObject::Edit()
 {
-	ImGui::LabelText("", "Spawn rate");
-	GuiHelper::ClampedFloatInput("##spawnRate", &settings.spawnRate, "%0.2f", 0.0f, 60.0f);
+	if(ImGui::CollapsingHeader("SPAWNING", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::LabelText("", "Spawn rate");
+		GuiHelper::ClampedFloatInput("##spawnRate", &settings.spawnRate, "%0.2f", 0.0f, 60.0f);
 
-	ImGui::Checkbox("Scale spawn rate", &settings.scaleSpawnRate);
+		ImGui::Checkbox("Scale spawn rate", &settings.scaleSpawnRate);
+
+		ImGui::LabelText("", "Initial delay");
+		GuiHelper::ClampedFloatInput("##initialDelay", &settings.initialDelay, "%0.2f", 0.0f, 300.0f);
+
+		ImGui::LabelText("", "Spawn condition");
+		GuiHelper::EnumDropdown("##spawnCondition", &settings.spawnCondition);
+
+		if(settings.spawnCondition != SpawnCondition::Always)
+		{
+			ImGui::LabelText("", "Condition value");
+			GuiHelper::ClampedFloatInput("##spawnConditionValue", &settings.spawnConditionValue, "%0.2f", 1.0f, 1000000.0f);
+		}
+	}
 
 	if(ImGui::CollapsingHeader("PARTICLES"))
 	{
 		ImGui::LabelText("", "Particle size (min, max)");
-		if(GuiHelper::ClampedFloat2Input("##pSize", &settings.pSize.x, "%0.2f", ParticleObject::minSize, ParticleObject::maxSize));
+		GuiHelper::ClampedFloat2Input("##pSize", &settings.pSize.x, "%0.2f", ParticleObject::minSize, ParticleObject::maxSize);
 
 		ImGui::LabelText("", "Particle mass");
 		GuiHelper::ClampedFloatInput("##pMass", &settings.pMass, "%0.2f", ParticleObject::minMass, ParticleObject::maxMass);
@@ -122,6 +137,9 @@ JsonObj SpawnerObject::Serialize() const
 	JsonObj json = SceneObject::Serialize();
 	json[NAMEOF(settings.spawnRate)] = settings.spawnRate;
 	json[NAMEOF(settings.scaleSpawnRate)] = settings.scaleSpawnRate;
+	json[NAMEOF(settings.initialDelay)] = settings.initialDelay;
+	json[NAMEOF(settings.spawnCondition)] = magic_enum::enum_name(settings.spawnCondition);
+	json[NAMEOF(settings.spawnConditionValue)] = settings.spawnConditionValue;
 	json[NAMEOF(settings.pSize)] = SerializationHelper::Serialize(settings.pSize);
 	json[NAMEOF(settings.pMass)] = settings.pMass;
 	json[NAMEOF(settings.scalePMass)] = settings.scalePMass;
@@ -145,6 +163,9 @@ void SpawnerObject::Deserialize(const JsonObj& json)
 	SceneObject::Deserialize(json);
 	settings.spawnRate = json[NAMEOF(settings.spawnRate)];
 	settings.scaleSpawnRate = json[NAMEOF(settings.scaleSpawnRate)];
+	settings.initialDelay = json[NAMEOF(settings.initialDelay)];
+	settings.spawnCondition = magic_enum::enum_cast<SpawnCondition>(static_cast<std::string>(json[NAMEOF(settings.spawnCondition)])).value();
+	settings.spawnConditionValue = json[NAMEOF(settings.spawnConditionValue)];
 	settings.pSize = SerializationHelper::Deserialize<Vector2>(json[NAMEOF(settings.pSize)]);
 	settings.pMass = json[NAMEOF(settings.pMass)];
 	settings.scalePMass = json[NAMEOF(settings.scalePMass)];

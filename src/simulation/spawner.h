@@ -2,6 +2,7 @@
 #include "spawnersettings.h"
 #include "utils/random.h"
 #include <functional>
+#include <cstdint>
 
 class Spawner
 {
@@ -15,6 +16,7 @@ private:
 	SpawnerSettings settings;
 
 	Random random = {};
+	uint32_t spawned = 0;
 	float time = 0.0f;
 	float spawnTimer = 0.0f;
 	Vector2 direction = Vector2::zero;
