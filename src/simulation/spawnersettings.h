@@ -1,13 +1,15 @@
 #pragma once
 #include "structs/vector2.h"
 #include "structs/color.h"
+#include "structs/gradient.h"
 
 enum class SpawnColorMode
 {
 	Fixed,
 	RandomHue,
 	ShiftHue,
-	//TODO random gradient and shift gradient
+	RandomGradient,
+	ShiftGradient
 };
 
 enum class SpawnRepeatMode
@@ -35,7 +37,7 @@ enum class SpawnCondition
 struct SpawnerSettings
 {
 	float spawnRate = 0.5f;
-	bool scaleSpawnRate = true;
+	bool scaleSpawnRate = false;
 	float initialDelay = 0.0f;
 	SpawnCondition spawnCondition = SpawnCondition::Always;
 	float spawnConditionValue = 1000.0f;
@@ -47,6 +49,7 @@ struct SpawnerSettings
 
 	SpawnColorMode pColorMode = SpawnColorMode::Fixed;
 	Color pColorSingle = Color::white;
+	Gradient pColorGradient = Gradient::white;
 	SpawnRepeatMode pColorShift = SpawnRepeatMode::Repeat;
 	float pColorShiftDuration = 10.0f;
 

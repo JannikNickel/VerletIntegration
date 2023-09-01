@@ -32,6 +32,7 @@
     <ClCompile Include="src\renderer\texture.cpp" />
     <ClCompile Include="src\simulation\simulation.cpp" />
     <ClCompile Include="src\simulation\spawner.cpp" />
+    <ClCompile Include="src\structs\gradient.cpp" />
     <ClCompile Include="src\utils\framecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
     <ClCompile Include="src\ecs\component.cpp" />
@@ -67,6 +68,7 @@
     <ClInclude Include="src\simulation\components.h" />
     <ClInclude Include="src\simulation\spawner.h" />
     <ClInclude Include="src\simulation\spawnersettings.h" />
+    <ClInclude Include="src\structs\gradient.h" />
     <ClInclude Include="src\utils\framecounter.h" />
     <ClInclude Include="src\core\world.h" />
     <ClInclude Include="src\ecs\archetype.h" />

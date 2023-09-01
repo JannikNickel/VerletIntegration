@@ -1,6 +1,7 @@
 #pragma once
 #include "imgui.h"
 #include "structs/color.h"
+#include "structs/gradient.h"
 #include "magic_enum.hpp"
 #include <algorithm>
 #include <limits>
@@ -115,6 +116,12 @@ namespace GuiHelper
 			}
 			return true;
 		}
+		return false;
+	}
+
+	inline bool GradientEdit(const char* label, Gradient* gradient)
+	{
+		//TODO
 		return false;
 	}
 }

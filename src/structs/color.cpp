@@ -1,4 +1,5 @@
 #include "color.h"
+#include "utils/math.h"
 #include <algorithm>
 
 const Color Color::white = Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -82,6 +83,11 @@ Color Color::FromHSV(float h, float s, float v, float a)
         default:
             return Color::black;
     }
+}
+
+Color Color::Lerp(const Color& from, const Color& to, float t)
+{
+    return Color(Math::Lerp(from.r, to.r, t), Math::Lerp(from.g, to.g, t), Math::Lerp(from.b, to.b, t), Math::Lerp(from.a, to.a, t));
 }
 
 std::ostream& operator<<(std::ostream& os, const Color& c)

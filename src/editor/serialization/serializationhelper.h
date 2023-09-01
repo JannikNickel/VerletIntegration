@@ -3,6 +3,7 @@
 #include "utils/nameof.h"
 #include "structs/vector2.h"
 #include "structs/color.h"
+#include "structs/gradient.h"
 
 namespace SerializationHelper
 {
@@ -26,7 +27,17 @@ namespace SerializationHelper
 		};
 	}
 
-	template<typename T> requires std::same_as<T, Color> || std::same_as<T, Vector2>
+	inline JsonObj Serialize(const Gradient& gradient)
+	{
+		JsonObj obj = {};
+		for(const Gradient::Key& key : gradient.Keys())
+		{
+			obj.push_back({ { NAMEOF(key.t), key.t }, { NAMEOF(key.value), Serialize(key.value) } });
+		}
+		return obj;
+	}
+
+	template<typename T> requires std::same_as<T, Color> || std::same_as<T, Vector2> || std::same_as<T, Gradient>
 	inline T Deserialize(const JsonObj& json)
 	{
 		return T();
@@ -42,5 +53,17 @@ namespace SerializationHelper
 	inline Vector2 Deserialize<Vector2>(const JsonObj& json)
 	{
 		return Vector2(json[NAMEOF(Vector2::x)], json[NAMEOF(Vector2::y)]);
+	}
+
+	template<>
+	inline Gradient Deserialize<Gradient>(const JsonObj& json)
+	{
+		Gradient gradient = {};
+		for(size_t i = 0; i < json.size(); i++)
+		{
+			JsonObj key = json[i];
+			gradient.AddKey(key[NAMEOF(Gradient::Key::t)], Deserialize<Color>(key[NAMEOF(Gradient::Key::value)]));
+		}
+		return gradient;
 	}
 }

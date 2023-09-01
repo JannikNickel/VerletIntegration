@@ -78,6 +78,10 @@ Color Spawner::ParticleColor()
 		case SpawnColorMode::ShiftHue:
 			hsv.h += t;
 			break;
+		case SpawnColorMode::RandomGradient:
+			return settings.pColorGradient.Evaluate(random.Value());
+		case SpawnColorMode::ShiftGradient:
+			return settings.pColorGradient.Evaluate(t);
 		default:
 			break;
 	}

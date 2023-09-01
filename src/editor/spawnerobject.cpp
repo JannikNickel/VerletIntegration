@@ -95,10 +95,18 @@ EditResult SpawnerObject::Edit()
 		ImGui::LabelText("", "Color mode");
 		GuiHelper::EnumDropdown("##pColorMode", &settings.pColorMode);
 
-		ImGui::LabelText("", "Color");
-		ImGui::ColorEdit4("##pColorSingle", &settings.pColorSingle.r, ImGuiColorEditFlags_DisplayHex);
+		if(settings.pColorMode == SpawnColorMode::RandomGradient || settings.pColorMode == SpawnColorMode::ShiftGradient)
+		{
+			ImGui::LabelText("", "Gradient");
+			GuiHelper::GradientEdit("##pColorGradient", &settings.pColorGradient);
+		}
+		else
+		{
+			ImGui::LabelText("", "Color");
+			ImGui::ColorEdit4("##pColorSingle", &settings.pColorSingle.r, ImGuiColorEditFlags_DisplayHex);
+		}
 
-		if(settings.pColorMode != SpawnColorMode::Fixed && settings.pColorMode != SpawnColorMode::RandomHue)
+		if(settings.pColorMode != SpawnColorMode::Fixed && settings.pColorMode != SpawnColorMode::RandomHue && settings.pColorMode != SpawnColorMode::RandomGradient)
 		{
 			ImGui::LabelText("", "Repeat mode");
 			GuiHelper::EnumDropdown("##colorRepeatMode", &settings.pColorShift);
@@ -166,6 +174,7 @@ JsonObj SpawnerObject::Serialize() const
 	json[NAMEOF(settings.pBounciness)] = settings.pBounciness;
 	json[NAMEOF(settings.pColorMode)] = magic_enum::enum_name(settings.pColorMode);
 	json[NAMEOF(settings.pColorSingle)] = SerializationHelper::Serialize(settings.pColorSingle);
+	json[NAMEOF(settings.pColorGradient)] = SerializationHelper::Serialize(settings.pColorGradient);
 	json[NAMEOF(settings.pColorShift)] = magic_enum::enum_name(settings.pColorShift);
 	json[NAMEOF(settings.pColorShiftDuration)] = settings.pColorShiftDuration;
 	json[NAMEOF(settings.spawnDirection)] = settings.spawnDirection;
@@ -194,6 +203,7 @@ void SpawnerObject::Deserialize(const JsonObj& json)
 	settings.pBounciness = json[NAMEOF(settings.pBounciness)];
 	settings.pColorMode = magic_enum::enum_cast<SpawnColorMode>(static_cast<std::string>(json[NAMEOF(settings.pColorMode)])).value();
 	settings.pColorSingle = SerializationHelper::Deserialize<Color>(json[NAMEOF(settings.pColorSingle)]);
+	settings.pColorGradient = SerializationHelper::Deserialize<Gradient>(json[NAMEOF(settings.pColorGradient)]);
 	settings.pColorShift = magic_enum::enum_cast<SpawnRepeatMode>(static_cast<std::string>(json[NAMEOF(settings.pColorShift)])).value();
 	settings.pColorShiftDuration = json[NAMEOF(settings.pColorShiftDuration)];
 	settings.spawnDirection = json[NAMEOF(settings.spawnDirection)];
