@@ -20,4 +20,9 @@ private:
 	float time = 0.0f;
 	float spawnTimer = 0.0f;
 	Vector2 direction = Vector2::zero;
+
+	bool CanSpawn(Simulation& simulation) const;
+	float SpawnParticle(Simulation& simulation);
+	Color ParticleColor();
+	float RotationOffset() const;
 };

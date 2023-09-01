@@ -16,12 +16,12 @@ enum class SpawnRepeatMode
 	Reverse
 };
 
-enum class SpawnDirectionMode
+enum class SpawnDirectionRotation
 {
 	Fixed,
-	RotateCW,
-	RotateCCW,
-	//TODO are the options above useful
+	RotateLinear,
+	RotateSmoothStep,
+	RotateSmootherStep
 };
 
 enum class SpawnCondition
@@ -54,9 +54,11 @@ struct SpawnerSettings
 	float spawnDirectionVariation = 0.0f;
 	Vector2 spawnForce = Vector2(350.0f, 350.0f);
 	bool scaleSpawnForce = true;
-	SpawnDirectionMode spawnDirectionMode = SpawnDirectionMode::Fixed;
-	SpawnRepeatMode spawnDirectionRepeatMode = SpawnRepeatMode::Reverse;
-	float spawnDirectionDuration = 5.0f;
+	SpawnDirectionRotation spawnDirectionRotation = SpawnDirectionRotation::Fixed;
+	SpawnRepeatMode spawnDirectionRotationRepeat = SpawnRepeatMode::Reverse;
+	float spawnDirectionRotationStart = 0.5f;
+	float spawnDirectionRotationDuration = 5.0f;
+	float spawnDirectionRotationLimit = 360.0f;
 
 	Vector2 SpawnDirVector(float offset = 0.0f) const
 	{

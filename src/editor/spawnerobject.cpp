@@ -43,8 +43,13 @@ bool SpawnerObject::IsHovered(Vector2 mousePos) const
 
 EditResult SpawnerObject::Edit()
 {
+	static int currentNode = 0;
+
+	ImGui::SetNextItemOpen(currentNode == 0, ImGuiCond_Always);
 	if(ImGui::CollapsingHeader("SPAWNING", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		currentNode = 0;
+
 		ImGui::LabelText("", "Spawn rate");
 		GuiHelper::ClampedFloatInput("##spawnRate", &settings.spawnRate, "%0.2f", 0.0f, 60.0f);
 
@@ -63,8 +68,11 @@ EditResult SpawnerObject::Edit()
 		}
 	}
 
+	ImGui::SetNextItemOpen(currentNode == 1, ImGuiCond_Always);
 	if(ImGui::CollapsingHeader("PARTICLES"))
 	{
+		currentNode = 1;
+
 		ImGui::LabelText("", "Particle size (min, max)");
 		GuiHelper::ClampedFloat2Input("##pSize", &settings.pSize.x, "%0.2f", ParticleObject::minSize, ParticleObject::maxSize);
 
@@ -79,8 +87,11 @@ EditResult SpawnerObject::Edit()
 		ImGui::Spacing();
 	}
 
+	ImGui::SetNextItemOpen(currentNode == 2, ImGuiCond_Always);
 	if(ImGui::CollapsingHeader("COLORS"))
 	{
+		currentNode = 2;
+
 		ImGui::LabelText("", "Color mode");
 		GuiHelper::EnumDropdown("##pColorMode", &settings.pColorMode);
 
@@ -99,8 +110,11 @@ EditResult SpawnerObject::Edit()
 		ImGui::Spacing();
 	}
 
+	ImGui::SetNextItemOpen(currentNode == 3, ImGuiCond_Always);
 	if(ImGui::CollapsingHeader("FORCE"))
 	{
+		currentNode = 3;
+
 		ImGui::LabelText("", "Spawn direction");
 		ImGui::SliderFloat("##spawnDirection", &settings.spawnDirection, -360.0f, 360.0f, "%0.2f");
 
@@ -113,15 +127,21 @@ EditResult SpawnerObject::Edit()
 		ImGui::Checkbox("Scale spawn force", &settings.scaleSpawnForce);
 
 		ImGui::LabelText("", "Direction mode");
-		GuiHelper::EnumDropdown("##directionMode", &settings.spawnDirectionMode);
+		GuiHelper::EnumDropdown("##directionMode", &settings.spawnDirectionRotation);
 
-		if(settings.spawnDirectionMode != SpawnDirectionMode::Fixed)
+		if(settings.spawnDirectionRotation != SpawnDirectionRotation::Fixed)
 		{
 			ImGui::LabelText("", "Repeat mode");
-			GuiHelper::EnumDropdown("##spawnRepeatMode", &settings.spawnDirectionRepeatMode);
+			GuiHelper::EnumDropdown("##spawnRepeatMode", &settings.spawnDirectionRotationRepeat);
+
+			ImGui::LabelText("", "Anim start");
+			GuiHelper::ClampedFloatInput("##spawnDirStart", &settings.spawnDirectionRotationStart, "%0.2f", 0.0f, 1.0f);
 
 			ImGui::LabelText("", "Animation duration");
-			GuiHelper::ClampedFloatInput("##spawnDirDuration", &settings.spawnDirectionDuration, "%0.2f", 0.1f, 300.0f);
+			GuiHelper::ClampedFloatInput("##spawnDirDuration", &settings.spawnDirectionRotationDuration, "%0.2f", 0.1f, 300.0f);
+
+			ImGui::LabelText("", "Rotation limit");
+			GuiHelper::ClampedFloatInput("##spawnDirRotationLimit", &settings.spawnDirectionRotationLimit, "%0.2f", -360.0f, 360.0f);
 		}
 
 		ImGui::Spacing();
@@ -152,9 +172,11 @@ JsonObj SpawnerObject::Serialize() const
 	json[NAMEOF(settings.spawnDirectionVariation)] = settings.spawnDirectionVariation;
 	json[NAMEOF(settings.spawnForce)] = SerializationHelper::Serialize(settings.spawnForce);
 	json[NAMEOF(settings.scaleSpawnForce)] = settings.scaleSpawnForce;
-	json[NAMEOF(settings.spawnDirectionMode)] = magic_enum::enum_name(settings.spawnDirectionMode);
-	json[NAMEOF(settings.spawnDirectionRepeatMode)] = magic_enum::enum_name(settings.spawnDirectionRepeatMode);
-	json[NAMEOF(settings.spawnDirectionDuration)] = settings.spawnDirectionDuration;
+	json[NAMEOF(settings.spawnDirectionRotation)] = magic_enum::enum_name(settings.spawnDirectionRotation);
+	json[NAMEOF(settings.spawnDirectionRotationRepeat)] = magic_enum::enum_name(settings.spawnDirectionRotationRepeat);
+	json[NAMEOF(settings.spawnDirectionRotationStart)] = settings.spawnDirectionRotationStart;
+	json[NAMEOF(settings.spawnDirectionRotationDuration)] = settings.spawnDirectionRotationDuration;
+	json[NAMEOF(settings.spawnDirectionRotationLimit)] = settings.spawnDirectionRotationLimit;
 	return json;
 }
 
@@ -178,7 +200,9 @@ void SpawnerObject::Deserialize(const JsonObj& json)
 	settings.spawnDirectionVariation = json[NAMEOF(settings.spawnDirectionVariation)];
 	settings.spawnForce = SerializationHelper::Deserialize<Vector2>(json[NAMEOF(settings.spawnForce)]);
 	settings.scaleSpawnForce = json[NAMEOF(settings.scaleSpawnForce)];
-	settings.spawnDirectionMode = magic_enum::enum_cast<SpawnDirectionMode>(static_cast<std::string>(json[NAMEOF(settings.spawnDirectionMode)])).value();
-	settings.spawnDirectionRepeatMode = magic_enum::enum_cast<SpawnRepeatMode>(static_cast<std::string>(json[NAMEOF(settings.spawnDirectionRepeatMode)])).value();
-	settings.spawnDirectionDuration = json[NAMEOF(settings.spawnDirectionDuration)];
+	settings.spawnDirectionRotation = magic_enum::enum_cast<SpawnDirectionRotation>(static_cast<std::string>(json[NAMEOF(settings.spawnDirectionRotation)])).value();
+	settings.spawnDirectionRotationRepeat = magic_enum::enum_cast<SpawnRepeatMode>(static_cast<std::string>(json[NAMEOF(settings.spawnDirectionRotationRepeat)])).value();
+	settings.spawnDirectionRotationStart = json[NAMEOF(settings.spawnDirectionRotationStart)];
+	settings.spawnDirectionRotationDuration = json[NAMEOF(settings.spawnDirectionRotationDuration)];
+	settings.spawnDirectionRotationLimit = json[NAMEOF(settings.spawnDirectionRotationLimit)];
 }
