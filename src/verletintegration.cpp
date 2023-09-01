@@ -8,6 +8,7 @@
 #include "editor/editor.h"
 #include "simulation/simulation.h"
 #include "engine/input.h"
+#include "utils/math.h"
 
 static const float windowSize = 1080;
 

@@ -1,4 +1,5 @@
 #include "color.h"
+#include <algorithm>
 
 const Color Color::white = Color(1.0f, 1.0f, 1.0f, 1.0f);
 const Color Color::black = Color(0.0f, 0.0f, 0.0f, 1.0f);
@@ -21,6 +22,35 @@ Color Color::operator*(const Color& other) const
 Color Color::WithAlpha(float alpha) const
 {
     return Color(r, g, b, alpha);
+}
+
+HSV Color::ToHSV() const
+{
+    float cMax = std::max(r, std::max(g, b));
+    float cMin = std::min(r, std::min(g, b));
+    float diff = cMax - cMin;
+
+    float h = -1.0f;
+    if(cMin == cMax)
+    {
+        h = 0.0f;
+    }
+    else if(cMax == r)
+    {
+        h = std::fmodf(60.0f * ((g - b) / diff) + 360.0f, 360.0f);
+    }
+    else if(cMax == g)
+    {
+        h = std::fmodf(60.0f * ((b - r) / diff) + 120.0f, 360.0f);
+    }
+    else if(cMax == b)
+    {
+        h = std::fmodf(60.0f * ((r - g) / diff) + 240.0f, 360.0f);
+    }
+    h /= 360.0f;
+
+    float s = cMax != 0.0f ? (diff / cMax) : 0.0f;
+    return HSV { h, s, cMax };
 }
 
 Color Color::From32(unsigned char r, unsigned char g, unsigned char b, unsigned char a)

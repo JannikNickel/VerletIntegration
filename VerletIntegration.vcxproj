@@ -22,13 +22,16 @@
     <ClCompile Include="src\core\circleworld.cpp" />
     <ClCompile Include="src\core\rectworld.cpp" />
     <ClCompile Include="src\editor\editor.cpp" />
+    <ClCompile Include="src\editor\particleobject.cpp" />
     <ClCompile Include="src\editor\physicsdata.cpp" />
     <ClCompile Include="src\editor\scene.cpp" />
     <ClCompile Include="src\editor\sceneobject.cpp" />
+    <ClCompile Include="src\editor\spawnerobject.cpp" />
     <ClCompile Include="src\editor\storage.cpp" />
     <ClCompile Include="src\editor\worlddata.cpp" />
     <ClCompile Include="src\renderer\texture.cpp" />
     <ClCompile Include="src\simulation\simulation.cpp" />
+    <ClCompile Include="src\simulation\spawner.cpp" />
     <ClCompile Include="src\utils\framecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
     <ClCompile Include="src\ecs\component.cpp" />
@@ -55,12 +58,15 @@
     <ClInclude Include="src\editor\guihelper.h" />
     <ClInclude Include="src\editor\serialization\serializable.h" />
     <ClInclude Include="src\editor\serialization\serializationhelper.h" />
+    <ClInclude Include="src\editor\spawnerobject.h" />
     <ClInclude Include="src\editor\storage.h" />
     <ClInclude Include="src\editor\worlddata.h" />
     <ClInclude Include="src\physics\partitioning.h" />
     <ClInclude Include="src\physics\solversettings.h" />
     <ClInclude Include="src\renderer\texture.h" />
     <ClInclude Include="src\simulation\components.h" />
+    <ClInclude Include="src\simulation\spawner.h" />
+    <ClInclude Include="src\simulation\spawnersettings.h" />
     <ClInclude Include="src\utils\framecounter.h" />
     <ClInclude Include="src\core\world.h" />
     <ClInclude Include="src\ecs\archetype.h" />
@@ -84,6 +90,7 @@
     <ClInclude Include="src\utils\math.h" />
     <ClInclude Include="src\utils\nameof.h" />
     <ClInclude Include="src\utils\optionalref.h" />
+    <ClInclude Include="src\utils\random.h" />
     <ClInclude Include="src\utils\stringutils.h" />
   </ItemGroup>
   <ItemGroup>

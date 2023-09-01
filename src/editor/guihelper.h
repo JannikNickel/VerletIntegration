@@ -102,4 +102,19 @@ namespace GuiHelper
 		}
 		return false;
 	}
+
+	inline bool ClampedFloat2Input(const char* label, float value[2], const char* format = "%0.2f", float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max())
+	{
+		if(ImGui::InputFloat2("##pSize", value, "%0.2f"))
+		{
+			value[0] = std::clamp(value[0], min, max);
+			value[1] = std::clamp(value[1], min, max);
+			if(value[0] > value[1])
+			{
+				std::swap(value[0], value[1]);
+			}
+			return true;
+		}
+		return false;
+	}
 }

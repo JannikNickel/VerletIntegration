@@ -1,6 +1,7 @@
 #include "editor.h"
 #include "guihelper.h"
 #include "particleobject.h"
+#include "spawnerobject.h"
 #include "serialization/serializable.h"
 #include "renderer/graphics.h"
 #include "engine/input.h"
@@ -298,11 +299,11 @@ void Editor::AddMenu()
 {
 	if(ImGui::MenuItem("Particle", ""))
 	{
-		CreatePreview(std::make_unique<ParticleObject>(Vector2::zero));
+		CreatePreview(std::make_unique<ParticleObject>());
 	}
 	if(ImGui::MenuItem("Particle Spawner", ""))
 	{
-
+		CreatePreview(std::make_unique<SpawnerObject>());
 	}
 	if(ImGui::MenuItem("Link", ""))
 	{

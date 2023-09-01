@@ -29,6 +29,7 @@ struct Vector2
 	static Vector2 ClampLength(Vector2 v, float length);
 	static Vector2 Min(Vector2 a, Vector2 b);
 	static Vector2 Max(Vector2 a, Vector2 b);
+	static Vector2 Rotate(Vector2 v, float angle);
 
 	bool operator==(const Vector2& v) const;
 	bool operator!=(const Vector2& v) const;

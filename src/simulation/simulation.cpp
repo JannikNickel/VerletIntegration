@@ -9,6 +9,11 @@ Simulation::Simulation(std::unique_ptr<World> world, const SolverSettings& solve
 
 void Simulation::Update(double dt)
 {
+	for(Spawner& spawner : spawners)
+	{
+		spawner.Update(*this, dt);
+	}
+
 	solver->Update(dt);
 }
 
@@ -25,4 +30,9 @@ void Simulation::AddParticle(Particle&& particle, Vector2 pos, const Color& colo
 {
 	particle.prevPos = pos;
 	ecs->CreateEntity(Transform(Matrix4::PositionScale2d(pos, particle.radius * 2.0f)), RenderColor(color), std::move(particle));
+}
+
+void Simulation::AddSpawner(Spawner&& spawner)
+{
+	spawners.push_back(std::move(spawner));
 }

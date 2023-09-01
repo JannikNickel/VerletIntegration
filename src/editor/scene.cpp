@@ -1,5 +1,6 @@
 #include "scene.h"
 #include "particleobject.h"
+#include "spawnerobject.h"
 #include "core/rectworld.h"
 #include "core/circleworld.h"
 #include "utils/nameof.h"
@@ -32,6 +33,12 @@ Simulation Scene::CreateSimulation()
 			{
 				ParticleObject& p = static_cast<ParticleObject&>(*obj.get());
 				sim.AddParticle(Particle(p.radius, p.mass, p.bounciness, obj->position, Vector2::zero), obj->position, p.color);
+				break;
+			}
+			case SceneObjectType::Spawner:
+			{
+				SpawnerObject& s = static_cast<SpawnerObject&>(*obj.get());
+				sim.AddSpawner(Spawner(obj->position, s.Settings()));
 				break;
 			}
 			default:
@@ -86,6 +93,7 @@ void Scene::Deserialize(const JsonObj& json)
 				obj = std::make_shared<ParticleObject>();
 				break;
 			case SceneObjectType::Spawner:
+				obj = std::make_shared<SpawnerObject>();
 				break;
 			case SceneObjectType::Link:
 				break;
