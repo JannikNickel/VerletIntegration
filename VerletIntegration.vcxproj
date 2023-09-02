@@ -52,6 +52,7 @@
     <ClInclude Include="src\core\rectworld.h" />
     <ClInclude Include="src\ecs\archetypemanager.h" />
     <ClInclude Include="src\editor\editor.h" />
+    <ClInclude Include="src\editor\editorsettings.h" />
     <ClInclude Include="src\editor\particleobject.h" />
     <ClInclude Include="src\editor\physicsdata.h" />
     <ClInclude Include="src\editor\scene.h" />
