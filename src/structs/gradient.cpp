@@ -11,9 +11,24 @@ Gradient::Gradient(std::initializer_list<Key> keys)
 	}
 }
 
+size_t Gradient::Size() const
+{
+	return keys.size();
+}
+
 const std::vector<Gradient::Key>& Gradient::Keys() const
 {
 	return keys;
+}
+
+const Gradient::Key& Gradient::At(size_t index) const
+{
+	return keys[index];
+}
+
+Gradient::Key& Gradient::EditKey(size_t index)
+{
+	return keys[index];
 }
 
 void Gradient::AddKey(float time, const Color& value)

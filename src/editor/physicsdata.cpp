@@ -47,14 +47,14 @@ void PhysicsData::Edit()
 	ImGui::LabelText("", "Update mode");
 	GuiHelper::EnumDropdown("##updateModeCombo", &settings.updateMode);
 
-	GuiHelper::BeginDisabled(settings.updateMode == SolverUpdateMode::FrameDeltaTime);
+	ImGui::BeginDisabled(settings.updateMode == SolverUpdateMode::FrameDeltaTime);
 	ImGui::LabelText("", "Simulation steps per second");
 	int sps = static_cast<int>(std::roundf(1.0f / settings.timestep));
 	if(ImGui::InputInt("##spsInput", &sps, 0, 0))
 	{
 		settings.timestep = 1.0f / static_cast<float>(std::clamp(sps, 10, 300));
 	}
-	GuiHelper::EndDisabled(settings.updateMode == SolverUpdateMode::FrameDeltaTime);
+	ImGui::EndDisabled();
 
 	ImGui::LabelText("", "Substeps");
 	int substeps = settings.substeps;

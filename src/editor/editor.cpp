@@ -293,12 +293,12 @@ void Editor::FileMenu()
 		}
 		ImGui::EndMenu();
 	}
-	GuiHelper::BeginDisabled(!currentSaveFile.has_value());
+	ImGui::BeginDisabled(!currentSaveFile.has_value());
 	if(ImGui::MenuItem("Save", currentSaveFile.has_value() ? currentSaveFile.value().CStr() : ""))
 	{
 		SaveCurrent();
 	}
-	GuiHelper::EndDisabled(!currentSaveFile.has_value());
+	ImGui::EndDisabled();
 	if(ImGui::MenuItem("Save As..."))
 	{
 		SetPopup(std::make_unique<std::function<void()>>([this, path = std::array<char, 32>()]() mutable
