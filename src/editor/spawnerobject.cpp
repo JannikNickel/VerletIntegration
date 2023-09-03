@@ -103,7 +103,7 @@ EditResult SpawnerObject::Edit()
 		else
 		{
 			ImGui::LabelText("", "Color");
-			ImGui::ColorEdit4("##pColorSingle", &settings.pColorSingle.r, ImGuiColorEditFlags_DisplayHex);
+			ImGui::ColorEdit4("##pColorSingle", &settings.pColorSingle.r, GuiHelper::defaultColorEditFlags);
 		}
 
 		if(settings.pColorMode != SpawnColorMode::Fixed && settings.pColorMode != SpawnColorMode::RandomHue && settings.pColorMode != SpawnColorMode::RandomGradient)

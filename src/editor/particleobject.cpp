@@ -28,7 +28,7 @@ EditResult ParticleObject::Edit()
 	GuiHelper::ClampedFloatInput("##bouncinessInput", &bounciness, "%0.2f", 0.0f, 1.0f);
 
 	ImGui::LabelText("", "Color");
-	if(ImGui::ColorEdit4("##colorInput", &color.r, ImGuiColorEditFlags_DisplayHex))
+	if(ImGui::ColorEdit4("##colorInput", &color.r, GuiHelper::defaultColorEditFlags))
 	{
 		ignColTimer = 2.0f;
 	}
@@ -38,7 +38,7 @@ EditResult ParticleObject::Edit()
 
 	ImGui::Spacing();
 	int result = GuiHelper::HorizontalButtonSplit("Delete", "Duplicate");
-	if(result > 0.0f)
+	if(result > 0)
 	{
 		ignColTimer = 0.0;
 	}

@@ -10,6 +10,8 @@
 
 namespace GuiHelper
 {
+	const ImGuiColorEditFlags defaultColorEditFlags = ImGuiColorEditFlags_DisplayHex | ImGuiColorEditFlags_AlphaPreview;
+
 	float TitleBarHeight();
 	void CenterNextWindow();
 

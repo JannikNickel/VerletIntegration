@@ -3,6 +3,7 @@
 #include "guihelper.h"
 #include "particleobject.h"
 #include "spawnerobject.h"
+#include "linkobject.h"
 #include "serialization/serializable.h"
 #include "renderer/graphics.h"
 #include "engine/input.h"
@@ -85,10 +86,27 @@ void Editor::Placement(double dt)
 	if(currentPreview != nullptr)
 	{
 		Vector2 pos = Input::MousePosition();
-		bool valid = world->Contains(pos) && GetHoveredObject().expired();
+		bool lmb = Input::KeyPressed(KeyCode::LMB);
+
+		std::weak_ptr<SceneObject> hovered = GetHoveredObject();
+		IConnectionPlacement* cp = dynamic_cast<IConnectionPlacement*>(currentPreview.get());
+		bool valid = world->Contains(pos) && hovered.expired() != (cp != nullptr);
+		bool previewValid = valid;
+		if(cp != nullptr)
+		{
+			bool pDiff = (*cp)[0].expired() || (*cp)[0].lock().get() != hovered.lock().get();
+			if(valid && pDiff && lmb)
+			{
+				((*cp)[0].expired() ? (*cp)[0] : (*cp)[1]) = hovered;
+			}
+			valid &= !(*cp)[0].expired() && !(*cp)[1].expired() && pDiff;
+			previewValid &= !(*cp)[0].expired() && pDiff;
+		}
+
 		currentPreview->position = pos;
-		currentPreview->Render(dt, valid ? previewValidColor : previewInvalidColor);
-		if(valid && Input::KeyPressed(KeyCode::LMB))
+		currentPreview->Render(dt, previewValid ? previewValidColor : previewInvalidColor);
+
+		if(valid && lmb)
 		{
 			scene->AddObject(std::move(currentPreview));
 		}
@@ -101,12 +119,17 @@ void Editor::Placement(double dt)
 
 void Editor::Selection()
 {
+	currentHovered = GetHoveredObject();
+
 	if(currentPreview != nullptr)
 	{
+		if(dynamic_cast<IConnectionPlacement*>(currentPreview.get()) == nullptr)
+		{
+			currentHovered.reset();
+		}
 		return;
 	}
 
-	currentHovered = GetHoveredObject();
 	if(Input::KeyPressed(KeyCode::LMB) && !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow | ImGuiHoveredFlags_AllowWhenBlockedByPopup) && !ImGui::IsPopupOpen(nullptr, ImGuiPopupFlags_AnyPopup))
 	{
 		SelectObject(currentHovered);
@@ -130,7 +153,7 @@ void Editor::SelectionInteraction()
 
 		if(result == EditResult::Delete || Input::KeyPressed(KeyCode::Delete))
 		{
-			scene->RemoveObject(selected);
+			scene->RemoveObject(std::move(selected));
 		}
 		else if(result == EditResult::Duplicate)
 		{
@@ -321,11 +344,7 @@ void Editor::AddMenu()
 	}
 	if(ImGui::MenuItem("Link", ""))
 	{
-
-	}
-	if(ImGui::MenuItem("Spring", ""))
-	{
-
+		CreatePreview(std::make_unique<LinkObject>(*scene));
 	}
 }
 

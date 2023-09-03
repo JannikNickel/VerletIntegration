@@ -23,8 +23,9 @@ public:
 	std::unique_ptr<World> CreateWorld();
 	Simulation CreateSimulation();
 
-	void AddObject(const std::shared_ptr<SceneObject>& obj);
-	void RemoveObject(const std::shared_ptr<SceneObject>& obj);
+	void AddObject(const std::shared_ptr<SceneObject>& obj, bool assignId = true);
+	void RemoveObject(std::shared_ptr<SceneObject>&& obj);
+	std::weak_ptr<SceneObject> FindObject(uint32_t id) const;
 
 	JsonObj Serialize() const override;
 	void Deserialize(const JsonObj& json) override;

@@ -24,6 +24,7 @@
     <ClCompile Include="src\editor\editor.cpp" />
     <ClCompile Include="src\editor\editorsettings.cpp" />
     <ClCompile Include="src\editor\guihelper.cpp" />
+    <ClCompile Include="src\editor\linkobject.cpp" />
     <ClCompile Include="src\editor\particleobject.cpp" />
     <ClCompile Include="src\editor\physicsdata.cpp" />
     <ClCompile Include="src\editor\scene.cpp" />
@@ -53,8 +54,10 @@
     <ClInclude Include="src\core\circleworld.h" />
     <ClInclude Include="src\core\rectworld.h" />
     <ClInclude Include="src\ecs\archetypemanager.h" />
+    <ClInclude Include="src\editor\connectionplacement.h" />
     <ClInclude Include="src\editor\editor.h" />
     <ClInclude Include="src\editor\editorsettings.h" />
+    <ClInclude Include="src\editor\linkobject.h" />
     <ClInclude Include="src\editor\particleobject.h" />
     <ClInclude Include="src\editor\physicsdata.h" />
     <ClInclude Include="src\editor\scene.h" />
@@ -69,6 +72,7 @@
     <ClInclude Include="src\physics\solversettings.h" />
     <ClInclude Include="src\renderer\texture.h" />
     <ClInclude Include="src\simulation\components.h" />
+    <ClInclude Include="src\simulation\components\link.h" />
     <ClInclude Include="src\simulation\spawner.h" />
     <ClInclude Include="src\simulation\spawnersettings.h" />
     <ClInclude Include="src\structs\gradient.h" />

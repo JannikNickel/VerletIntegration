@@ -30,9 +30,13 @@ public:
 	SceneObject() : position(Vector2::zero) { }
 	virtual ~SceneObject() { }
 
+	uint32_t Id() const { return id; };
+	Vector2 Position() const { return position; }
+
 	virtual SceneObjectType ObjType() const = 0;
 	virtual void Render(float dt, const std::optional<Color>& color) const = 0;
 	virtual bool IsHovered(Vector2 mousePos) const = 0;
+	virtual bool IsValid() const { return true; }
 	virtual EditResult Edit() = 0;
 
 	virtual std::unique_ptr<SceneObject> Clone() const = 0;

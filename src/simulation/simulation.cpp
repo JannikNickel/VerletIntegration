@@ -42,6 +42,11 @@ void Simulation::AddSpawner(Spawner&& spawner, uint32_t objId)
 	spawners.push_back(std::move(spawner));
 }
 
+void Simulation::AddLink(Link&& link, uint32_t p0Id, uint32_t p1Id, const Color& color, uint32_t objId)
+{
+	//TODO
+}
+
 uint32_t Simulation::ParticleAmount() const
 {
 	return particleAmount;

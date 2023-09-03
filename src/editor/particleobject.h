@@ -5,17 +5,13 @@
 
 class ParticleObject : public CloneableSceneObject<ParticleObject>
 {
+	friend class Scene;
+
 public:
 	static inline const float minSize = 1.0f;
 	static inline const float maxSize = 10.0f;
 	static inline const float minMass = 0.01f;
 	static inline const float maxMass = 10000.0f;
-
-	float radius = 10.0f;
-	float mass = 1.0f;
-	float bounciness = 0.1f;
-	Color color = Color::white;
-	bool pinned = false;
 
 	ParticleObject(Vector2 position) : CloneableSceneObject(position) { }
 	ParticleObject() { }
@@ -29,5 +25,11 @@ public:
 	void Deserialize(const JsonObj& json) override;
 
 private:
+	float radius = 10.0f;
+	float mass = 1.0f;
+	float bounciness = 0.1f;
+	Color color = Color::white;
+	bool pinned = false;
+
 	mutable float ignColTimer = 0.0;
 };
