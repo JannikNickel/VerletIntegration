@@ -2,9 +2,9 @@
 
 enum class KeyCode : int
 {
-	LeftMouseButton = 0,
-	RightMouseButton = 1,
-	MiddleMouseButton = 2,
+	LMB = 0,
+	RMB = 1,
+	MMB = 2,
 	A = 65,
 	B = 66,
 	C = 67,
@@ -53,7 +53,7 @@ enum class KeyCode : int
 	Backslash = 92,
 	RightBracket = 93,
 	GraveAccent = 96,
-	_Escape = 256,
+	Escape = 256,
 	Enter = 257,
 	Tab = 258,
 	Backspace = 259,

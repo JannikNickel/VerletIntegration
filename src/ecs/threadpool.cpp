@@ -18,6 +18,10 @@ ThreadPool::~ThreadPool()
 {
 	stop = true;
 
+	for(size_t i = 0; i < workerThreads.size(); i++)
+	{
+		condVars[i].Set();
+	}
 	for(std::thread& t : workerThreads)
 	{
 		t.join();

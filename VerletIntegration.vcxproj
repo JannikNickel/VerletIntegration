@@ -21,9 +21,22 @@
     <ClCompile Include="external\imgui-1.89.7\imgui_widgets.cpp" />
     <ClCompile Include="src\core\circleworld.cpp" />
     <ClCompile Include="src\core\rectworld.cpp" />
+    <ClCompile Include="src\editor\editor.cpp" />
+    <ClCompile Include="src\editor\editorsettings.cpp" />
+    <ClCompile Include="src\editor\guihelper.cpp" />
+    <ClCompile Include="src\editor\particleobject.cpp" />
+    <ClCompile Include="src\editor\physicsdata.cpp" />
+    <ClCompile Include="src\editor\scene.cpp" />
+    <ClCompile Include="src\editor\sceneobject.cpp" />
+    <ClCompile Include="src\editor\spawnerobject.cpp" />
+    <ClCompile Include="src\editor\storage.cpp" />
+    <ClCompile Include="src\editor\worlddata.cpp" />
+    <ClCompile Include="src\renderer\texture.cpp" />
+    <ClCompile Include="src\simulation\simulation.cpp" />
+    <ClCompile Include="src\simulation\spawner.cpp" />
+    <ClCompile Include="src\structs\gradient.cpp" />
     <ClCompile Include="src\utils\framecounter.cpp" />
     <ClCompile Include="src\core\world.cpp" />
-    <ClCompile Include="src\ecs\archetype.cpp" />
     <ClCompile Include="src\ecs\component.cpp" />
     <ClCompile Include="src\ecs\threadpool.cpp" />
     <ClCompile Include="src\physics\verletsolver.cpp" />
@@ -39,7 +52,26 @@
   <ItemGroup>
     <ClInclude Include="src\core\circleworld.h" />
     <ClInclude Include="src\core\rectworld.h" />
+    <ClInclude Include="src\ecs\archetypemanager.h" />
+    <ClInclude Include="src\editor\editor.h" />
+    <ClInclude Include="src\editor\editorsettings.h" />
+    <ClInclude Include="src\editor\particleobject.h" />
+    <ClInclude Include="src\editor\physicsdata.h" />
+    <ClInclude Include="src\editor\scene.h" />
+    <ClInclude Include="src\editor\sceneobject.h" />
+    <ClInclude Include="src\editor\guihelper.h" />
+    <ClInclude Include="src\editor\serialization\serializable.h" />
+    <ClInclude Include="src\editor\serialization\serializationhelper.h" />
+    <ClInclude Include="src\editor\spawnerobject.h" />
+    <ClInclude Include="src\editor\storage.h" />
+    <ClInclude Include="src\editor\worlddata.h" />
     <ClInclude Include="src\physics\partitioning.h" />
+    <ClInclude Include="src\physics\solversettings.h" />
+    <ClInclude Include="src\renderer\texture.h" />
+    <ClInclude Include="src\simulation\components.h" />
+    <ClInclude Include="src\simulation\spawner.h" />
+    <ClInclude Include="src\simulation\spawnersettings.h" />
+    <ClInclude Include="src\structs\gradient.h" />
     <ClInclude Include="src\utils\framecounter.h" />
     <ClInclude Include="src\core\world.h" />
     <ClInclude Include="src\ecs\archetype.h" />
@@ -61,6 +93,10 @@
     <ClInclude Include="src\structs\matrix4.h" />
     <ClInclude Include="src\engine\window.h" />
     <ClInclude Include="src\utils\math.h" />
+    <ClInclude Include="src\utils\nameof.h" />
+    <ClInclude Include="src\utils\optionalref.h" />
+    <ClInclude Include="src\utils\random.h" />
+    <ClInclude Include="src\utils\stringutils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default2d.frag">
@@ -120,7 +156,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;$(SolutionDir)external\magic_enum_v0.9.3\include\;$(SolutionDir)external\nlohmann_json\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,7 +178,7 @@ XCOPY /E /Y "$(SolutionDir)resources" "$(OutDIr)resources\"</Command>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\;$(SolutionDir)external\imgui-1.89.7\;$(SolutionDir)external\stb\;$(SolutionDir)external\glad\include\;$(SolutionDir)external\glfw-3.3.8.bin.WIN64\include\;$(SolutionDir)external\magic_enum_v0.9.3\include\;$(SolutionDir)external\nlohmann_json\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

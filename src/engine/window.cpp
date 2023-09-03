@@ -113,6 +113,11 @@ void Window::Close()
 	glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
+Vector2 Window::Size()
+{
+	return Vector2(width, height);
+}
+
 float Window::LastFrameRenderTime()
 {
 	return renderTime;

@@ -27,6 +27,17 @@ float Vector2::SqrLength() const
 	return x * x + y * y;
 }
 
+float Vector2::Normalize()
+{
+	float length = Length();
+	if(length > 0.0f)
+	{
+		x /= length;
+		y /= length;
+	}
+	return length;
+}
+
 Vector2 Vector2::Normalized() const
 {
 	float length = Length();
@@ -110,6 +121,14 @@ Vector2 Vector2::Min(Vector2 a, Vector2 b)
 Vector2 Vector2::Max(Vector2 a, Vector2 b)
 {
 	return Vector2(std::max(a.x, b.x), std::max(a.y, b.y));
+}
+
+Vector2 Vector2::Rotate(Vector2 v, float angle)
+{
+	angle *= 0.0174533f;
+	float s = std::sinf(angle);
+	float c = std::cosf(angle);
+	return Vector2(c * v.x - s * v.y, s * v.x + c * v.y);
 }
 
 bool Vector2::operator==(const Vector2& v) const

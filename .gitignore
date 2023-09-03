@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 #Imgui
 imgui.ini
+
+#Scenes
+[Ss]cenes/
