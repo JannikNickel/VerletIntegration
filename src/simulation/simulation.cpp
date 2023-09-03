@@ -26,14 +26,18 @@ void Simulation::Render()
 	});
 }
 
-void Simulation::AddParticle(Particle&& particle, Vector2 pos, const Color& color)
+void Simulation::AddParticle(Particle&& particle, Vector2 pos, const Color& color, uint32_t objId)
 {
 	particle.prevPos = pos;
-	ecs->CreateEntity(Transform(Matrix4::PositionScale2d(pos, particle.radius * 2.0f)), RenderColor(color), std::move(particle));
+	Entity entity = ecs->CreateEntity(Transform(Matrix4::PositionScale2d(pos, particle.radius * 2.0f)), RenderColor(color), std::move(particle));
+	if(objId != 0)
+	{
+		placedEntityMap.emplace(objId, entity);
+	}
 	particleAmount++;
 }
 
-void Simulation::AddSpawner(Spawner&& spawner)
+void Simulation::AddSpawner(Spawner&& spawner, uint32_t objId)
 {
 	spawners.push_back(std::move(spawner));
 }

@@ -34,4 +34,6 @@ private:
 	WorldData world;
 	PhysicsData physics;
 	std::vector<std::shared_ptr<SceneObject>> objects;
+
+	uint32_t lastId = 0;
 };

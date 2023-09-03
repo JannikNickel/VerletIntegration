@@ -15,6 +15,7 @@ public:
 	float mass = 1.0f;
 	float bounciness = 0.1f;
 	Color color = Color::white;
+	bool pinned = false;
 
 	ParticleObject(Vector2 position) : CloneableSceneObject(position) { }
 	ParticleObject() { }

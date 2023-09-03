@@ -7,8 +7,9 @@ struct Particle : Component<Particle>
 	float radius;
 	float mass;
 	float bounciness;
+	bool pinned;
 	Vector2 prevPos;
 	Vector2 acc;
 
-	Particle(float radius, float mass, float bounciness, Vector2 prevPos, Vector2 acc) : radius(radius), mass(mass), bounciness(bounciness), prevPos(prevPos), acc(acc) { }
+	Particle(float radius, float mass, float bounciness, bool pinned, Vector2 prevPos, Vector2 acc) : radius(radius), mass(mass), bounciness(bounciness), pinned(pinned), prevPos(prevPos), acc(acc) { }
 };

@@ -33,6 +33,9 @@ EditResult ParticleObject::Edit()
 		ignColTimer = 2.0f;
 	}
 
+	ImGui::LabelText("", "Pinned");
+	ImGui::Checkbox("##pinned", &pinned);
+
 	ImGui::Spacing();
 	int result = GuiHelper::HorizontalButtonSplit("Delete", "Duplicate");
 	if(result > 0.0f)
@@ -49,6 +52,7 @@ JsonObj ParticleObject::Serialize() const
 	json[NAMEOF(mass)] = mass;
 	json[NAMEOF(bounciness)] = bounciness;
 	json[NAMEOF(color)] = SerializationHelper::Serialize(color);
+	json[NAMEOF(pinned)] = pinned;
 	return json;
 }
 
@@ -59,4 +63,5 @@ void ParticleObject::Deserialize(const JsonObj& json)
 	mass = json[NAMEOF(mass)];
 	bounciness = json[NAMEOF(bounciness)];
 	color = SerializationHelper::Deserialize<Color>(json[NAMEOF(color)]);
+	pinned = json[NAMEOF(pinned)];
 }

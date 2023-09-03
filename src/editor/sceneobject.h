@@ -4,6 +4,7 @@
 #include "serialization/serializable.h"
 #include <optional>
 #include <memory>
+#include <cstdint>
 
 enum class EditResult
 {
@@ -39,6 +40,7 @@ public:
 	void Deserialize(const JsonObj& json) override;
 
 protected:
+	uint32_t id = 0;
 	Vector2 position;
 };
 
@@ -50,6 +52,8 @@ public:
 
 	std::unique_ptr<SceneObject> Clone() const override
 	{
-		return std::make_unique<T>(static_cast<const T&>(*this));
+		std::unique_ptr<CloneableSceneObject> obj = std::make_unique<T>(static_cast<const T&>(*this));
+		obj->id = 0;
+		return obj;
 	}
 };

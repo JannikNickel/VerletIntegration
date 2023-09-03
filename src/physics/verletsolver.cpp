@@ -164,6 +164,11 @@ void VerletSolver::UpdateObjects(float dt)
 	updatePhaseCounter.BeginSubFrame();
 	ecs.QueryMT<Transform, Particle>(std::nullopt, [this, dt](Transform& t, Particle& p)
 	{
+		if(p.pinned)
+		{
+			return;
+		}
+
 		//Make sure applied forces (like initial) are represented as force over 1 second to make it delta time and substep independent
 		p.acc *= (1.0f / dt);
 

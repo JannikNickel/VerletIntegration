@@ -32,13 +32,13 @@ Simulation Scene::CreateSimulation()
 			case SceneObjectType::Particle:
 			{
 				ParticleObject& p = static_cast<ParticleObject&>(*obj.get());
-				sim.AddParticle(Particle(p.radius, p.mass, p.bounciness, obj->position, Vector2::zero), obj->position, p.color);
+				sim.AddParticle(Particle(p.radius, p.mass, p.bounciness, p.pinned, obj->position, Vector2::zero), obj->position, p.color, obj->id);
 				break;
 			}
 			case SceneObjectType::Spawner:
 			{
 				SpawnerObject& s = static_cast<SpawnerObject&>(*obj.get());
-				sim.AddSpawner(Spawner(obj->position, s.Settings()));
+				sim.AddSpawner(Spawner(obj->position, s.Settings()), obj->id);
 				break;
 			}
 			default:
@@ -50,6 +50,7 @@ Simulation Scene::CreateSimulation()
 
 void Scene::AddObject(const std::shared_ptr<SceneObject>& obj)
 {
+	obj->id = ++lastId;
 	objects.push_back(obj);
 }
 
@@ -103,7 +104,8 @@ void Scene::Deserialize(const JsonObj& json)
 		if(obj != nullptr)
 		{
 			obj->Deserialize(objJson);
-			AddObject(obj);
+			lastId = std::max(lastId, obj->id);
+			this->objects.push_back(obj);
 		}
 	}
 }

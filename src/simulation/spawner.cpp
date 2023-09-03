@@ -61,7 +61,7 @@ float Spawner::SpawnParticle(Simulation& simulation)
 	float dirOffset = random.Range(-settings.spawnDirectionVariation, settings.spawnDirectionVariation) * 0.5f;
 	float rotOffset = RotationOffset();
 
-	simulation.AddParticle(Particle(r, m, b, position, settings.SpawnDirVector(dirOffset + rotOffset) * f), position, c);
+	simulation.AddParticle(Particle(r, m, b, false, position, settings.SpawnDirVector(dirOffset + rotOffset) * f), position, c);
 	spawned++;
 	return settings.spawnRate * (settings.scaleSpawnRate ? r : 1.0f);
 }
