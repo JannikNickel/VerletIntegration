@@ -12,17 +12,17 @@ namespace EditorSettings
 	const Color uiErrorColor = Color::From32(255, 53, 53, 200);
 	const Color uiSuccessColor = Color::From32(53, 222, 78, 200);
 
-	const Color c50  = Color::From32(246, 247, 249, 255);
-	const Color c100 = Color::From32(237, 238, 241, 255);
-	const Color c200 = Color::From32(214, 218, 225, 255);
-	const Color c300 = Color::From32(179, 187, 198, 255);
-	const Color c400 = Color::From32(137, 151, 167, 255);
-	const Color c500 = Color::From32(107, 122, 140, 255);
-	const Color c600 = Color::From32(82, 94, 111, 255);
-	const Color c700 = Color::From32(70, 80, 94, 255);
-	const Color c800 = Color::From32(60, 68, 80, 255);
-	const Color c900 = Color::From32(53, 59, 69, 255);
-	const Color c950 = Color::From32(36, 39, 45, 255);
+	const Color c50  = Color::From32(245, 247, 250);
+	const Color c100 = Color::From32(235, 239, 243);
+	const Color c200 = Color::From32(211, 219, 228);
+	const Color c300 = Color::From32(172, 189, 205);
+	const Color c400 = Color::From32(126, 152, 178);
+	const Color c500 = Color::From32(94, 124, 153);
+	const Color c600 = Color::From32(74, 99, 127);
+	const Color c700 = Color::From32(61, 80, 103);
+	const Color c800 = Color::From32(53, 69, 87);
+	const Color c900 = Color::From32(48, 59, 74);
+	const Color c950 = Color::From32(22, 27, 34);
 
 	void ApplyUIStyle();
 }

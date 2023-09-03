@@ -1,7 +1,7 @@
 #include "gradient.h"
 #include "utils/math.h"
 
-const Gradient Gradient::white = Gradient({ Gradient::Key(0.0f, Color::white), Gradient::Key(1.0f, Color::white) });
+const Gradient Gradient::white = Gradient({ Gradient::Key(0.0f, Color(1.0f, 1.0f, 1.0f, 1.0f)), Gradient::Key(1.0f, Color(1.0f, 1.0f, 1.0f, 1.0f)) });
 
 Gradient::Gradient(std::initializer_list<Key> keys)
 {
