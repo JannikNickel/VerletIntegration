@@ -22,6 +22,7 @@
     <ClCompile Include="src\core\circleworld.cpp" />
     <ClCompile Include="src\core\rectworld.cpp" />
     <ClCompile Include="src\editor\editor.cpp" />
+    <ClCompile Include="src\editor\editorsettings.cpp" />
     <ClCompile Include="src\editor\guihelper.cpp" />
     <ClCompile Include="src\editor\particleobject.cpp" />
     <ClCompile Include="src\editor\physicsdata.cpp" />

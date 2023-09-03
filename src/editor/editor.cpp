@@ -35,6 +35,7 @@ void Editor::Update(double dt)
 {
 	static bool init = [this]()
 	{
+		EditorSettings::ApplyUIStyle();
 		OpenScene(std::make_unique<Scene>(1080, WorldData { WorldShape::Circle, {.radius = 500.0f }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) }));
 		return true;
 	}();

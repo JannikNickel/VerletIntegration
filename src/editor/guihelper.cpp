@@ -6,7 +6,7 @@
 static void PushStyleColor(ImGuiCol col, const std::optional<Color>& color, bool copyAlpha)
 {
 	const ImVec4& defCol = ImGui::GetStyle().Colors[col];
-	ImGui::PushStyleColor(col, color.has_value() ? ImVec4 { color.value().r, color.value().g, color.value().b, copyAlpha ? defCol.w : color.value().a } : defCol);
+	ImGui::PushStyleColor(col, color.has_value() ? ImVec4 { color.value().r, color.value().g, color.value().b, color.value().a * (copyAlpha ? defCol.w : 1.0f) } : defCol);
 }
 
 float GuiHelper::TitleBarHeight()
@@ -174,10 +174,14 @@ void GuiHelper::GradientEdit(const char* label, Gradient* gradient)
 	DrawGradient(origin, end, gradient);
 
 	std::string btnLabel = std::string(label) + "_EditButton";
-	if(ImGui::InvisibleButton(btnLabel.c_str(), size))
+	PushStyleColor(ImGuiCol_Button, Color(0.0f, 0.0f, 0.0f, 0.0f), false);
+	PushStyleColor(ImGuiCol_ButtonActive, EditorSettings::c500.WithAlpha(0.6f), false);
+	PushStyleColor(ImGuiCol_ButtonHovered, EditorSettings::c500.WithAlpha(0.5f), false);
+	if(ImGui::Button(btnLabel.c_str(), size))
 	{
 		ImGui::OpenPopup(popupId);
 	}
+	ImGui::PopStyleColor(3);
 
 	CenterNextWindow();
 	if(ImGui::BeginPopup(popupId, ImGuiWindowFlags_AlwaysAutoResize))
