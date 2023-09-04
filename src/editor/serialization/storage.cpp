@@ -105,7 +105,7 @@ struct CmpFileLastWrite
 {
 	bool operator()(const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b)
 	{
-		return a.last_write_time() < b.last_write_time();
+		return a.last_write_time() > b.last_write_time();
 	}
 };
 
@@ -128,7 +128,7 @@ void SceneStorage::UpdateRecentFiles()
 	recentFiles.clear();
 	while(!best.empty())
 	{
-		recentFiles.push_back(FileNameFromPath(best.top().path()));
+		recentFiles.insert(recentFiles.begin(), FileNameFromPath(best.top().path()));
 		best.pop();
 	}
 }

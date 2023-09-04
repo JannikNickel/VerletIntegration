@@ -96,7 +96,7 @@
     <ClCompile Include="src\editor\worlddata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\editor\storage.cpp">
+    <ClCompile Include="src\editor\serialization\storage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\simulation\simulation.cpp">
@@ -230,7 +230,7 @@
     <ClInclude Include="src\editor\worlddata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\editor\storage.h">
+    <ClInclude Include="src\editor\serialization\storage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\stringutils.h">

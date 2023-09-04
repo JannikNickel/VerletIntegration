@@ -83,6 +83,15 @@ void LinkObject::Deserialize(const JsonObj& json)
     restrictMax = json[NAMEOF(restrictMax)];
 }
 
+std::unique_ptr<SceneObject> LinkObject::Clone() const
+{
+    std::unique_ptr<SceneObject> ptr = CloneableSceneObject<LinkObject>::Clone();
+    LinkObject* l = static_cast<LinkObject*>(ptr.get());
+    l->p0 = std::weak_ptr<SceneObject>();
+    l->p1 = std::weak_ptr<SceneObject>();
+    return ptr;
+}
+
 std::weak_ptr<SceneObject>& LinkObject::operator[](size_t index)
 {
     switch(index)

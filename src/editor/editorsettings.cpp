@@ -35,6 +35,10 @@ void EditorSettings::ApplyUIStyle()
 	ApplyColor(ImGuiCol_TitleBgActive, c700);
 	ApplyColor(ImGuiCol_TitleBgCollapsed, c700);
 	ApplyColor(ImGuiCol_MenuBarBg, c950);
+	ApplyColor(ImGuiCol_ScrollbarBg, c950);
+	ApplyColor(ImGuiCol_ScrollbarGrab, c800);
+	ApplyColor(ImGuiCol_ScrollbarGrabHovered, c700);
+	ApplyColor(ImGuiCol_ScrollbarGrabActive, c600);
 	ApplyColor(ImGuiCol_CheckMark, c300);
 	ApplyColor(ImGuiCol_SliderGrab, c500);
 	ApplyColor(ImGuiCol_SliderGrabActive, c400);

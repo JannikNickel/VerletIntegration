@@ -1,5 +1,5 @@
 #pragma once
-#include "serialization/serializable.h"
+#include "serializable.h"
 #include "utils/stringutils.h"
 #include <string>
 #include <optional>

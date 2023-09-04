@@ -26,6 +26,8 @@ public:
 	JsonObj Serialize() const override;
 	void Deserialize(const JsonObj& json) override;
 
+	std::unique_ptr<SceneObject> Clone() const override;
+
 	std::weak_ptr<SceneObject>& operator[](size_t index) override;
 
 private:

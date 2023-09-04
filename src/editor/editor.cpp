@@ -108,7 +108,9 @@ void Editor::Placement(double dt)
 
 		if(valid && lmb)
 		{
+			std::unique_ptr<SceneObject> next = currentPreview->Clone();
 			scene->AddObject(std::move(currentPreview));
+			currentPreview = std::move(next);
 		}
 		else if(Input::KeyPressed(KeyCode::Escape))
 		{
@@ -159,7 +161,7 @@ void Editor::SelectionInteraction()
 		{
 			CreatePreview(selected->Clone());
 		}
-		else if(Input::KeyHeld(KeyCode::LeftControl) && Input::KeyPressed(KeyCode::C))
+		else if(Input::KeyHeld(KeyCode::LeftControl) && Input::KeyPressed(KeyCode::C) && dynamic_cast<IConnectionPlacement*>(selected.get()) == nullptr)
 		{
 			currentCopied = selected->Clone();
 		}
