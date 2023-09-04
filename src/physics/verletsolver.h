@@ -20,6 +20,7 @@ public:
 	const FrameCounter& BroadPhaseCounter() const;
 	const FrameCounter& NarrowPhaseCounter() const;
 	const FrameCounter& UpdatePhaseCounter() const;
+	const FrameCounter& LinkPhaseCounter() const;
 
 private:
 	float timeStep;
@@ -30,13 +31,15 @@ private:
 	FrameCounter broadPhaseCounter = FrameCounter(0.25f);
 	FrameCounter narrowPhaseCounter = FrameCounter(0.25f);
 	FrameCounter updatePhaseCounter = FrameCounter(0.25f);
+	FrameCounter linkPhaseCounter = FrameCounter(0.25f);
 	ThreadPool threadPool = {};
 
-	void CollectStats();
 	void Simulate(float dt);
 	void Collisions();
 	void SolveCell(PartitioningCell& cell);
 	void SolveCells(PartitioningCell& cell0, PartitioningCell& cell1);
 	void Solve(Transform& aTransform, Particle& a, Transform& bTransform, Particle& b);
 	void UpdateObjects(float dt);
+	void UpdateLinks(float dt);
+	void CollectStats();
 };

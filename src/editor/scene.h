@@ -17,11 +17,11 @@ public:
 	Scene(int32_t size, WorldData world) : size(size), world(world), physics(PhysicsData()), objects({}) { }
 	Scene() : Scene(0, WorldData()) { }
 
-	int32_t Size() { return size; }
+	int32_t Size() const { return size; }
 	const std::vector<std::shared_ptr<SceneObject>>& Objects() const { return objects; }
 
-	std::unique_ptr<World> CreateWorld();
-	Simulation CreateSimulation();
+	std::unique_ptr<World> CreateWorld() const;
+	Simulation CreateSimulation() const;
 
 	void AddObject(const std::shared_ptr<SceneObject>& obj, bool assignId = true);
 	void RemoveObject(std::shared_ptr<SceneObject>&& obj);

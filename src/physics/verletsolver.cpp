@@ -6,6 +6,17 @@
 #include <limits>
 #include <utility>
 
+inline Vector2 CalcMassRatio(Particle& a, Particle& b)
+{
+	float aMul = static_cast<float>(!a.pinned);
+	float bMul = static_cast<float>(!b.pinned);
+	float massSum = a.mass * aMul + b.mass * bMul;
+	float invMassSum = massSum != 0.0f ? (1.0f / massSum) : 0.0f;
+	aMul *= b.mass * invMassSum;
+	bMul *= a.mass * invMassSum;
+	return Vector2(aMul, bMul);
+}
+
 VerletSolver::VerletSolver(EcsWorld& ecs, IConstraint& constraint, const SolverSettings& settings)
 	: ecs(ecs), constraint(constraint), timeStep(settings.timestep), gravity(settings.gravity), substeps(settings.substeps), partitioningSize(settings.partitioningSize),
 	collision(settings.collision), updateMode(settings.updateMode), partitioning(constraint.Bounds().first, constraint.Bounds().second, settings.partitioningSize)
@@ -56,6 +67,7 @@ void VerletSolver::Simulate(float dt)
 			Collisions();
 		}
 		UpdateObjects(stepDt);
+		UpdateLinks(stepDt);
 	}
 }
 
@@ -153,9 +165,10 @@ void VerletSolver::Solve(Transform& aTransform, Particle& a, Transform& bTransfo
 		dst = std::sqrtf(dst);
 		Vector2 normDir = dir / dst;
 		float overlap = a.radius + b.radius - dst;
-		float massRatio = b.mass / (a.mass + b.mass);
-		aPos += normDir * (overlap * massRatio);
-		bPos -= normDir * (overlap * (1.0f - massRatio));
+
+		auto [aMul, bMul] = CalcMassRatio(a, b);
+		aPos += normDir * (overlap * aMul);
+		bPos -= normDir * (overlap * bMul);
 	}
 }
 
@@ -192,11 +205,36 @@ void VerletSolver::UpdateObjects(float dt)
 	updatePhaseCounter.EndSubFrame();
 }
 
+void VerletSolver::UpdateLinks(float dt)
+{
+	linkPhaseCounter.BeginSubFrame();
+	ecs.Query<Transform, Link>([this, dt](Transform& t, Link& l)
+	{
+		Vector2& aPos = ecs.GetComponent<Transform>(l.e0)->Position();
+		Vector2& bPos = ecs.GetComponent<Transform>(l.e1)->Position();
+		Particle& a = *ecs.GetComponent<Particle>(l.e0);
+		Particle& b = *ecs.GetComponent<Particle>(l.e1);
+
+		Vector2 dir = (bPos - aPos);
+		float len = dir.Normalize();
+		float off = len - l.distance;
+		if((l.restrictMax && off > 0.0f) || (l.restrictMin && off < 0.0f))
+		{
+			auto [aMul, bMul] = CalcMassRatio(a, b);
+			aPos += dir * (off * aMul);
+			bPos -= dir * (off * bMul);
+		}
+		t.value = Matrix4::Line(aPos, bPos);
+	});
+	linkPhaseCounter.EndSubFrame();
+}
+
 void VerletSolver::CollectStats()
 {
 	broadPhaseCounter.EndFrame();
 	narrowPhaseCounter.EndFrame();
 	updatePhaseCounter.EndFrame();
+	linkPhaseCounter.EndFrame();
 }
 
 const FrameCounter& VerletSolver::BroadPhaseCounter() const
@@ -212,4 +250,9 @@ const FrameCounter& VerletSolver::NarrowPhaseCounter() const
 const FrameCounter& VerletSolver::UpdatePhaseCounter() const
 {
 	return updatePhaseCounter;
+}
+
+const FrameCounter& VerletSolver::LinkPhaseCounter() const
+{
+	return linkPhaseCounter;
 }

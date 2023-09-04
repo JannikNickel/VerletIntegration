@@ -20,7 +20,11 @@ void Simulation::Update(double dt)
 void Simulation::Render()
 {
 	world->Render();
-	ecs->QueryChunked<Transform, RenderColor>(Graphics::instancingLimit, [](Transform* transform, RenderColor* renderColor, size_t chunkSize)
+	ecs->QueryChunked<Transform, RenderColor, Link>(Graphics::instancingLimit, [](Transform* transform, RenderColor* renderColor, Link* _, size_t chunkSize)
+	{
+		Graphics::LinesInstanced(reinterpret_cast<const Matrix4*>(transform), reinterpret_cast<const Color*>(renderColor), chunkSize);
+	});
+	ecs->QueryChunked<Transform, RenderColor, Particle>(Graphics::instancingLimit, [](Transform* transform, RenderColor* renderColor, Particle* _, size_t chunkSize)
 	{
 		Graphics::CirclesInstanced(reinterpret_cast<const Matrix4*>(transform), reinterpret_cast<const Color*>(renderColor), chunkSize);
 	});
@@ -44,7 +48,14 @@ void Simulation::AddSpawner(Spawner&& spawner, uint32_t objId)
 
 void Simulation::AddLink(Link&& link, uint32_t p0Id, uint32_t p1Id, const Color& color, uint32_t objId)
 {
-	//TODO
+	link.e0 = placedEntityMap[p0Id];
+	link.e1 = placedEntityMap[p1Id];
+	link.distance = Vector2::Distance(ecs->GetComponent<Transform>(link.e0)->Position(), ecs->GetComponent<Transform>(link.e1)->Position());
+	Entity entity = ecs->CreateEntity(Transform(Matrix4::identity), RenderColor(color), std::move(link));
+	if(objId != 0)
+	{
+		placedEntityMap.emplace(objId, entity);
+	}
 }
 
 uint32_t Simulation::ParticleAmount() const

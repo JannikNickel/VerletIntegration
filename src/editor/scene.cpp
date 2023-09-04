@@ -9,7 +9,7 @@
 #include "magic_enum.hpp"
 #include <algorithm>
 
-std::unique_ptr<World> Scene::CreateWorld()
+std::unique_ptr<World> Scene::CreateWorld() const
 {
 	switch(world.shape)
 	{
@@ -22,11 +22,16 @@ std::unique_ptr<World> Scene::CreateWorld()
 	}
 }
 
-Simulation Scene::CreateSimulation()
+Simulation Scene::CreateSimulation() const
 {
 	SolverSettings settings = this->physics.Settings();
 	settings.partitioningSize = ParticleObject::maxSize * 2.0f;
 	Simulation sim = Simulation(CreateWorld(), settings);
+	std::vector<std::shared_ptr<SceneObject>> objects = this->objects;
+	std::sort(objects.begin(), objects.end(), [](const std::shared_ptr<SceneObject>& a, const std::shared_ptr<SceneObject>& b)
+	{
+		return a->Id() < b->Id();
+	});
 	for(const std::shared_ptr<SceneObject>& obj : objects)
 	{
 		switch(obj->ObjType())
