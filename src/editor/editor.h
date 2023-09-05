@@ -64,6 +64,7 @@ private:
 	void MainMenuBar();
 	void FileMenu();
 	void AddMenu();
+	void ControlsMenu();
 
 	void ShowNotification(const Notification& notification);
 	void NewSimulationPopup(struct SimulationPopupData& data);

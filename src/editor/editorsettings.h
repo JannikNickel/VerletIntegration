@@ -3,8 +3,11 @@
 
 namespace EditorSettings
 {
-	const Color previewValidColor = Color::From32(53, 132, 222, 128);
-	const Color previewInvalidColor = Color::From32(222, 53, 53, 128);
+	const int32_t minSceneSize = 128;
+	const int32_t maxSceneSize = 1080;
+
+	const Color previewValidColor = Color::From32(53, 132, 222, 192);
+	const Color previewInvalidColor = Color::From32(222, 53, 53, 192);
 	const Color sceneObjectColor = Color::From32(255, 255, 255, 200);
 	const Color selectedColor = Color::From32(222, 152, 53, 255);
 	const Color selectedHoverColor = Color::From32(222, 183, 111, 255);

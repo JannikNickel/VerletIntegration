@@ -80,10 +80,10 @@ void VerletSolver::Collisions()
 		std::make_pair(1, -1),
 		std::make_pair(0, -1)
 	};
-	static const int32_t cellsX = partitioning.CellsX();
-	static const int32_t cellsY = partitioning.CellsY();
-	static const int32_t lastXCell = cellsX - 1;
-	static const int32_t lastYCell = cellsY - 1;
+	const int32_t cellsX = partitioning.CellsX();
+	const int32_t cellsY = partitioning.CellsY();
+	const int32_t lastXCell = cellsX - 1;
+	const int32_t lastYCell = cellsY - 1;
 
 	ecs.QueryChunked<Transform, Particle>(std::numeric_limits<size_t>::max(), [&](Transform* t, Particle* p, size_t chunkSize)
 	{
@@ -98,7 +98,7 @@ void VerletSolver::Collisions()
 		narrowPhaseCounter.BeginSubFrame();
 		for(const auto& [offset, amount] : ThreadPool::SplitWork(cellsX, threadPool.ThreadCount()))
 		{
-			threadPool.EnqueueJob([this, offset, amount]
+			threadPool.EnqueueJob([this, offset, amount, cellsY, lastXCell, lastYCell]
 			{
 				for(int32_t i = offset; i < offset + amount; i++)
 				{

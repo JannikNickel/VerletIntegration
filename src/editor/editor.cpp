@@ -17,7 +17,7 @@ using namespace EditorSettings;
 
 struct SimulationPopupData
 {
-	int32_t sceneSize = 1080;
+	int32_t sceneSize = maxSceneSize;
 	WorldData worldData = {	WorldShape::Rect, { Vector2(sceneSize, sceneSize) }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) };
 };
 
@@ -37,7 +37,7 @@ void Editor::Update(double dt)
 	static bool init = [this]()
 	{
 		EditorSettings::ApplyUIStyle();
-		OpenScene(std::make_unique<Scene>(1080, WorldData { WorldShape::Circle, {.radius = 500.0f }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) }));
+		OpenScene(std::make_unique<Scene>(maxSceneSize, WorldData { WorldShape::Circle, {.radius = 500.0f }, Color::From32(30, 30, 30), Color::From32(15, 15, 15) }));
 		return true;
 	}();
 
@@ -95,11 +95,12 @@ void Editor::Placement(double dt)
 		if(cp != nullptr)
 		{
 			bool pDiff = (*cp)[0].expired() || (*cp)[0].lock().get() != hovered.lock().get();
-			if(valid && pDiff && lmb)
+			bool pTarget = dynamic_cast<IConnectionPlacement*>(hovered.lock().get()) == nullptr;
+			if(valid && pDiff && pTarget && lmb)
 			{
 				((*cp)[0].expired() ? (*cp)[0] : (*cp)[1]) = hovered;
 			}
-			valid &= !(*cp)[0].expired() && !(*cp)[1].expired() && pDiff;
+			valid &= !(*cp)[0].expired() && !(*cp)[1].expired() && pDiff && pTarget;
 			previewValid &= !(*cp)[0].expired() && pDiff;
 		}
 
@@ -140,11 +141,15 @@ void Editor::Selection()
 
 void Editor::SelectionInteraction()
 {
+	static std::weak_ptr<SceneObject> lastSelected = {};
 	if(std::shared_ptr<SceneObject> selected = currentSelected.lock())
 	{
+		bool selectionChanged = lastSelected.lock() != selected;
+		lastSelected = selected;
+
 		Vector2 pos = selected->position;
 		float xDir = pos.x / static_cast<float>(scene->Size()) > 0.75f ? -1.0f : 1.0f;
-		ImGui::SetNextWindowPos({ pos.x + xDir * 25.0f, window->Size().y - pos.y - GuiHelper::TitleBarHeight() * 0.5f }, ImGuiCond_Appearing, { (-xDir + 1.0f) * 0.5f, 0.0f });
+		ImGui::SetNextWindowPos({ pos.x + xDir * 25.0f, window->Size().y - pos.y - GuiHelper::TitleBarHeight() * 0.5f }, selectionChanged ? ImGuiCond_Always : ImGuiCond_Appearing, { (-xDir + 1.0f) * 0.5f, 0.0f });
 		EditResult result = EditResult::None;
 		std::string title = std::string(magic_enum::enum_name(selected->ObjType()));
 		if(ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
@@ -164,6 +169,10 @@ void Editor::SelectionInteraction()
 		else if(Input::KeyHeld(KeyCode::LeftControl) && Input::KeyPressed(KeyCode::C) && dynamic_cast<IConnectionPlacement*>(selected.get()) == nullptr)
 		{
 			currentCopied = selected->Clone();
+		}
+		else if(Input::KeyPressed(KeyCode::Escape))
+		{
+			SelectObject({});
 		}
 	}
 }
@@ -196,7 +205,7 @@ void Editor::OpenScene(std::unique_ptr<Scene> scene, const std::optional<FileNam
 	this->scene = std::move(scene);
 	this->currentSaveFile = file;
 
-	SetNotification(Notification(file.has_value() ? std::format("Opened scene \"{0}\"!", file.value().Str()) : "Opened scene!", uiSuccessColor));
+	SetNotification(Notification(file.has_value() ? std::format("Opened scene \"{0}\"!", file.value().Str()) : "Opened scene!", uiSuccessColor, 1.0f));
 }
 
 void Editor::LoadScene(const FileName& file)
@@ -282,10 +291,30 @@ void Editor::MainMenuBar()
 			scene->physics.Edit();
 			ImGui::EndMenu();
 		}
-		if(ImGui::MenuItem("Simulate", nullptr, nullptr, scene != nullptr))
+		if(ImGui::BeginMenu("Controls"))
+		{
+			ControlsMenu();
+			ImGui::EndMenu();
+		}
+
+		bool allowSimulation = scene != nullptr && currentPreview == nullptr && currentSelected.expired();
+		bool simShortcut = allowSimulation && Input::KeyPressed(KeyCode::Enter) && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow);
+		if(ImGui::MenuItem("Simulate", nullptr, nullptr, allowSimulation) || simShortcut)
 		{
 			simulationCallback(scene->CreateSimulation());
 		}
+
+		std::string controlInfo = "";
+		if(currentPreview != nullptr)
+		{
+			controlInfo = std::format("Placing {0}... (esc to cancel)", magic_enum::enum_name(currentPreview->ObjType()));
+		}
+		else if(std::shared_ptr<SceneObject> selected = currentSelected.lock())
+		{
+			controlInfo = std::format("Selected {0}... (esc to deselect, del to delete)", magic_enum::enum_name(selected->ObjType()));
+		}
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - ImGui::CalcTextSize(controlInfo.c_str()).x);
+		ImGui::Text(controlInfo.c_str());
 
 		ImGui::EndMainMenuBar();
 	}
@@ -350,6 +379,20 @@ void Editor::AddMenu()
 	}
 }
 
+void Editor::ControlsMenu()
+{
+	const char* text =
+		"Editor\n"
+		"- LMB = Place preview\n"
+		"- Esc = Cancel placement/selection\n"
+		"- Del = Delete selected\n"
+		"\nSimulation\n"
+		"- Enter = Start\n"
+		"- Esc   = Stop\n";
+	ImGui::Spacing();
+	ImGui::Text(text);
+}
+
 void Editor::ShowNotification(const Notification& notification)
 {
 	float textWidth = ImGui::CalcTextSize(notification.message.c_str()).x;
@@ -366,9 +409,6 @@ void Editor::ShowNotification(const Notification& notification)
 
 void Editor::NewSimulationPopup(SimulationPopupData& data)
 {
-	static const int32_t minSceneSize = 128;
-	static const int32_t maxSceneSize = 1080;
-
 	GuiHelper::CenterNextWindow();
 	ImGui::OpenPopup("New Simulation");
 	if(ImGui::BeginPopupModal("New Simulation", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
@@ -393,8 +433,8 @@ void Editor::NewSimulationPopup(SimulationPopupData& data)
 				ImGui::LabelText("", "World Size");
 				if(ImGui::InputFloat2("##worldSizeInput", &data.worldData.bounds.size[0], "%.0f") || clamp)
 				{
-					data.worldData.bounds.size.x = std::clamp(data.worldData.bounds.size.x, 64.0f, static_cast<float>(data.sceneSize));
-					data.worldData.bounds.size.y = std::clamp(data.worldData.bounds.size.y, 64.0f, static_cast<float>(data.sceneSize));
+					data.worldData.bounds.size.x = std::clamp(data.worldData.bounds.size.x, minSceneSize * 0.5f, static_cast<float>(data.sceneSize));
+					data.worldData.bounds.size.y = std::clamp(data.worldData.bounds.size.y, minSceneSize * 0.5f, static_cast<float>(data.sceneSize));
 				}
 				break;
 			}
@@ -403,7 +443,7 @@ void Editor::NewSimulationPopup(SimulationPopupData& data)
 				ImGui::LabelText("", "World Radius");
 				if(ImGui::InputFloat("##worldSizeInput", &data.worldData.bounds.radius, 0.0f, 0.0f, "%.0f") || clamp)
 				{
-					data.worldData.bounds.radius = std::clamp(data.worldData.bounds.radius, 32.0f, static_cast<float>(data.sceneSize / 2));
+					data.worldData.bounds.radius = std::clamp(data.worldData.bounds.radius, minSceneSize * 0.25f, static_cast<float>(data.sceneSize * 0.5f));
 				}
 				break;
 			}
