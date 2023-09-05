@@ -57,8 +57,3 @@ void Simulation::AddLink(Link&& link, uint32_t p0Id, uint32_t p1Id, const Color&
 		placedEntityMap.emplace(objId, entity);
 	}
 }
-
-uint32_t Simulation::ParticleAmount() const
-{
-	return particleAmount;
-}

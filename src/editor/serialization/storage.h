@@ -39,6 +39,7 @@ public:
 	std::optional<std::string> IsValidFileName(const FileName& fileName) const;
 	bool FileExists(const FileName& fileName) const;
 	bool SaveFile(const FileName& fileName, const JsonObj& data);
+	bool DeleteFile(const FileName& fileName);
 	std::optional<JsonObj> LoadFile(const FileName& fileName);
 	const std::vector<FileName>& RecentFiles() const;
 	void ForEach(std::function<void(FileName file)> elementCallback) const;

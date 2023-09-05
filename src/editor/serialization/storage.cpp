@@ -58,6 +58,17 @@ bool SceneStorage::SaveFile(const FileName& fileName, const JsonObj& data)
 	return !out.fail();
 }
 
+bool SceneStorage::DeleteFile(const FileName& fileName)
+{
+	const std::string path = GetRelFilePath(fileName);
+	bool result = std::filesystem::remove(path);
+	if(result)
+	{
+		UpdateRecentFiles();
+	}
+	return result;
+}
+
 std::optional<JsonObj> SceneStorage::LoadFile(const FileName& fileName)
 {
 	const std::string path = GetRelFilePath(fileName);

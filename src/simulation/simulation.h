@@ -21,7 +21,8 @@ public:
 	void AddSpawner(Spawner&& spawner, uint32_t objId = 0);
 	void AddLink(Link&& link, uint32_t p0Id, uint32_t p1Id, const Color& color, uint32_t objId = 0);
 
-	uint32_t ParticleAmount() const;
+	uint32_t ParticleAmount() const { return particleAmount; }
+	const VerletSolver& Solver() const { return *solver; }
 
 private:
 	std::unique_ptr<World> world;

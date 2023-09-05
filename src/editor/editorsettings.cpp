@@ -48,6 +48,9 @@ void EditorSettings::ApplyUIStyle()
 	ApplyColor(ImGuiCol_Header, c400);
 	ApplyColor(ImGuiCol_HeaderHovered, c500);
 	ApplyColor(ImGuiCol_HeaderActive, c500);
+	ApplyColor(ImGuiCol_Separator, c800);
+	ApplyColor(ImGuiCol_SeparatorHovered, c800);
+	ApplyColor(ImGuiCol_SeparatorActive, c800);
 	ApplyColor(ImGuiCol_TextSelectedBg, c400);
 	ApplyColor(ImGuiCol_ModalWindowDimBg, c900);
 }

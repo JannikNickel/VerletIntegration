@@ -388,7 +388,8 @@ void Editor::ControlsMenu()
 		"- Del = Delete selected\n"
 		"\nSimulation\n"
 		"- Enter = Start\n"
-		"- Esc   = Stop\n";
+		"- Esc   = Stop\n"
+		"- Space = Toggle stats";
 	ImGui::Spacing();
 	ImGui::Text(text);
 }
@@ -522,6 +523,7 @@ void Editor::LoadFilePopup(LoadFilePopupData& data)
 		ImGui::Spacing();
 
 		std::string filter = std::string(data.path.data());
+		std::optional<FileName> fileToDelete = std::nullopt;
 		if(ImGui::BeginChild("Files", { ImGui::GetContentRegionAvail().x, 50.0f }))
 		{
 			int32_t amount = 0;
@@ -534,6 +536,14 @@ void Editor::LoadFilePopup(LoadFilePopupData& data)
 					{
 						data.selected = selected ? std::make_optional(file) : std::nullopt;
 					}
+					if(ImGui::BeginPopupContextItem(file.CStr()))
+					{
+						if(ImGui::MenuItem("Delete"))
+						{
+							fileToDelete = file;
+						}
+						ImGui::EndPopup();
+					}
 					amount++;
 				}
 			});
@@ -544,6 +554,10 @@ void Editor::LoadFilePopup(LoadFilePopupData& data)
 				ImGui::EndDisabled();
 			}
 			ImGui::EndChild();
+		}
+		if(fileToDelete.has_value())
+		{
+			storage.DeleteFile(fileToDelete.value());
 		}
 
 		ImGui::Spacing();

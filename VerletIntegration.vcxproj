@@ -170,7 +170,11 @@
     </Link>
     <PostBuildEvent>
       <Command>XCOPY /E /Y "$(SolutionDir)shaders" "$(OutDIr)shaders\"
-XCOPY /E /Y "$(SolutionDir)resources" "$(OutDIr)resources\"</Command>
+XCOPY /E /Y "$(SolutionDir)resources" "$(OutDIr)resources\"
+
+if exist "$(SolutionDir)scenes" (
+XCOPY /E /Y /c "$(SolutionDir)scenes" "$(OutDIr)scenes\"
+)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -194,7 +198,11 @@ XCOPY /E /Y "$(SolutionDir)resources" "$(OutDIr)resources\"</Command>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY /E /Y "$(SolutionDir)shaders" "$(OutDIr)shaders\"
-XCOPY /E /Y "$(SolutionDir)resources" "$(OutDIr)resources\"</Command>
+XCOPY /E /Y "$(SolutionDir)resources" "$(OutDIr)resources\"
+
+if exist "$(SolutionDir)scenes" (
+XCOPY /E /Y /c "$(SolutionDir)scenes" "$(OutDIr)scenes\"
+)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
