@@ -35,7 +35,7 @@ std::optional<std::string> SceneStorage::IsValidFileName(const FileName& fileNam
 	{
 		return std::make_optional("File name can't be empty!");
 	}
-	if(fileName.name.starts_with("con"))
+	if(fileName.name == "con")
 	{
 		return std::make_optional("Invalid file name!");
 	}

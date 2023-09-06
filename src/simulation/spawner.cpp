@@ -36,7 +36,7 @@ bool Spawner::CanSpawn(Simulation& simulation) const
 	switch(settings.spawnCondition)
 	{
 		case SpawnCondition::Duration:
-			condValue = time;
+			condValue = time - settings.initialDelay;
 			break;
 		case SpawnCondition::LocalAmount:
 			condValue = spawned;
@@ -69,7 +69,7 @@ float Spawner::SpawnParticle(Simulation& simulation)
 Color Spawner::ParticleColor()
 {
 	HSV hsv = settings.pColorSingle.ToHSV();
-	float t = AnimParam(time, settings.pColorShiftDuration, settings.pColorShift);
+	float t = AnimParam(time - settings.initialDelay, settings.pColorShiftDuration, settings.pColorShift);
 	switch(settings.pColorMode)
 	{
 		case SpawnColorMode::RandomHue:
@@ -94,7 +94,7 @@ float Spawner::RotationOffset() const
 	float start = settings.spawnDirectionRotationStart;
 	float limit = settings.spawnDirectionRotationLimit;
 	float baseOff = -start * limit;
-	float t = AnimParam(time + start * settings.spawnDirectionRotationDuration, settings.spawnDirectionRotationDuration, settings.spawnDirectionRotationRepeat);
+	float t = AnimParam(time - settings.initialDelay + start * settings.spawnDirectionRotationDuration, settings.spawnDirectionRotationDuration, settings.spawnDirectionRotationRepeat);
 	switch(settings.spawnDirectionRotation)
 	{
 		case SpawnDirectionRotation::RotateLinear:
