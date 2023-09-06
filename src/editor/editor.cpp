@@ -179,7 +179,7 @@ void Editor::SelectionInteraction()
 
 void Editor::Insertion()
 {
-	if(currentCopied != nullptr)
+	if(currentCopied != nullptr && !ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
 	{
 		if(Input::KeyHeld(KeyCode::LeftControl) && Input::KeyPressed(KeyCode::V))
 		{

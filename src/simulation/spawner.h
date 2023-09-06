@@ -7,7 +7,7 @@
 class Spawner
 {
 public:
-	Spawner(Vector2 position, const SpawnerSettings& settings) : position(position), settings(settings) { }
+	Spawner(Vector2 position, const SpawnerSettings& settings) : position(position), settings(settings), time(settings.spawnRate) { }
 
 	void Update(class Simulation& simulation, float dt);
 

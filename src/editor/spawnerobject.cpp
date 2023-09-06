@@ -51,7 +51,7 @@ EditResult SpawnerObject::Edit()
 		currentNode = 0;
 
 		ImGui::LabelText("", "Spawn rate");
-		GuiHelper::ClampedFloatInput("##spawnRate", &settings.spawnRate, "%0.2f", 0.0f, 60.0f);
+		GuiHelper::ClampedFloatInput("##spawnRate", &settings.spawnRate, "%0.3f", 0.0f, 60.0f);
 
 		ImGui::Checkbox("Scale spawn rate", &settings.scaleSpawnRate);
 
