@@ -157,14 +157,17 @@ void Editor::ChainPlacement()
 				}
 			}
 
-			for(int32_t i = 0; i < static_cast<int32_t>(placed.size()) - 1; i++)
+			if(!currentChainPreview->isStatic)
 			{
-				const std::shared_ptr<SceneObject> from = placed[i];
-				const std::shared_ptr<SceneObject> to = placed[i + 1];
-				std::shared_ptr<LinkObject> link = std::make_shared<LinkObject>(*scene, from->Position(), currentChainPreview->color, currentChainPreview->restrictMin, currentChainPreview->restrictMax);
-				(*link)[0] = from;
-				(*link)[1] = to;
-				scene->AddObject(link);
+				for(int32_t i = 0; i < static_cast<int32_t>(placed.size()) - 1; i++)
+				{
+					const std::shared_ptr<SceneObject> from = placed[i];
+					const std::shared_ptr<SceneObject> to = placed[i + 1];
+					std::shared_ptr<LinkObject> link = std::make_shared<LinkObject>(*scene, from->Position(), currentChainPreview->color, currentChainPreview->restrictMin, currentChainPreview->restrictMax);
+					(*link)[0] = from;
+					(*link)[1] = to;
+					scene->AddObject(link);
+				}
 			}
 
 			if(finalize)
