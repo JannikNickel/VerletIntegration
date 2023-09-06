@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <format>
+#include <ranges>
 
 using namespace EditorSettings;
 
@@ -46,6 +47,7 @@ void Editor::Update(double dt)
 	Selection();
 	SelectionInteraction();
 	Placement(dt);
+	ChainPlacement();
 	Insertion();
 }
 
@@ -120,11 +122,70 @@ void Editor::Placement(double dt)
 	}
 }
 
+void Editor::ChainPlacement()
+{
+	if(currentChainPreview != nullptr)
+	{
+		static Vector2 start = Vector2::zero;
+		Vector2 mousePos = Input::MousePosition();
+		if(Input::KeyPressed(KeyCode::LMB))
+		{
+			start = mousePos;
+		}
+		else if(start != Vector2::zero && (Input::KeyHeld(KeyCode::LMB) || Input::KeyReleased(KeyCode::LMB)))
+		{
+			bool finalize = Input::KeyReleased(KeyCode::LMB);
+			Graphics::Line(start, mousePos, previewValidColor);
+
+			Vector2 dir = (mousePos - start);
+			float dst = dir.Normalize();
+			uint32_t count = 1 + static_cast<uint32_t>(dst / (currentChainPreview->particleRadius * 2.0f + currentChainPreview->particleDistance));
+			std::vector<std::shared_ptr<SceneObject>> placed = {};
+			for(size_t i = 0; i < count; i++)
+			{
+				Vector2 pos = start + dir * i * (currentChainPreview->particleRadius * 2.0f + currentChainPreview->particleDistance);
+				bool valid = world->Contains(pos) && std::ranges::find_if(scene->Objects(), [&](const std::shared_ptr<SceneObject>& obj) { return obj->IsHovered(pos); }) == scene->Objects().end();
+
+				ParticleObject particle = ParticleObject(pos, currentChainPreview->particleRadius, currentChainPreview->particleMass, 0.0f, currentChainPreview->color, i == 0 || i == count - 1 || currentChainPreview->isStatic);
+				particle.Render(0.0f, valid ? previewValidColor : previewInvalidColor);
+
+				if(finalize && valid)
+				{
+					std::shared_ptr<SceneObject> obj = std::make_shared<ParticleObject>(particle);
+					scene->AddObject(obj);
+					placed.push_back(obj);
+				}
+			}
+
+			for(int32_t i = 0; i < static_cast<int32_t>(placed.size()) - 1; i++)
+			{
+				const std::shared_ptr<SceneObject> from = placed[i];
+				const std::shared_ptr<SceneObject> to = placed[i + 1];
+				std::shared_ptr<LinkObject> link = std::make_shared<LinkObject>(*scene, from->Position(), currentChainPreview->color, currentChainPreview->restrictMin, currentChainPreview->restrictMax);
+				(*link)[0] = from;
+				(*link)[1] = to;
+				scene->AddObject(link);
+			}
+
+			if(finalize)
+			{
+				start = Vector2::zero;
+				currentChainPreview = nullptr;
+			}
+		}
+
+		if(Input::KeyPressed(KeyCode::Escape))
+		{
+			currentChainPreview = nullptr;
+		}
+	}
+}
+
 void Editor::Selection()
 {
 	currentHovered = GetHoveredObject();
 
-	if(currentPreview != nullptr)
+	if(currentPreview != nullptr && currentChainPreview == nullptr)
 	{
 		if(dynamic_cast<IConnectionPlacement*>(currentPreview.get()) == nullptr)
 		{
@@ -252,11 +313,19 @@ void Editor::CreatePreview(std::unique_ptr<SceneObject> obj)
 {
 	SelectObject({});
 	currentPreview = std::move(obj);
+	currentChainPreview = nullptr;
 }
 
 void Editor::SelectObject(const std::weak_ptr<SceneObject>& obj)
 {
 	currentSelected = obj;
+}
+
+void Editor::CreateChainPreview(std::unique_ptr<ChainData> data)
+{
+	SelectObject({});
+	currentPreview = nullptr;
+	currentChainPreview = std::move(data);
 }
 
 std::weak_ptr<SceneObject> Editor::GetHoveredObject()
@@ -308,6 +377,10 @@ void Editor::MainMenuBar()
 		if(currentPreview != nullptr)
 		{
 			controlInfo = std::format("Placing {0}... (esc to cancel)", magic_enum::enum_name(currentPreview->ObjType()));
+		}
+		else if(currentChainPreview != nullptr)
+		{
+			controlInfo = std::format("Drag with LMB to create a chain... (esc to cancel)");
 		}
 		else if(std::shared_ptr<SceneObject> selected = currentSelected.lock())
 		{
@@ -377,6 +450,12 @@ void Editor::AddMenu()
 	{
 		CreatePreview(std::make_unique<LinkObject>(*scene));
 	}
+	if(ImGui::BeginMenu("Chain", ""))
+	{
+		static ChainData data = ChainData();
+		ChainCreationMenu(data);
+		ImGui::EndMenu();
+	}
 }
 
 void Editor::ControlsMenu()
@@ -406,6 +485,31 @@ void Editor::ShowNotification(const Notification& notification)
 		ImGui::End();
 	}
 	ImGui::PopStyleColor();
+}
+
+void Editor::ChainCreationMenu(ChainData& data)
+{
+	ImGui::LabelText("", "Radius");
+	GuiHelper::ClampedFloatInput("##radius", &data.particleRadius, "%0.2f", ParticleObject::minSize, ParticleObject::maxSize);
+
+	ImGui::LabelText("", "Mass");
+	GuiHelper::ClampedFloatInput("##massInput", &data.particleMass, "%0.2f", ParticleObject::minMass, ParticleObject::maxMass);
+
+	ImGui::LabelText("", "Segment distance");
+	GuiHelper::ClampedFloatInput("##segmentDistance", &data.particleDistance, "%0.2f", 0.0f, 100.0f);
+
+	ImGui::LabelText("", "Color");
+	ImGui::ColorEdit4("##colorInput", &data.color.r, GuiHelper::defaultColorEditFlags);
+
+	ImGui::Checkbox("Restrict Min", &data.restrictMin);
+	ImGui::Checkbox("Restrict Max", &data.restrictMax);
+	ImGui::Checkbox("Static", &data.isStatic);
+
+	if(GuiHelper::HorizontalButton("Create", ImGui::GetContentRegionAvail().x))
+	{
+		CreateChainPreview(std::make_unique<ChainData>(data));
+		ImGui::CloseCurrentPopup();
+	}
 }
 
 void Editor::NewSimulationPopup(SimulationPopupData& data)

@@ -26,7 +26,7 @@ int GuiHelper::HorizontalButton(const char* button, float fullWidth, const std::
 	PushStyleColor(ImGuiCol_ButtonActive, color, true);
 	PushStyleColor(ImGuiCol_ButtonHovered, color, true);
 	ImGui::BeginDisabled(disabled);
-	bool result = ImGui::Button(button, { fullWidth - ImGui::GetStyle().ItemInnerSpacing.x, 0 });
+	bool result = ImGui::Button(button, { fullWidth, 0 });
 	ImGui::EndDisabled();
 	ImGui::PopStyleColor(3);
 	return result;
@@ -35,12 +35,12 @@ int GuiHelper::HorizontalButton(const char* button, float fullWidth, const std::
 int GuiHelper::HorizontalButtonSplit(const char* button0, const char* button1, const std::optional<Color>& b0Color, const std::optional<Color>& b1Color, bool b0Disabled, bool b1Disabled)
 {
 	float width = ImGui::GetContentRegionAvail().x;
-	if(HorizontalButton(button0, width * 0.5f, b0Color, b0Disabled))
+	if(HorizontalButton(button0, width * 0.5f - ImGui::GetStyle().ItemInnerSpacing.x, b0Color, b0Disabled))
 	{
 		return 1;
 	}
 	ImGui::SameLine();
-	if(HorizontalButton(button1, width * 0.5f, b1Color, b1Disabled))
+	if(HorizontalButton(button1, width * 0.5f - ImGui::GetStyle().ItemInnerSpacing.x, b1Color, b1Disabled))
 	{
 		return 2;
 	}
@@ -76,7 +76,7 @@ static void DrawGradient(ImVec2 min, ImVec2 max, Gradient* gradient)
 {
 	ImVec2 size = { max.x - min.x, max.y - min.y };
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	int segments = gradient->Size() - 1;
+	int segments = static_cast<int>(gradient->Size()) - 1;
 	float x = min.x;
 	for(size_t i = 0; i < segments; i++)
 	{

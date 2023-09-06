@@ -22,6 +22,17 @@ class Editor
 		Notification(const std::string& message, const Color& color, float duration = 3.0f) : message(message), color(color), duration(duration) { }
 	};
 
+	struct ChainData
+	{
+		float particleRadius = 5.0f;
+		float particleMass = 1.0f;
+		float particleDistance = 0.5f;
+		Color color = Color::white;
+		bool restrictMin = false;
+		bool restrictMax = true;
+		bool isStatic = false;
+	};
+
 public:
 	Editor(const std::shared_ptr<Window>& window, const std::function<void(Simulation)>& simulationCallback);
 	void Update(double dt);
@@ -34,6 +45,7 @@ private:
 	std::unique_ptr<std::function<void()>> currentPopup = nullptr;
 	std::optional<Notification> currentNotification = std::nullopt;
 	std::unique_ptr<SceneObject> currentPreview = nullptr;
+	std::unique_ptr<ChainData> currentChainPreview = nullptr;
 	std::weak_ptr<SceneObject> currentSelected = std::weak_ptr<SceneObject>();
 	std::weak_ptr<SceneObject> currentHovered = std::weak_ptr<SceneObject>();
 	std::unique_ptr<SceneObject> currentCopied = nullptr;
@@ -45,6 +57,7 @@ private:
 	void Render(double dt);
 	void UI(double dt);
 	void Placement(double dt);
+	void ChainPlacement();
 	void Selection();
 	void SelectionInteraction();
 	void Insertion();
@@ -58,6 +71,7 @@ private:
 
 	void CreatePreview(std::unique_ptr<SceneObject> obj);
 	void SelectObject(const std::weak_ptr<SceneObject>& obj);
+	void CreateChainPreview(std::unique_ptr<ChainData> data);
 
 	std::weak_ptr<SceneObject> GetHoveredObject();
 
@@ -67,6 +81,7 @@ private:
 	void ControlsMenu();
 
 	void ShowNotification(const Notification& notification);
+	void ChainCreationMenu(ChainData& data);
 	void NewSimulationPopup(struct SimulationPopupData& data);
 	void NewSaveFilePopup(std::array<char, 32>& path);
 	void LoadFilePopup(struct LoadFilePopupData& data);

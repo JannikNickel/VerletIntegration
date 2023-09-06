@@ -13,6 +13,8 @@ public:
 	static inline const float minMass = 0.01f;
 	static inline const float maxMass = 10000.0f;
 
+	ParticleObject(Vector2 position, float radius, float mass, float bounciness, const Color& color, bool pinned)
+		: CloneableSceneObject(position), radius(radius), mass(mass), bounciness(bounciness), color(color), pinned(pinned) { }
 	ParticleObject(Vector2 position) : CloneableSceneObject(position) { }
 	ParticleObject() { }
 

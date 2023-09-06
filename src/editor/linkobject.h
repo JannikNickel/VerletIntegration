@@ -10,6 +10,8 @@
 class LinkObject : public CloneableSceneObject<LinkObject>, public IConnectionPlacement
 {
 public:
+	LinkObject(const Scene& scene, Vector2 position, const Color& color, bool restrictMin, bool restrictMax)
+		: CloneableSceneObject(position), scene(scene), color(color), restrictMin(restrictMin), restrictMax(restrictMax) { }
 	LinkObject(const Scene& scene, Vector2 position) : CloneableSceneObject(position), scene(scene) { }
 	LinkObject(const Scene& scene) : scene(scene) { }
 
