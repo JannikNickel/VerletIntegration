@@ -35,12 +35,17 @@ std::optional<std::string> SceneStorage::IsValidFileName(const FileName& fileNam
 	{
 		return std::make_optional("File name can't be empty!");
 	}
+	if(fileName.name.starts_with("con"))
+	{
+		return std::make_optional("Invalid file name!");
+	}
 	return std::nullopt;
 }
 
 bool SceneStorage::FileExists(const FileName& fileName) const
 {
-	return std::filesystem::exists(GetRelFilePath(fileName));
+	std::error_code error;
+	return std::filesystem::exists(GetRelFilePath(fileName), error);
 }
 
 bool SceneStorage::SaveFile(const FileName& fileName, const JsonObj& data)

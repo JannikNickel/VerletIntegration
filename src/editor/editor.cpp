@@ -128,13 +128,13 @@ void Editor::ChainPlacement()
 	{
 		static Vector2 start = Vector2::zero;
 		Vector2 mousePos = Input::MousePosition();
+		bool finalize = Input::KeyReleased(KeyCode::LMB) && start != Vector2::zero;
 		if(Input::KeyPressed(KeyCode::LMB))
 		{
 			start = mousePos;
 		}
-		else if(start != Vector2::zero && (Input::KeyHeld(KeyCode::LMB) || Input::KeyReleased(KeyCode::LMB)))
+		else if(finalize || Input::KeyHeld(KeyCode::LMB))
 		{
-			bool finalize = Input::KeyReleased(KeyCode::LMB);
 			Graphics::Line(start, mousePos, previewValidColor);
 
 			Vector2 dir = (mousePos - start);
@@ -169,16 +169,11 @@ void Editor::ChainPlacement()
 					scene->AddObject(link);
 				}
 			}
-
-			if(finalize)
-			{
-				start = Vector2::zero;
-				currentChainPreview = nullptr;
-			}
 		}
 
-		if(Input::KeyPressed(KeyCode::Escape))
+		if(finalize || Input::KeyPressed(KeyCode::Escape))
 		{
+			start = Vector2::zero;
 			currentChainPreview = nullptr;
 		}
 	}
@@ -589,7 +584,7 @@ void Editor::NewSaveFilePopup(std::array<char, 32>& path)
 	{
 		ImGui::InputTextWithHint("##pathInput", "Enter file name...", path.data(), path.size() - 1, ImGuiInputTextFlags_CharsNoBlank);
 		std::optional<std::string> error = storage.IsValidFileName(path.data());
-		bool exists = storage.FileExists(path.data());
+		bool exists = error == std::nullopt && storage.FileExists(path.data());
 		
 		if(error.has_value())
 		{
