@@ -1,0 +1,2057 @@
+{
+    "size": 1080,
+    "world": {
+        "shape": "Rect",
+        "bounds": {
+            "x": 1080.0,
+            "y": 1080.0
+        },
+        "background": {
+            "r": 0.11764705926179886,
+            "g": 0.11764705926179886,
+            "b": 0.11764705926179886,
+            "a": 1.0
+        },
+        "color": {
+            "r": 0.05882352963089943,
+            "g": 0.05882352963089943,
+            "b": 0.05882352963089943,
+            "a": 1.0
+        }
+    },
+    "physics": {
+        "updateMode": "FixedFrameRate",
+        "timestep": 0.0069444444961845875,
+        "substeps": 8,
+        "gravity": {
+            "x": 0.0,
+            "y": -900.0
+        },
+        "collision": true
+    },
+    "objects": [
+        {
+            "type": "Link",
+            "id": 109,
+            "position": {
+                "x": 808.4991455078125,
+                "y": 551.97802734375
+            },
+            "p0": 54,
+            "p1": 55,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 108,
+            "position": {
+                "x": 797.9992065429688,
+                "y": 551.9595947265625
+            },
+            "p0": 53,
+            "p1": 54,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 107,
+            "position": {
+                "x": 787.4992065429688,
+                "y": 551.9411010742188
+            },
+            "p0": 52,
+            "p1": 53,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 106,
+            "position": {
+                "x": 776.9992065429688,
+                "y": 551.9226684570313
+            },
+            "p0": 51,
+            "p1": 52,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 105,
+            "position": {
+                "x": 766.499267578125,
+                "y": 551.9042358398438
+            },
+            "p0": 50,
+            "p1": 51,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 104,
+            "position": {
+                "x": 755.999267578125,
+                "y": 551.8857421875
+            },
+            "p0": 49,
+            "p1": 50,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 103,
+            "position": {
+                "x": 745.499267578125,
+                "y": 551.8673095703125
+            },
+            "p0": 48,
+            "p1": 49,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 102,
+            "position": {
+                "x": 734.999267578125,
+                "y": 551.848876953125
+            },
+            "p0": 47,
+            "p1": 48,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 101,
+            "position": {
+                "x": 724.499267578125,
+                "y": 551.8303833007813
+            },
+            "p0": 46,
+            "p1": 47,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 100,
+            "position": {
+                "x": 713.9993286132813,
+                "y": 551.8119506835938
+            },
+            "p0": 45,
+            "p1": 46,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 99,
+            "position": {
+                "x": 703.4993286132813,
+                "y": 551.7935180664063
+            },
+            "p0": 44,
+            "p1": 45,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 98,
+            "position": {
+                "x": 692.9993896484375,
+                "y": 551.7750244140625
+            },
+            "p0": 43,
+            "p1": 44,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 97,
+            "position": {
+                "x": 682.4993896484375,
+                "y": 551.756591796875
+            },
+            "p0": 42,
+            "p1": 43,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 96,
+            "position": {
+                "x": 671.9993896484375,
+                "y": 551.7381591796875
+            },
+            "p0": 41,
+            "p1": 42,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 95,
+            "position": {
+                "x": 661.4993896484375,
+                "y": 551.7196655273438
+            },
+            "p0": 40,
+            "p1": 41,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 94,
+            "position": {
+                "x": 650.9993896484375,
+                "y": 551.7012329101563
+            },
+            "p0": 39,
+            "p1": 40,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 93,
+            "position": {
+                "x": 640.4994506835938,
+                "y": 551.6828002929688
+            },
+            "p0": 38,
+            "p1": 39,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 92,
+            "position": {
+                "x": 629.9994506835938,
+                "y": 551.664306640625
+            },
+            "p0": 37,
+            "p1": 38,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 91,
+            "position": {
+                "x": 619.4994506835938,
+                "y": 551.6458740234375
+            },
+            "p0": 36,
+            "p1": 37,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 90,
+            "position": {
+                "x": 608.99951171875,
+                "y": 551.62744140625
+            },
+            "p0": 35,
+            "p1": 36,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 89,
+            "position": {
+                "x": 598.49951171875,
+                "y": 551.6089477539063
+            },
+            "p0": 34,
+            "p1": 35,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 88,
+            "position": {
+                "x": 587.99951171875,
+                "y": 551.5905151367188
+            },
+            "p0": 33,
+            "p1": 34,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 87,
+            "position": {
+                "x": 577.49951171875,
+                "y": 551.5720825195313
+            },
+            "p0": 32,
+            "p1": 33,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 86,
+            "position": {
+                "x": 566.99951171875,
+                "y": 551.5535888671875
+            },
+            "p0": 31,
+            "p1": 32,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 85,
+            "position": {
+                "x": 556.49951171875,
+                "y": 551.53515625
+            },
+            "p0": 30,
+            "p1": 31,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 84,
+            "position": {
+                "x": 545.9995727539063,
+                "y": 551.5167236328125
+            },
+            "p0": 29,
+            "p1": 30,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 83,
+            "position": {
+                "x": 535.4995727539063,
+                "y": 551.4982299804688
+            },
+            "p0": 28,
+            "p1": 29,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 82,
+            "position": {
+                "x": 524.9996337890625,
+                "y": 551.4797973632813
+            },
+            "p0": 27,
+            "p1": 28,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 81,
+            "position": {
+                "x": 514.4996337890625,
+                "y": 551.4613647460938
+            },
+            "p0": 26,
+            "p1": 27,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 80,
+            "position": {
+                "x": 503.9996337890625,
+                "y": 551.44287109375
+            },
+            "p0": 25,
+            "p1": 26,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 79,
+            "position": {
+                "x": 493.4996337890625,
+                "y": 551.4244384765625
+            },
+            "p0": 24,
+            "p1": 25,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 78,
+            "position": {
+                "x": 482.9996643066406,
+                "y": 551.4059448242188
+            },
+            "p0": 23,
+            "p1": 24,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 77,
+            "position": {
+                "x": 472.49969482421875,
+                "y": 551.3875122070313
+            },
+            "p0": 22,
+            "p1": 23,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 76,
+            "position": {
+                "x": 461.99969482421875,
+                "y": 551.3690795898438
+            },
+            "p0": 21,
+            "p1": 22,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 75,
+            "position": {
+                "x": 451.49969482421875,
+                "y": 551.3505859375
+            },
+            "p0": 20,
+            "p1": 21,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 74,
+            "position": {
+                "x": 440.9997253417969,
+                "y": 551.3321533203125
+            },
+            "p0": 19,
+            "p1": 20,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 73,
+            "position": {
+                "x": 430.499755859375,
+                "y": 551.313720703125
+            },
+            "p0": 18,
+            "p1": 19,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 72,
+            "position": {
+                "x": 419.999755859375,
+                "y": 551.2952270507813
+            },
+            "p0": 17,
+            "p1": 18,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 71,
+            "position": {
+                "x": 409.499755859375,
+                "y": 551.2767944335938
+            },
+            "p0": 16,
+            "p1": 17,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 70,
+            "position": {
+                "x": 398.9997863769531,
+                "y": 551.2583618164063
+            },
+            "p0": 15,
+            "p1": 16,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 69,
+            "position": {
+                "x": 388.49981689453125,
+                "y": 551.2398681640625
+            },
+            "p0": 14,
+            "p1": 15,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 68,
+            "position": {
+                "x": 377.99981689453125,
+                "y": 551.221435546875
+            },
+            "p0": 13,
+            "p1": 14,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 67,
+            "position": {
+                "x": 367.49981689453125,
+                "y": 551.2030029296875
+            },
+            "p0": 12,
+            "p1": 13,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 66,
+            "position": {
+                "x": 356.9998474121094,
+                "y": 551.1845092773438
+            },
+            "p0": 11,
+            "p1": 12,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 65,
+            "position": {
+                "x": 346.4998779296875,
+                "y": 551.1660766601563
+            },
+            "p0": 10,
+            "p1": 11,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 64,
+            "position": {
+                "x": 335.9998779296875,
+                "y": 551.1476440429688
+            },
+            "p0": 9,
+            "p1": 10,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 63,
+            "position": {
+                "x": 325.4998779296875,
+                "y": 551.129150390625
+            },
+            "p0": 8,
+            "p1": 9,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 62,
+            "position": {
+                "x": 314.9999084472656,
+                "y": 551.1107177734375
+            },
+            "p0": 7,
+            "p1": 8,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 61,
+            "position": {
+                "x": 304.4999084472656,
+                "y": 551.09228515625
+            },
+            "p0": 6,
+            "p1": 7,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 60,
+            "position": {
+                "x": 293.99993896484375,
+                "y": 551.0737915039063
+            },
+            "p0": 5,
+            "p1": 6,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 59,
+            "position": {
+                "x": 283.49993896484375,
+                "y": 551.0553588867188
+            },
+            "p0": 4,
+            "p1": 5,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 58,
+            "position": {
+                "x": 272.9999694824219,
+                "y": 551.0369262695313
+            },
+            "p0": 3,
+            "p1": 4,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 57,
+            "position": {
+                "x": 262.5,
+                "y": 551.0184326171875
+            },
+            "p0": 2,
+            "p1": 3,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Link",
+            "id": 56,
+            "position": {
+                "x": 252.0,
+                "y": 551.0
+            },
+            "p0": 1,
+            "p1": 2,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "restrictMin": false,
+            "restrictMax": true
+        },
+        {
+            "type": "Particle",
+            "id": 1,
+            "position": {
+                "x": 252.0,
+                "y": 551.0
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": true
+        },
+        {
+            "type": "Particle",
+            "id": 2,
+            "position": {
+                "x": 262.5,
+                "y": 551.0184326171875
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 3,
+            "position": {
+                "x": 272.9999694824219,
+                "y": 551.0369262695313
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 4,
+            "position": {
+                "x": 283.49993896484375,
+                "y": 551.0553588867188
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 5,
+            "position": {
+                "x": 293.99993896484375,
+                "y": 551.0737915039063
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 6,
+            "position": {
+                "x": 304.4999084472656,
+                "y": 551.09228515625
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 7,
+            "position": {
+                "x": 314.9999084472656,
+                "y": 551.1107177734375
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 8,
+            "position": {
+                "x": 325.4998779296875,
+                "y": 551.129150390625
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 9,
+            "position": {
+                "x": 335.9998779296875,
+                "y": 551.1476440429688
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 10,
+            "position": {
+                "x": 346.4998779296875,
+                "y": 551.1660766601563
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 11,
+            "position": {
+                "x": 356.9998474121094,
+                "y": 551.1845092773438
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 12,
+            "position": {
+                "x": 367.49981689453125,
+                "y": 551.2030029296875
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 13,
+            "position": {
+                "x": 377.99981689453125,
+                "y": 551.221435546875
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 14,
+            "position": {
+                "x": 388.49981689453125,
+                "y": 551.2398681640625
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 15,
+            "position": {
+                "x": 398.9997863769531,
+                "y": 551.2583618164063
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 16,
+            "position": {
+                "x": 409.499755859375,
+                "y": 551.2767944335938
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 17,
+            "position": {
+                "x": 419.999755859375,
+                "y": 551.2952270507813
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 18,
+            "position": {
+                "x": 430.499755859375,
+                "y": 551.313720703125
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 19,
+            "position": {
+                "x": 440.9997253417969,
+                "y": 551.3321533203125
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 20,
+            "position": {
+                "x": 451.49969482421875,
+                "y": 551.3505859375
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 21,
+            "position": {
+                "x": 461.99969482421875,
+                "y": 551.3690795898438
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 22,
+            "position": {
+                "x": 472.49969482421875,
+                "y": 551.3875122070313
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 23,
+            "position": {
+                "x": 482.9996643066406,
+                "y": 551.4059448242188
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 24,
+            "position": {
+                "x": 493.4996337890625,
+                "y": 551.4244384765625
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 25,
+            "position": {
+                "x": 503.9996337890625,
+                "y": 551.44287109375
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 26,
+            "position": {
+                "x": 514.4996337890625,
+                "y": 551.4613647460938
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 27,
+            "position": {
+                "x": 524.9996337890625,
+                "y": 551.4797973632813
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 28,
+            "position": {
+                "x": 535.4995727539063,
+                "y": 551.4982299804688
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 29,
+            "position": {
+                "x": 545.9995727539063,
+                "y": 551.5167236328125
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 30,
+            "position": {
+                "x": 556.49951171875,
+                "y": 551.53515625
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 31,
+            "position": {
+                "x": 566.99951171875,
+                "y": 551.5535888671875
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 32,
+            "position": {
+                "x": 577.49951171875,
+                "y": 551.5720825195313
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 33,
+            "position": {
+                "x": 587.99951171875,
+                "y": 551.5905151367188
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 34,
+            "position": {
+                "x": 598.49951171875,
+                "y": 551.6089477539063
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 35,
+            "position": {
+                "x": 608.99951171875,
+                "y": 551.62744140625
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 36,
+            "position": {
+                "x": 619.4994506835938,
+                "y": 551.6458740234375
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 37,
+            "position": {
+                "x": 629.9994506835938,
+                "y": 551.664306640625
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 38,
+            "position": {
+                "x": 640.4994506835938,
+                "y": 551.6828002929688
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 39,
+            "position": {
+                "x": 650.9993896484375,
+                "y": 551.7012329101563
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 40,
+            "position": {
+                "x": 661.4993896484375,
+                "y": 551.7196655273438
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 41,
+            "position": {
+                "x": 671.9993896484375,
+                "y": 551.7381591796875
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 42,
+            "position": {
+                "x": 682.4993896484375,
+                "y": 551.756591796875
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 43,
+            "position": {
+                "x": 692.9993896484375,
+                "y": 551.7750244140625
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 44,
+            "position": {
+                "x": 703.4993286132813,
+                "y": 551.7935180664063
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 45,
+            "position": {
+                "x": 713.9993286132813,
+                "y": 551.8119506835938
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 46,
+            "position": {
+                "x": 724.499267578125,
+                "y": 551.8303833007813
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 47,
+            "position": {
+                "x": 734.999267578125,
+                "y": 551.848876953125
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 48,
+            "position": {
+                "x": 745.499267578125,
+                "y": 551.8673095703125
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 49,
+            "position": {
+                "x": 755.999267578125,
+                "y": 551.8857421875
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 50,
+            "position": {
+                "x": 766.499267578125,
+                "y": 551.9042358398438
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 51,
+            "position": {
+                "x": 776.9992065429688,
+                "y": 551.9226684570313
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 52,
+            "position": {
+                "x": 787.4992065429688,
+                "y": 551.9411010742188
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 53,
+            "position": {
+                "x": 797.9992065429688,
+                "y": 551.9595947265625
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 54,
+            "position": {
+                "x": 808.4991455078125,
+                "y": 551.97802734375
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": false
+        },
+        {
+            "type": "Particle",
+            "id": 55,
+            "position": {
+                "x": 818.9991455078125,
+                "y": 551.9964599609375
+            },
+            "radius": 5.0,
+            "mass": 1.0,
+            "bounciness": 0.0,
+            "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pinned": true
+        },
+        {
+            "type": "Spawner",
+            "id": 114,
+            "position": {
+                "x": 535.0,
+                "y": 949.0
+            },
+            "spawnRate": 0.05000000074505806,
+            "scaleSpawnRate": false,
+            "initialDelay": 0.0,
+            "spawnCondition": "Duration",
+            "spawnConditionValue": 60.0,
+            "pSize": {
+                "x": 3.0,
+                "y": 7.5
+            },
+            "pMass": 1.0,
+            "scalePMass": false,
+            "pBounciness": 0.10000000149011612,
+            "pColorMode": "ShiftHue",
+            "pColorSingle": {
+                "r": 0.9026548862457275,
+                "g": 0.10783931612968445,
+                "b": 0.10783931612968445,
+                "a": 1.0
+            },
+            "pColorGradient": [
+                {
+                    "t": 0.0,
+                    "value": {
+                        "r": 1.0,
+                        "g": 1.0,
+                        "b": 1.0,
+                        "a": 1.0
+                    }
+                },
+                {
+                    "t": 1.0,
+                    "value": {
+                        "r": 1.0,
+                        "g": 1.0,
+                        "b": 1.0,
+                        "a": 1.0
+                    }
+                }
+            ],
+            "pColorShift": "Repeat",
+            "pColorShiftDuration": 25.0,
+            "spawnDirection": 0.0,
+            "spawnDirectionVariation": 45.0,
+            "spawnForce": {
+                "x": 350.0,
+                "y": 350.0
+            },
+            "scaleSpawnForce": true,
+            "spawnDirectionRotation": "Fixed",
+            "spawnDirectionRotationRepeat": "Reverse",
+            "spawnDirectionRotationStart": 0.5,
+            "spawnDirectionRotationDuration": 5.0,
+            "spawnDirectionRotationLimit": 360.0
+        }
+    ]
+}

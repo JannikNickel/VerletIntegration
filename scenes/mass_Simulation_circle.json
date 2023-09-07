@@ -1,0 +1,458 @@
+{
+    "size": 1080,
+    "world": {
+        "shape": "Circle",
+        "bounds": 500.0,
+        "background": {
+            "r": 0.11764705926179886,
+            "g": 0.11764705926179886,
+            "b": 0.11764705926179886,
+            "a": 1.0
+        },
+        "color": {
+            "r": 0.05882352963089943,
+            "g": 0.05882352963089943,
+            "b": 0.05882352963089943,
+            "a": 1.0
+        }
+    },
+    "physics": {
+        "updateMode": "FixedFrameRate",
+        "timestep": 0.0069444444961845875,
+        "substeps": 8,
+        "gravity": {
+            "x": 0.0,
+            "y": -900.0
+        },
+        "collision": true
+    },
+    "objects": [
+        {
+            "type": "Spawner",
+            "id": 7,
+            "position": {
+                "x": 147.0,
+                "y": 649.0
+            },
+            "spawnRate": 0.019999999552965164,
+            "scaleSpawnRate": false,
+            "initialDelay": 0.0,
+            "spawnCondition": "GlobalAmount",
+            "spawnConditionValue": 6000.0,
+            "pSize": {
+                "x": 3.0,
+                "y": 5.0
+            },
+            "pMass": 1.0,
+            "scalePMass": true,
+            "pBounciness": 0.10000000149011612,
+            "pColorMode": "RandomGradient",
+            "pColorSingle": {
+                "r": 0.9115044474601746,
+                "g": 0.10083015263080597,
+                "b": 0.10083015263080597,
+                "a": 1.0
+            },
+            "pColorGradient": [
+                {
+                    "t": 0.0,
+                    "value": {
+                        "r": 0.11764705926179886,
+                        "g": 0.23529411852359772,
+                        "b": 0.4470588266849518,
+                        "a": 1.0
+                    }
+                },
+                {
+                    "t": 1.0,
+                    "value": {
+                        "r": 0.16470588743686676,
+                        "g": 0.32156863808631897,
+                        "b": 0.5960784554481506,
+                        "a": 1.0
+                    }
+                }
+            ],
+            "pColorShift": "Reverse",
+            "pColorShiftDuration": 10.0,
+            "spawnDirection": 0.0,
+            "spawnDirectionVariation": 90.0,
+            "spawnForce": {
+                "x": 500.0,
+                "y": 500.0
+            },
+            "scaleSpawnForce": true,
+            "spawnDirectionRotation": "Fixed",
+            "spawnDirectionRotationRepeat": "Reverse",
+            "spawnDirectionRotationStart": 0.5,
+            "spawnDirectionRotationDuration": 5.0,
+            "spawnDirectionRotationLimit": 160.0
+        },
+        {
+            "type": "Spawner",
+            "id": 8,
+            "position": {
+                "x": 315.0,
+                "y": 646.0
+            },
+            "spawnRate": 0.019999999552965164,
+            "scaleSpawnRate": false,
+            "initialDelay": 0.0,
+            "spawnCondition": "GlobalAmount",
+            "spawnConditionValue": 6000.0,
+            "pSize": {
+                "x": 3.0,
+                "y": 5.0
+            },
+            "pMass": 1.0,
+            "scalePMass": true,
+            "pBounciness": 0.10000000149011612,
+            "pColorMode": "RandomGradient",
+            "pColorSingle": {
+                "r": 0.9115044474601746,
+                "g": 0.10083015263080597,
+                "b": 0.10083015263080597,
+                "a": 1.0
+            },
+            "pColorGradient": [
+                {
+                    "t": 0.0,
+                    "value": {
+                        "r": 0.11764705926179886,
+                        "g": 0.23529411852359772,
+                        "b": 0.4470588266849518,
+                        "a": 1.0
+                    }
+                },
+                {
+                    "t": 1.0,
+                    "value": {
+                        "r": 0.16470588743686676,
+                        "g": 0.32156863808631897,
+                        "b": 0.5960784554481506,
+                        "a": 1.0
+                    }
+                }
+            ],
+            "pColorShift": "Reverse",
+            "pColorShiftDuration": 10.0,
+            "spawnDirection": 0.0,
+            "spawnDirectionVariation": 90.0,
+            "spawnForce": {
+                "x": 500.0,
+                "y": 500.0
+            },
+            "scaleSpawnForce": true,
+            "spawnDirectionRotation": "Fixed",
+            "spawnDirectionRotationRepeat": "Reverse",
+            "spawnDirectionRotationStart": 0.5,
+            "spawnDirectionRotationDuration": 5.0,
+            "spawnDirectionRotationLimit": 160.0
+        },
+        {
+            "type": "Spawner",
+            "id": 9,
+            "position": {
+                "x": 485.0,
+                "y": 642.0
+            },
+            "spawnRate": 0.019999999552965164,
+            "scaleSpawnRate": false,
+            "initialDelay": 0.0,
+            "spawnCondition": "GlobalAmount",
+            "spawnConditionValue": 6000.0,
+            "pSize": {
+                "x": 3.0,
+                "y": 5.0
+            },
+            "pMass": 1.0,
+            "scalePMass": true,
+            "pBounciness": 0.10000000149011612,
+            "pColorMode": "RandomGradient",
+            "pColorSingle": {
+                "r": 0.9115044474601746,
+                "g": 0.10083015263080597,
+                "b": 0.10083015263080597,
+                "a": 1.0
+            },
+            "pColorGradient": [
+                {
+                    "t": 0.0,
+                    "value": {
+                        "r": 0.11764705926179886,
+                        "g": 0.23529411852359772,
+                        "b": 0.4470588266849518,
+                        "a": 1.0
+                    }
+                },
+                {
+                    "t": 1.0,
+                    "value": {
+                        "r": 0.16470588743686676,
+                        "g": 0.32156863808631897,
+                        "b": 0.5960784554481506,
+                        "a": 1.0
+                    }
+                }
+            ],
+            "pColorShift": "Reverse",
+            "pColorShiftDuration": 10.0,
+            "spawnDirection": 0.0,
+            "spawnDirectionVariation": 90.0,
+            "spawnForce": {
+                "x": 500.0,
+                "y": 500.0
+            },
+            "scaleSpawnForce": true,
+            "spawnDirectionRotation": "Fixed",
+            "spawnDirectionRotationRepeat": "Reverse",
+            "spawnDirectionRotationStart": 0.5,
+            "spawnDirectionRotationDuration": 5.0,
+            "spawnDirectionRotationLimit": 160.0
+        },
+        {
+            "type": "Spawner",
+            "id": 13,
+            "position": {
+                "x": 671.0,
+                "y": 642.0
+            },
+            "spawnRate": 0.019999999552965164,
+            "scaleSpawnRate": false,
+            "initialDelay": 0.0,
+            "spawnCondition": "GlobalAmount",
+            "spawnConditionValue": 6000.0,
+            "pSize": {
+                "x": 3.0,
+                "y": 5.0
+            },
+            "pMass": 1.0,
+            "scalePMass": true,
+            "pBounciness": 0.10000000149011612,
+            "pColorMode": "RandomGradient",
+            "pColorSingle": {
+                "r": 0.9115044474601746,
+                "g": 0.10083015263080597,
+                "b": 0.10083015263080597,
+                "a": 1.0
+            },
+            "pColorGradient": [
+                {
+                    "t": 0.0,
+                    "value": {
+                        "r": 0.11764705926179886,
+                        "g": 0.23529411852359772,
+                        "b": 0.4470588266849518,
+                        "a": 1.0
+                    }
+                },
+                {
+                    "t": 1.0,
+                    "value": {
+                        "r": 0.16470588743686676,
+                        "g": 0.32156863808631897,
+                        "b": 0.5960784554481506,
+                        "a": 1.0
+                    }
+                }
+            ],
+            "pColorShift": "Reverse",
+            "pColorShiftDuration": 10.0,
+            "spawnDirection": 0.0,
+            "spawnDirectionVariation": 90.0,
+            "spawnForce": {
+                "x": 500.0,
+                "y": 500.0
+            },
+            "scaleSpawnForce": true,
+            "spawnDirectionRotation": "Fixed",
+            "spawnDirectionRotationRepeat": "Reverse",
+            "spawnDirectionRotationStart": 0.5,
+            "spawnDirectionRotationDuration": 5.0,
+            "spawnDirectionRotationLimit": 160.0
+        },
+        {
+            "type": "Spawner",
+            "id": 14,
+            "position": {
+                "x": 827.0,
+                "y": 641.0
+            },
+            "spawnRate": 0.019999999552965164,
+            "scaleSpawnRate": false,
+            "initialDelay": 0.0,
+            "spawnCondition": "GlobalAmount",
+            "spawnConditionValue": 6000.0,
+            "pSize": {
+                "x": 3.0,
+                "y": 5.0
+            },
+            "pMass": 1.0,
+            "scalePMass": true,
+            "pBounciness": 0.10000000149011612,
+            "pColorMode": "RandomGradient",
+            "pColorSingle": {
+                "r": 0.9115044474601746,
+                "g": 0.10083015263080597,
+                "b": 0.10083015263080597,
+                "a": 1.0
+            },
+            "pColorGradient": [
+                {
+                    "t": 0.0,
+                    "value": {
+                        "r": 0.11764705926179886,
+                        "g": 0.23529411852359772,
+                        "b": 0.4470588266849518,
+                        "a": 1.0
+                    }
+                },
+                {
+                    "t": 1.0,
+                    "value": {
+                        "r": 0.16470588743686676,
+                        "g": 0.32156863808631897,
+                        "b": 0.5960784554481506,
+                        "a": 1.0
+                    }
+                }
+            ],
+            "pColorShift": "Reverse",
+            "pColorShiftDuration": 10.0,
+            "spawnDirection": 0.0,
+            "spawnDirectionVariation": 90.0,
+            "spawnForce": {
+                "x": 500.0,
+                "y": 500.0
+            },
+            "scaleSpawnForce": true,
+            "spawnDirectionRotation": "Fixed",
+            "spawnDirectionRotationRepeat": "Reverse",
+            "spawnDirectionRotationStart": 0.5,
+            "spawnDirectionRotationDuration": 5.0,
+            "spawnDirectionRotationLimit": 160.0
+        },
+        {
+            "type": "Spawner",
+            "id": 15,
+            "position": {
+                "x": 968.0,
+                "y": 639.0
+            },
+            "spawnRate": 0.019999999552965164,
+            "scaleSpawnRate": false,
+            "initialDelay": 0.0,
+            "spawnCondition": "GlobalAmount",
+            "spawnConditionValue": 6000.0,
+            "pSize": {
+                "x": 3.0,
+                "y": 5.0
+            },
+            "pMass": 1.0,
+            "scalePMass": true,
+            "pBounciness": 0.10000000149011612,
+            "pColorMode": "RandomGradient",
+            "pColorSingle": {
+                "r": 0.9115044474601746,
+                "g": 0.10083015263080597,
+                "b": 0.10083015263080597,
+                "a": 1.0
+            },
+            "pColorGradient": [
+                {
+                    "t": 0.0,
+                    "value": {
+                        "r": 0.11764705926179886,
+                        "g": 0.23529411852359772,
+                        "b": 0.4470588266849518,
+                        "a": 1.0
+                    }
+                },
+                {
+                    "t": 1.0,
+                    "value": {
+                        "r": 0.16470588743686676,
+                        "g": 0.32156863808631897,
+                        "b": 0.5960784554481506,
+                        "a": 1.0
+                    }
+                }
+            ],
+            "pColorShift": "Reverse",
+            "pColorShiftDuration": 10.0,
+            "spawnDirection": 0.0,
+            "spawnDirectionVariation": 90.0,
+            "spawnForce": {
+                "x": 500.0,
+                "y": 500.0
+            },
+            "scaleSpawnForce": true,
+            "spawnDirectionRotation": "Fixed",
+            "spawnDirectionRotationRepeat": "Reverse",
+            "spawnDirectionRotationStart": 0.5,
+            "spawnDirectionRotationDuration": 5.0,
+            "spawnDirectionRotationLimit": 160.0
+        },
+        {
+            "type": "Spawner",
+            "id": 17,
+            "position": {
+                "x": 682.0,
+                "y": 953.0
+            },
+            "spawnRate": 0.5,
+            "scaleSpawnRate": false,
+            "initialDelay": 22.0,
+            "spawnCondition": "LocalAmount",
+            "spawnConditionValue": 10.0,
+            "pSize": {
+                "x": 10.0,
+                "y": 10.0
+            },
+            "pMass": 750.0,
+            "scalePMass": false,
+            "pBounciness": 1.0,
+            "pColorMode": "Fixed",
+            "pColorSingle": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            },
+            "pColorGradient": [
+                {
+                    "t": 0.0,
+                    "value": {
+                        "r": 1.0,
+                        "g": 1.0,
+                        "b": 1.0,
+                        "a": 1.0
+                    }
+                },
+                {
+                    "t": 1.0,
+                    "value": {
+                        "r": 1.0,
+                        "g": 1.0,
+                        "b": 1.0,
+                        "a": 1.0
+                    }
+                }
+            ],
+            "pColorShift": "Repeat",
+            "pColorShiftDuration": 10.0,
+            "spawnDirection": -41.25,
+            "spawnDirectionVariation": 133.1199951171875,
+            "spawnForce": {
+                "x": 750.0,
+                "y": 1000.0
+            },
+            "scaleSpawnForce": true,
+            "spawnDirectionRotation": "Fixed",
+            "spawnDirectionRotationRepeat": "Reverse",
+            "spawnDirectionRotationStart": 0.5,
+            "spawnDirectionRotationDuration": 5.0,
+            "spawnDirectionRotationLimit": 360.0
+        }
+    ]
+}
