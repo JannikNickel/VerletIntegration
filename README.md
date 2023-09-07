@@ -1,7 +1,7 @@
 # Verlet Integration
 Implementation of a 2d verlet integration physics engine in C++20 and OpenGL with an editor to create particle simulations using a custom entity component system and instanced rendering.
 
-//TODO gif
+![Application Overview](docs/application.gif)
 
 ## Dependencies
 The repo contains VS2022 solution and project files and uses C++20. All dependencies are included in `external/`
