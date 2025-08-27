@@ -4,6 +4,7 @@
 #include "particleobject.h"
 #include "spawnerobject.h"
 #include "linkobject.h"
+#include "forcefieldobject.h"
 #include "serialization/serializable.h"
 #include "renderer/graphics.h"
 #include "engine/input.h"
@@ -214,6 +215,16 @@ void Editor::SelectionInteraction()
 		if(ImGui::Begin(title.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			result = selected->Edit();
+
+			double editWndHeight = ImGui::GetWindowHeight();
+			auto editWndPos = ImGui::GetWindowPos();
+			double editWndEnd = editWndPos.y + editWndHeight;
+			if(editWndEnd > window->Size().y)
+			{
+				editWndPos.y -= (editWndEnd - window->Size().y);
+				ImGui::SetWindowPos(editWndPos);
+			}
+
 			ImGui::End();
 		}
 
@@ -453,6 +464,10 @@ void Editor::AddMenu()
 		static ChainData data = ChainData();
 		ChainCreationMenu(data);
 		ImGui::EndMenu();
+	}
+	if(ImGui::MenuItem("Force Field", ""))
+	{
+		CreatePreview(std::make_unique<ForceFieldObject>());
 	}
 }
 

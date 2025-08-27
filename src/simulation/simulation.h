@@ -20,6 +20,7 @@ public:
 	void AddParticle(Particle&& particle, Vector2 pos, const Color& color, uint32_t objId = 0);
 	void AddSpawner(Spawner&& spawner, uint32_t objId = 0);
 	void AddLink(Link&& link, uint32_t p0Id, uint32_t p1Id, const Color& color, uint32_t objId = 0);
+	void AddForceField(ForceField&& forceField, uint32_t objId);
 
 	uint32_t ParticleAmount() const { return particleAmount; }
 	const VerletSolver& Solver() const { return *solver; }

@@ -2,6 +2,7 @@
 #include "particleobject.h"
 #include "spawnerobject.h"
 #include "linkobject.h"
+#include "forcefieldobject.h"
 #include "core/rectworld.h"
 #include "core/circleworld.h"
 #include "utils/nameof.h"
@@ -52,6 +53,12 @@ Simulation Scene::CreateSimulation() const
 			{
 				LinkObject& l = static_cast<LinkObject&>(*obj);
 				sim.AddLink(Link(0.0f, l.RestrictMin(), l.RestrictMax()), l[0].lock()->Id(), l[1].lock()->Id(), l.Col(), obj->id);
+				break;
+			}
+			case SceneObjectType::ForceField:
+			{
+				ForceFieldObject& f = static_cast<ForceFieldObject&>(*obj);
+				sim.AddForceField(ForceField(f.Settings(), obj->position), obj->id);
 				break;
 			}
 			default:
@@ -137,6 +144,9 @@ void Scene::Deserialize(const JsonObj& json)
 				break;
 			case SceneObjectType::Link:
 				obj = std::make_shared<LinkObject>(*this);
+				break;
+			case SceneObjectType::ForceField:
+				obj = std::make_shared<ForceFieldObject>();
 				break;
 			default:
 				throw std::exception("Unknown SceneObjectType!");

@@ -19,7 +19,7 @@ namespace GuiHelper
 	int HorizontalButtonSplit(const char* button0, const char* button1, const std::optional<Color>& b0Color = std::nullopt, const std::optional<Color>& b1Color = std::nullopt, bool b0Disabled = false, bool b1Disabled = false);
 	
 	bool ClampedFloatInput(const char* label, float* value, const char* format = "%0.2f", float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max());
-	bool ClampedFloat2Input(const char* label, float value[2], const char* format = "%0.2f", float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max());
+	bool ClampedFloat2Input(const char* label, float value[2], const char* format = "%0.2f", float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max(), bool swapMinMax = false);
 
 	void GradientEdit(const char* label, Gradient* gradient);
 

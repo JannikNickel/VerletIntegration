@@ -175,33 +175,43 @@ void VerletSolver::Solve(Transform& aTransform, Particle& a, Transform& bTransfo
 void VerletSolver::UpdateObjects(float dt)
 {
 	updatePhaseCounter.BeginSubFrame();
-	ecs.QueryMT<Transform, Particle>(std::nullopt, [this, dt](Transform& t, Particle& p)
+
+	ecs.WithAllOfComponent<ForceField>([&](std::span<const ForceField> forceFields)
 	{
-		if(p.pinned)
+		ecs.QueryMT<Transform, Particle>(std::nullopt, [this, dt, forceFields](Transform& t, Particle& p)
 		{
-			return;
-		}
+			if(p.pinned)
+			{
+				return;
+			}
 
-		//Make sure applied forces (like initial) are represented as force over 1 second to make it delta time and substep independent
-		p.acc *= (1.0f / dt);
+			//Make sure applied forces (like initial) are represented as force over 1 second to make it delta time and substep independent
+			p.acc *= (1.0f / dt);
 
-		//Apply mass to forces
-		p.acc /= p.mass;
+			//Apply mass to forces
+			p.acc /= p.mass;
 
-		//Gravity
-		p.acc.x += gravity.x;
-		p.acc.y += gravity.y;
+			//Gravity
+			p.acc.x += gravity.x;
+			p.acc.y += gravity.y;
 
-		//Constrain
-		constraint.Contrain(t.Position(), p);
+			for(const ForceField& forceField : forceFields)
+			{
+				p.acc += CalcForceField(forceField, p, t.Position());
+			}
 
-		//Update
-		Vector2& pos = t.Position();
-		const Vector2 vel = pos - p.prevPos;
-		p.prevPos = pos;
-		pos += vel + p.acc * (dt * dt);
-		p.acc = Vector2::zero;
+			//Constrain
+			constraint.Contrain(t.Position(), p);
+
+			//Update
+			Vector2& pos = t.Position();
+			const Vector2 vel = pos - p.prevPos;
+			p.prevPos = pos;
+			pos += vel + p.acc * (dt * dt);
+			p.acc = Vector2::zero;
+		});
 	});
+
 	updatePhaseCounter.EndSubFrame();
 }
 
@@ -227,6 +237,70 @@ void VerletSolver::UpdateLinks(float dt)
 		t.value = Matrix4::Line(aPos, bPos);
 	});
 	linkPhaseCounter.EndSubFrame();
+}
+
+Vector2 VerletSolver::CalcForceField(const ForceField& field, Particle& particle, Vector2 pos)
+{
+	const ForceFieldSettings& s = field.settings;
+	const Vector2 toPos = pos - field.pos;
+	const float eps = 1e-5f;
+
+	Vector2 local = toPos;
+	Vector2 halfRectSize = s.rectSize * 0.5f;
+	if(s.shape == ForceFieldShape::Circle)
+	{
+		float r2 = s.range * s.range;
+		if(toPos.SqrLength() > r2)
+		{
+			return Vector2::zero;
+		}
+	}
+	else
+	{
+		local = Vector2::Rotate(toPos, -s.rectRotation);
+		if(std::fabs(local.x) > halfRectSize.x || std::fabs(local.y) > halfRectSize.y)
+		{
+			return Vector2::zero;
+		}
+	}
+
+	Vector2 dir;
+	if(s.direction == ForceFieldDirection::FromCenter)
+	{
+		float len = toPos.SqrLength();
+		if(len < eps)
+		{
+			return Vector2::zero;
+		}
+		dir = toPos / std::sqrtf(len);
+	}
+	else
+	{
+		dir = s.DirVector();
+		if(s.shape == ForceFieldShape::Rect)
+		{
+			dir = Vector2::Rotate(dir, s.rectRotation);
+		}
+	}
+
+	float falloff = 1.0f;
+	if(s.falloff != ForceFieldFalloff::None)
+	{
+		if(s.shape == ForceFieldShape::Circle)
+		{
+			falloff = 1.0f - toPos.Length() / std::max(s.range, eps);
+		}
+		else
+		{
+			const float mx = 1.0f - std::fabs(local.x) / std::max(halfRectSize.x, eps);
+			const float my = 1.0f - std::fabs(local.y) / std::max(halfRectSize.y, eps);
+			falloff = std::fminf(mx, my);
+		}
+		falloff = s.ApplyFalloff(std::clamp(falloff, 0.0f, 1.0f));
+	}
+
+	float mag = s.massDependent ? (s.force * falloff * (1.0f / particle.mass)) : (s.force * falloff);
+	return dir * mag;
 }
 
 void VerletSolver::CollectStats()

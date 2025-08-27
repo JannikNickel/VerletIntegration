@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <type_traits>
 #include <optional>
+#include <span>
 
 class EcsWorld
 {
@@ -78,6 +79,22 @@ public:
 	void QueryPairs(Func&& entityFunc)
 	{
 		archManager.QueryComponentPairs<Func, Components...>(std::forward<Func>(entityFunc));
+	}
+
+	template<typename Component, typename Func>
+		requires ComponentDerived<Component>&& std::is_invocable_v<Func, std::span<const Component>>
+	void WithAllOfComponent(Func&& componentFunc)
+	{
+		bool fallback = true;
+		QueryChunked<Component>(std::numeric_limits<size_t>::max(), [&](Component* components, size_t size)
+		{
+			fallback = false;
+			componentFunc(std::span<const Component>(components, size));
+		});
+		if(fallback)
+		{
+			componentFunc(std::span<const Component>{});
+		}
 	}
 
 private:

@@ -17,6 +17,7 @@ struct Graphics
 	static void Quad(Vector2 pos, Vector2 size = Vector2::one, const Color& color = Color::white, const optional_ref<Texture>& texture = std::nullopt);
 	static void Circle(Vector2 pos, float radius, const Color& color = Color::white);
 	static void Line(Vector2 from, Vector2 to, const Color& color = Color::white);
+	static void Arrow(Vector2 from, Vector2 to, float arrowAngle = 25.0f, float arrowLength = 10.0f, const Color& color = Color::white);
 
 	static void QuadsInstanced(const Vector2* positions, const Vector2* sizes, const Color* colors, int instanceCount);
 	static void CirclesInstanced(const Vector2* positions, const float* radii, const Color* colors, int instanceCount);

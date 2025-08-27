@@ -283,6 +283,20 @@ void Graphics::Line(Vector2 from, Vector2 to, const Color& color)
 	glDrawArrays(GL_LINES, 0, 2);
 }
 
+void Graphics::Arrow(Vector2 from, Vector2 to, float arrowAngle, float arrowLength, const Color& color)
+{
+	PrepareShader(Matrix4::Line(from, to), color, quadTex.GlId());
+	glBindVertexArray(lineVAO);
+	glDrawArrays(GL_LINES, 0, 2);
+	Vector2 dir = (to - from).Normalized();
+	Vector2 right = Vector2::Rotate(-dir, arrowAngle);
+	Vector2 left = Vector2::Rotate(-dir, -arrowAngle);
+	PrepareShader(Matrix4::Line(to, to + right * arrowLength), color, quadTex.GlId());
+	glDrawArrays(GL_LINES, 0, 2);
+	PrepareShader(Matrix4::Line(to, to + left * arrowLength), color, quadTex.GlId());
+	glDrawArrays(GL_LINES, 0, 2);
+}
+
 static void PrepareInstancedRendering(unsigned int transformBuffer, const Matrix4* matrices, unsigned int colorBuffer, const Color* colors, int instanceCount, unsigned int texture)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, transformBuffer);

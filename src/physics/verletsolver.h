@@ -41,5 +41,6 @@ private:
 	void Solve(Transform& aTransform, Particle& a, Transform& bTransform, Particle& b);
 	void UpdateObjects(float dt);
 	void UpdateLinks(float dt);
+	Vector2 CalcForceField(const ForceField& forceField, Particle& particle, Vector2 pos);
 	void CollectStats();
 };

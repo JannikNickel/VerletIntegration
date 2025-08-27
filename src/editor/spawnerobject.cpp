@@ -74,7 +74,7 @@ EditResult SpawnerObject::Edit()
 		currentNode = 1;
 
 		ImGui::LabelText("", "Particle size (min, max)");
-		GuiHelper::ClampedFloat2Input("##pSize", &settings.pSize.x, "%0.2f", ParticleObject::minSize, ParticleObject::maxSize);
+		GuiHelper::ClampedFloat2Input("##pSize", &settings.pSize.x, "%0.2f", ParticleObject::minSize, ParticleObject::maxSize, true);
 
 		ImGui::LabelText("", "Particle mass");
 		GuiHelper::ClampedFloatInput("##pMass", &settings.pMass, "%0.2f", ParticleObject::minMass, ParticleObject::maxMass);
@@ -130,7 +130,7 @@ EditResult SpawnerObject::Edit()
 		ImGui::SliderFloat("##spawnVariation", &settings.spawnDirectionVariation, 0.0f, 360.0f, "%0.2f");
 
 		ImGui::LabelText("", "Spawn force (min, max)");
-		GuiHelper::ClampedFloat2Input("##spawnForce", &settings.spawnForce.x, "%0.2f", 0.0f, 10000.0f);
+		GuiHelper::ClampedFloat2Input("##spawnForce", &settings.spawnForce.x, "%0.2f", 0.0f, 10000.0f, true);
 
 		ImGui::Checkbox("Scale spawn force", &settings.scaleSpawnForce);
 

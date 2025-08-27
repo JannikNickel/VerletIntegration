@@ -57,13 +57,13 @@ bool GuiHelper::ClampedFloatInput(const char* label, float* value, const char* f
 	return false;
 }
 
-bool GuiHelper::ClampedFloat2Input(const char* label, float value[2], const char* format, float min, float max)
+bool GuiHelper::ClampedFloat2Input(const char* label, float value[2], const char* format, float min, float max, bool swapMinMax)
 {
 	if(ImGui::InputFloat2("##pSize", value, "%0.2f"))
 	{
 		value[0] = std::clamp(value[0], min, max);
 		value[1] = std::clamp(value[1], min, max);
-		if(value[0] > value[1])
+		if(swapMinMax && value[0] > value[1])
 		{
 			std::swap(value[0], value[1]);
 		}

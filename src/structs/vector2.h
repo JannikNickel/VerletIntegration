@@ -8,6 +8,8 @@ struct Vector2
 
 	static const Vector2 zero;
 	static const Vector2 one;
+	static const Vector2 right;
+	static const Vector2 up;
 
 	Vector2(float x, float y);
 	Vector2();

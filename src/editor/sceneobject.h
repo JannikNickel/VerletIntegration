@@ -17,7 +17,8 @@ enum class SceneObjectType
 {
 	Particle,
 	Spawner,
-	Link
+	Link,
+	ForceField
 };
 
 class SceneObject : public ISerializable

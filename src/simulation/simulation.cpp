@@ -57,3 +57,8 @@ void Simulation::AddLink(Link&& link, uint32_t p0Id, uint32_t p1Id, const Color&
 		placedEntityMap.emplace(objId, entity);
 	}
 }
+
+void Simulation::AddForceField(ForceField&& forceField, uint32_t objId)
+{
+	ecs->CreateEntity(std::move(forceField));
+}
